@@ -23,8 +23,8 @@ android {
         applicationId = "com.ravidor.forksure"
         minSdk = 29
         targetSdk = 35
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 2
+        versionName = "1.1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -46,7 +46,13 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.getByName("release")
+            
+            // Generate debug symbols for crash reporting
+            isDebuggable = false
+            ndk {
+                debugSymbolLevel = "FULL"
+            }
         }
     }
     compileOptions {
