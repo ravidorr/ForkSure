@@ -1,5 +1,6 @@
 package com.ravidor.forksure
 
+import android.content.Context
 import android.graphics.Bitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -22,10 +23,21 @@ class BakingViewModel : ViewModel() {
         apiKey = BuildConfig.apiKey
     )
 
+    // Store last request for retry functionality
+    private var lastBitmap: Bitmap? = null
+    private var lastPrompt: String? = null
+    private var lastContext: Context? = null
+
     fun sendPrompt(
         bitmap: Bitmap,
-        prompt: String
+        prompt: String,
+        context: Context
     ) {
+        // Store for potential retry
+        lastBitmap = bitmap
+        lastPrompt = prompt
+        lastContext = context
+        
         _uiState.value = UiState.Loading
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -38,10 +50,31 @@ class BakingViewModel : ViewModel() {
                 )
                 response.text?.let { outputContent ->
                     _uiState.value = UiState.Success(outputContent)
+                } ?: run {
+                    _uiState.value = ErrorHandler.handleError(
+                        Exception("No response received from AI"),
+                        context
+                    )
                 }
             } catch (e: Exception) {
-                _uiState.value = UiState.Error(e.localizedMessage ?: "")
+                _uiState.value = ErrorHandler.handleError(e, context)
             }
+        }
+    }
+
+    fun retryLastRequest() {
+        val bitmap = lastBitmap
+        val prompt = lastPrompt
+        val context = lastContext
+        
+        if (bitmap != null && prompt != null && context != null) {
+            sendPrompt(bitmap, prompt, context)
+        }
+    }
+
+    fun clearError() {
+        if (_uiState.value is UiState.Error) {
+            _uiState.value = UiState.Initial
         }
     }
 }
