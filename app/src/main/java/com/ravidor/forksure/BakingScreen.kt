@@ -114,7 +114,7 @@ fun BakingScreen(
                         contentDescription = "Take Photo",
                         modifier = Modifier.padding(end = 8.dp)
                     )
-                    Text("Take Photo")
+                    Text(stringResource(R.string.take_photo))
                 }
             }
 
@@ -141,7 +141,7 @@ fun BakingScreen(
             }
 
             Text(
-                text = "Or choose from sample images:",
+                text = stringResource(R.string.or_choose_sample),
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
             )
@@ -192,7 +192,7 @@ fun BakingScreen(
                                 images[selectedImage.intValue]
                             )
                         }
-                        bakingViewModel.sendPrompt(bitmap, prompt)
+                        bakingViewModel.sendPrompt(bitmap, prompt, context)
                     },
                     enabled = prompt.isNotEmpty() && (capturedImage != null || selectedImage.intValue >= 0),
                     modifier = Modifier
@@ -205,25 +205,101 @@ fun BakingScreen(
             if (uiState is UiState.Loading) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
             } else {
-                var textColor = MaterialTheme.colorScheme.onSurface
-                if (uiState is UiState.Error) {
-                    textColor = MaterialTheme.colorScheme.error
-                    result = (uiState as UiState.Error).errorMessage
-                } else if (uiState is UiState.Success) {
-                    textColor = MaterialTheme.colorScheme.onSurface
-                    result = (uiState as UiState.Success).outputText
+                when (val currentState = uiState) {
+                    is UiState.Error -> {
+                        // Enhanced error display
+                        Column(
+                            modifier = Modifier
+                                .align(Alignment.CenterHorizontally)
+                                .padding(16.dp)
+                                .fillMaxSize(),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            // Error icon based on error type
+                            val errorIcon = when (currentState.errorType) {
+                                ErrorType.NETWORK -> "📶"
+                                ErrorType.API_KEY -> "🔑"
+                                ErrorType.QUOTA_EXCEEDED -> "⏰"
+                                ErrorType.CONTENT_POLICY -> "🚫"
+                                ErrorType.IMAGE_SIZE -> "📷"
+                                ErrorType.SERVER_ERROR -> "🔧"
+                                ErrorType.UNKNOWN -> "⚠️"
+                            }
+                            
+                            Text(
+                                text = errorIcon,
+                                style = MaterialTheme.typography.headlineLarge,
+                                modifier = Modifier.padding(bottom = 16.dp)
+                            )
+                            
+                            Text(
+                                text = ErrorHandler.getErrorMessageWithSuggestion(currentState),
+                                textAlign = TextAlign.Center,
+                                color = MaterialTheme.colorScheme.error,
+                                modifier = Modifier
+                                    .padding(bottom = 16.dp)
+                                    .verticalScroll(rememberScrollState())
+                            )
+                            
+                            // Retry button (only show if retry is possible)
+                            if (currentState.canRetry) {
+                                Row(
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                ) {
+                                    Button(
+                                        onClick = { bakingViewModel.retryLastRequest() }
+                                    ) {
+                                        Text(stringResource(R.string.action_retry))
+                                    }
+                                    
+                                    Button(
+                                        onClick = { bakingViewModel.clearError() },
+                                        colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                                            containerColor = MaterialTheme.colorScheme.secondary
+                                        )
+                                    ) {
+                                        Text(stringResource(R.string.action_dismiss))
+                                    }
+                                }
+                            } else {
+                                Button(
+                                    onClick = { bakingViewModel.clearError() },
+                                    colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                                        containerColor = MaterialTheme.colorScheme.secondary
+                                    )
+                                ) {
+                                    Text(stringResource(R.string.action_dismiss))
+                                }
+                            }
+                        }
+                    }
+                    is UiState.Success -> {
+                        val scrollState = rememberScrollState()
+                        Text(
+                            text = currentState.outputText,
+                            textAlign = TextAlign.Start,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            modifier = Modifier
+                                .align(Alignment.CenterHorizontally)
+                                .padding(16.dp)
+                                .fillMaxSize()
+                                .verticalScroll(scrollState)
+                        )
+                    }
+                    else -> {
+                        // Initial state - show placeholder
+                        Text(
+                            text = result,
+                            textAlign = TextAlign.Start,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            modifier = Modifier
+                                .align(Alignment.CenterHorizontally)
+                                .padding(16.dp)
+                                .fillMaxSize()
+                                .verticalScroll(rememberScrollState())
+                        )
+                    }
                 }
-                val scrollState = rememberScrollState()
-                Text(
-                    text = result,
-                    textAlign = TextAlign.Start,
-                    color = textColor,
-                    modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
-                        .padding(16.dp)
-                        .fillMaxSize()
-                        .verticalScroll(scrollState)
-                )
             }
         }
     }

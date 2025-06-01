@@ -23,5 +23,22 @@ sealed interface UiState {
     /**
      * There was an error generating text
      */
-    data class Error(val errorMessage: String) : UiState
+    data class Error(
+        val errorMessage: String,
+        val errorType: ErrorType = ErrorType.UNKNOWN,
+        val canRetry: Boolean = true
+    ) : UiState
+}
+
+/**
+ * Different types of errors that can occur
+ */
+enum class ErrorType {
+    NETWORK,           // Network connectivity issues
+    API_KEY,           // API key problems
+    QUOTA_EXCEEDED,    // Rate limiting or quota issues
+    CONTENT_POLICY,    // Content blocked by policy
+    IMAGE_SIZE,        // Image too large or invalid format
+    SERVER_ERROR,      // Server-side issues
+    UNKNOWN           // Unknown or generic errors
 }
