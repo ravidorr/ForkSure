@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="512" height="512" fill="#FFF8E1"/>
+  <rect width="512" height="256" fill="#FFE0B2"/>
+  <rect width="512" height="128" fill="#FFCC80"/>
+  
+  <!-- Main icon group (scaled up) -->
+  <g transform="translate(128, 128) scale(2.8)">
+    <!-- Cupcake base -->
+    <path fill="#8D6E63" d="M30,45L60,45L65,75L25,75Z"/>
+    
+    <!-- Cupcake frosting -->
+    <path fill="#F8BBD9" d="M25,45C25,35 35,25 45,25C55,25 65,35 65,45C65,40 60,35 55,35C50,30 40,30 35,35C30,35 25,40 25,45Z"/>
+    
+    <!-- Cherry on top -->
+    <path fill="#E53935" d="M45,31C47.2,31 49,32.8 49,35C49,37.2 47.2,39 45,39C42.8,39 41,37.2 41,35C41,32.8 42.8,31 45,31Z"/>
+    
+    <!-- Fork -->
+    <path fill="#616161" d="M15,20L17,20L17,50L15,50Z"/>
+    <path fill="#616161" d="M13,18L19,18L19,22L13,22Z"/>
+    <path stroke="#616161" stroke-width="0.5" fill="none" d="M13,18L13,25M16,18L16,25M19,18L19,25"/>
+    
+    <!-- Sparkles -->
+    <path fill="#FFD700" d="M70,25L72,27L70,29L68,27Z"/>
+    <path fill="#FFD700" d="M75,40L76,41L75,42L74,41Z"/>
+  </g>
+</svg> 

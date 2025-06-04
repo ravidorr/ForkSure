@@ -1,27 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-    
-    <!-- Fork (monochrome) -->
+  <group android:scaleX="0.6"
+      android:scaleY="0.6"
+      android:translateX="21.6"
+      android:translateY="21.6">
+    <!-- Cupcake base -->
     <path
         android:fillColor="#000000"
-        android:pathData="M35,30 L35,75 L38,75 L38,30 L41,30 L41,45 L44,45 L44,30 L47,30 L47,45 L50,45 L50,30 L53,30 L53,75 L56,75 L56,30 L59,30 L59,45 L62,45 L62,30 L65,30 L65,45 L68,45 L68,30 L71,30 L71,75 L74,75 L74,78 L35,78 Z" />
+        android:pathData="M30,45L60,45L65,75L25,75Z"/>
     
-    <!-- Cupcake base (monochrome) -->
+    <!-- Cupcake frosting -->
     <path
         android:fillColor="#000000"
-        android:pathData="M45,50 L63,50 L65,70 L43,70 Z" />
+        android:pathData="M25,45C25,35 35,25 45,25C55,25 65,35 65,45C65,40 60,35 55,35C50,30 40,30 35,35C30,35 25,40 25,45Z"/>
     
-    <!-- Cupcake frosting (monochrome) -->
+    <!-- Cherry on top -->
     <path
         android:fillColor="#000000"
-        android:pathData="M43,50 C43,45 47,42 54,42 C61,42 65,45 65,50 C65,48 63,46 60,46 C62,44 60,42 57,43 C58,40 55,38 52,40 C50,37 47,39 48,42 C45,41 43,43 45,45 C42,46 40,48 43,50 Z" />
+        android:pathData="M45,31C47.2,31 49,32.8 49,35C49,37.2 47.2,39 45,39C42.8,39 41,37.2 41,35C41,32.8 42.8,31 45,31Z"/>
     
-    <!-- Cupcake cherry on top (monochrome) -->
+    <!-- Fork -->
     <path
         android:fillColor="#000000"
-        android:pathData="M52,42 C52,40 54,40 54,42 C54,44 52,44 52,42 Z" />
-
+        android:pathData="M15,20L17,20L17,50L15,50Z"/>
+    <path
+        android:fillColor="#000000"
+        android:pathData="M13,18L19,18L19,22L13,22Z"/>
+    <path
+        android:fillColor="#000000"
+        android:pathData="M13,18L13,25M16,18L16,25M19,18L19,25"/>
+  </group>
 </vector> 
