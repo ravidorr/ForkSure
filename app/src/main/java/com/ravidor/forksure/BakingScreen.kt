@@ -57,6 +57,7 @@ import dev.jeziellago.compose.markdowntext.MarkdownText
 // Centralized constants imports
 import com.ravidor.forksure.SampleDataConstants
 import com.ravidor.forksure.Dimensions
+import com.ravidor.forksure.PrintHelper
 
 // Constants moved to centralized Constants.kt file
 
@@ -239,6 +240,15 @@ private fun BakingResultsSection(
             RecipeResultsSection(
                 outputText = uiState.outputText,
                 onReportContent = { showReportDialog = true },
+                onPrintRecipe = {
+                    // Extract recipe title and print
+                    val recipeTitle = PrintHelper.extractRecipeTitle(uiState.outputText)
+                    PrintHelper.printRecipe(
+                        context = context,
+                        recipeContent = uiState.outputText,
+                        recipeName = recipeTitle
+                    )
+                },
                 modifier = Modifier.fillMaxSize()
             )
             
@@ -632,6 +642,7 @@ private fun ErrorActionButtons(
 private fun RecipeResultsSection(
     outputText: String,
     onReportContent: () -> Unit,
+    onPrintRecipe: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -668,12 +679,27 @@ private fun RecipeResultsSection(
                 }
         )
         
+        // Action buttons at the bottom
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 16.dp),
-            horizontalArrangement = Arrangement.Center
+            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
         ) {
+            // Print button
+            Button(
+                onClick = { 
+                    onPrintRecipe()
+                    AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.CLICK)
+                },
+                modifier = Modifier.semantics {
+                    contentDescription = "Print recipe button. Print the AI-generated recipe"
+                }
+            ) {
+                Text("🖨️ Print")
+            }
+            
+            // Report button
             Button(
                 onClick = { 
                     onReportContent()

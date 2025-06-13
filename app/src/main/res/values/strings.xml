@@ -113,4 +113,11 @@
     <string name="input_validation_failed">Invalid input detected. Please check your request.</string>
     <string name="response_validation_failed">AI response validation failed.</string>
     <string name="food_safety_warning">⚠️ Food Safety Notice: Please verify cooking instructions and temperatures.</string>
+    
+    <!-- Print strings -->
+    <string name="action_print">🖨️ Print</string>
+    <string name="print_recipe_success">Recipe sent to printer</string>
+    <string name="print_recipe_error">Unable to print recipe. Please try again.</string>
+    <string name="print_not_available">Printing is not available on this device</string>
+    <string name="accessibility_print_button">Print recipe button. Print the AI-generated recipe</string>
 </resources>

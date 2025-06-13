@@ -59,6 +59,7 @@ import com.ravidor.forksure.Dimensions
 import com.ravidor.forksure.ErrorHandler
 import com.ravidor.forksure.ErrorType
 import com.ravidor.forksure.HapticFeedbackType
+import com.ravidor.forksure.PrintHelper
 import com.ravidor.forksure.R
 import com.ravidor.forksure.SampleDataConstants
 import com.ravidor.forksure.SecurityStatusIndicator
@@ -273,9 +274,19 @@ private fun MainResultsSection(
             )
         }
         is UiState.Success -> {
+            val context = LocalContext.current
             RecipeResultsSection(
                 outputText = uiState.outputText,
                 onReportContent = onShowReportDialog,
+                onPrintRecipe = { 
+                    // Extract recipe title and print
+                    val recipeTitle = PrintHelper.extractRecipeTitle(uiState.outputText)
+                    PrintHelper.printRecipe(
+                        context = context,
+                        recipeContent = uiState.outputText,
+                        recipeName = recipeTitle
+                    )
+                },
                 modifier = Modifier.fillMaxSize()
             )
             
@@ -645,6 +656,7 @@ private fun ErrorActionButtons(
 private fun RecipeResultsSection(
     outputText: String,
     onReportContent: () -> Unit,
+    onPrintRecipe: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -676,13 +688,27 @@ private fun RecipeResultsSection(
                 }
         )
         
-        // Report button at the bottom
+        // Action buttons at the bottom
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = Dimensions.PADDING_STANDARD),
-            horizontalArrangement = Arrangement.Center
+            horizontalArrangement = Arrangement.spacedBy(Dimensions.PADDING_SMALL, Alignment.CenterHorizontally)
         ) {
+            // Print button
+            Button(
+                onClick = {
+                    onPrintRecipe()
+                    AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.CLICK)
+                },
+                modifier = Modifier.semantics {
+                    contentDescription = "Print recipe button. Print the AI-generated recipe"
+                }
+            ) {
+                Text("🖨️ Print")
+            }
+            
+            // Report button
             Button(
                 onClick = {
                     onReportContent()
