@@ -181,4 +181,19 @@ object SampleDataConstants {
         "Cookies", 
         "Cake"
     )
+}
+
+/**
+ * Navigation constants
+ */
+object NavigationConstants {
+    // Route definitions
+    const val ROUTE_MAIN = "main"
+    const val ROUTE_CAMERA = "camera"
+    const val ROUTE_RESULTS = "results"
+    
+    // Navigation accessibility descriptions
+    const val ACCESSIBILITY_NAVIGATION_TO_CAMERA = "Navigating to camera screen"
+    const val ACCESSIBILITY_NAVIGATION_TO_MAIN = "Navigating to main screen"
+    const val ACCESSIBILITY_NAVIGATION_TO_RESULTS = "Navigating to results screen"
 } 

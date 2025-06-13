@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import com.ravidor.forksure.navigation.ForkSureNavigation
 import com.ravidor.forksure.ui.theme.ForkSureTheme
 
 class MainActivity : ComponentActivity() {
@@ -40,7 +41,7 @@ class MainActivity : ComponentActivity() {
                         },
                     color = MaterialTheme.colorScheme.background,
                 ) {
-                    BakingScreen()
+                    ForkSureNavigation()
                 }
             }
         }
