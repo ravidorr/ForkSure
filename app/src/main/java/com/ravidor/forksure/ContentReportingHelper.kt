@@ -17,12 +17,17 @@ import java.util.Locale
 // Centralized constants imports
 import com.ravidor.forksure.AppConstants
 
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
+
 /**
  * Helper class to handle user reports for AI-generated content
  * This satisfies Google Play's AI-Generated Content policy requirement
  */
+@Stable
 class ContentReportingHelper {
     
+    @Immutable
     data class ContentReport(
         val content: String,
         val reason: ReportReason,
@@ -30,6 +35,7 @@ class ContentReportingHelper {
         val timestamp: Long = System.currentTimeMillis()
     )
     
+    @Stable
     enum class ReportReason {
         INAPPROPRIATE,
         OFFENSIVE,

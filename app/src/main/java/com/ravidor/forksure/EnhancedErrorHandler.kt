@@ -7,6 +7,8 @@ import java.net.UnknownHostException
 import javax.net.ssl.SSLException
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
 
 // Centralized constants imports
 import com.ravidor.forksure.AppConstants
@@ -14,6 +16,7 @@ import com.ravidor.forksure.AppConstants
 /**
  * Enhanced error handler with security integration
  */
+@Stable
 object EnhancedErrorHandler {
     private const val TAG = AppConstants.TAG_ENHANCED_ERROR_HANDLER
     
@@ -46,11 +49,11 @@ object EnhancedErrorHandler {
         // Generate appropriate response
         return when (errorCategory) {
             ErrorCategory.NETWORK -> handleNetworkError(error)
-            ErrorCategory.SECURITY -> handleSecurityError(error)
+            ErrorCategory.AUTHENTICATION -> handleSecurityError(error)
             ErrorCategory.RATE_LIMIT -> handleRateLimitError(error)
             ErrorCategory.INPUT_VALIDATION -> handleInputValidationError(error, userInput)
-            ErrorCategory.AI_RESPONSE -> handleAIResponseError(error, aiResponse)
-            ErrorCategory.SYSTEM -> handleSystemError(error)
+            ErrorCategory.SERVER_ERROR -> handleAIResponseError(error, aiResponse)
+            ErrorCategory.CLIENT_ERROR -> handleSystemError(error)
             ErrorCategory.UNKNOWN -> handleUnknownError(error)
         }
     }
@@ -114,8 +117,8 @@ object EnhancedErrorHandler {
     private fun categorizeError(error: Throwable): ErrorCategory {
         return when (error) {
             is UnknownHostException, is SocketTimeoutException -> ErrorCategory.NETWORK
-            is SSLException -> ErrorCategory.SECURITY
-            is SecurityException -> ErrorCategory.SECURITY
+            is SSLException -> ErrorCategory.AUTHENTICATION
+            is SecurityException -> ErrorCategory.AUTHENTICATION
             is IllegalArgumentException -> {
                 if (error.message?.contains("rate limit", ignoreCase = true) == true) {
                     ErrorCategory.RATE_LIMIT
@@ -123,16 +126,16 @@ object EnhancedErrorHandler {
                     ErrorCategory.INPUT_VALIDATION
                 }
             }
-            is IllegalStateException -> ErrorCategory.SYSTEM
+            is IllegalStateException -> ErrorCategory.CLIENT_ERROR
             else -> {
                 // Check error message for specific patterns
                 val message = error.message?.lowercase() ?: ""
                 when {
                     message.contains("network") || message.contains("connection") -> ErrorCategory.NETWORK
-                    message.contains("security") || message.contains("permission") -> ErrorCategory.SECURITY
+                    message.contains("security") || message.contains("permission") -> ErrorCategory.AUTHENTICATION
                     message.contains("rate") || message.contains("limit") -> ErrorCategory.RATE_LIMIT
                     message.contains("input") || message.contains("validation") -> ErrorCategory.INPUT_VALIDATION
-                    message.contains("response") || message.contains("ai") -> ErrorCategory.AI_RESPONSE
+                    message.contains("response") || message.contains("ai") -> ErrorCategory.SERVER_ERROR
                     else -> ErrorCategory.UNKNOWN
                 }
             }
@@ -218,19 +221,24 @@ object EnhancedErrorHandler {
     }
 }
 
-// Error categories
+/**
+ * Categories of errors for better handling
+ */
+@Stable
 enum class ErrorCategory {
     NETWORK,
-    SECURITY,
+    AUTHENTICATION,
     RATE_LIMIT,
     INPUT_VALIDATION,
-    AI_RESPONSE,
-    SYSTEM,
+    SERVER_ERROR,
+    CLIENT_ERROR,
     UNKNOWN
 }
 
 // Enhanced error result types
+@Immutable
 sealed class EnhancedErrorResult {
+    @Immutable
     data class Recoverable(
         val title: String,
         val message: String,
@@ -239,6 +247,7 @@ sealed class EnhancedErrorResult {
         val retryDelay: Long = 0
     ) : EnhancedErrorResult()
     
+    @Immutable
     data class Temporary(
         val title: String,
         val message: String,
@@ -246,6 +255,7 @@ sealed class EnhancedErrorResult {
         val retryAfter: Long
     ) : EnhancedErrorResult()
     
+    @Immutable
     data class UserError(
         val title: String,
         val message: String,
@@ -253,6 +263,7 @@ sealed class EnhancedErrorResult {
         val inputRelated: Boolean
     ) : EnhancedErrorResult()
     
+    @Immutable
     data class ServiceError(
         val title: String,
         val message: String,
@@ -260,6 +271,7 @@ sealed class EnhancedErrorResult {
         val serviceRelated: Boolean
     ) : EnhancedErrorResult()
     
+    @Immutable
     data class Critical(
         val title: String,
         val message: String,
@@ -267,6 +279,7 @@ sealed class EnhancedErrorResult {
         val requiresUserAction: Boolean
     ) : EnhancedErrorResult()
     
+    @Immutable
     data class Unknown(
         val title: String,
         val message: String,
@@ -276,16 +289,25 @@ sealed class EnhancedErrorResult {
 }
 
 // AI response processing results
+@Immutable
 sealed class AIResponseProcessingResult {
+    @Immutable
     data class Success(val response: String) : AIResponseProcessingResult()
+    @Immutable
     data class SuccessWithWarning(val response: String, val warning: String) : AIResponseProcessingResult()
+    @Immutable
     data class Warning(val response: String, val warning: String, val details: String) : AIResponseProcessingResult()
+    @Immutable
     data class Blocked(val reason: String, val message: String) : AIResponseProcessingResult()
+    @Immutable
     data class Error(val reason: String, val message: String) : AIResponseProcessingResult()
 }
 
 // User input validation results
+@Immutable
 sealed class UserInputValidationResult {
+    @Immutable
     data class Valid(val sanitizedInput: String) : UserInputValidationResult()
+    @Immutable
     data class Invalid(val reason: String) : UserInputValidationResult()
 } 

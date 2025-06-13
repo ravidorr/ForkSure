@@ -6,7 +6,9 @@ import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
 import android.view.accessibility.AccessibilityManager
+import androidx.compose.runtime.Stable
 
+@Stable
 object AccessibilityHelper {
     
     /**
@@ -66,6 +68,7 @@ object AccessibilityHelper {
     }
 }
 
+@Stable
 enum class HapticFeedbackType {
     CLICK,
     SUCCESS,

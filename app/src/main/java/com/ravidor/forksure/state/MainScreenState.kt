@@ -173,6 +173,7 @@ fun rememberContentReportDialogState(
  * Actions interface for main screen
  * Defines all possible actions that can be performed on the main screen
  */
+@Stable
 interface MainScreenActions {
     fun onPromptChange(prompt: String)
     fun onSampleImageSelected(index: Int)
@@ -191,6 +192,7 @@ interface MainScreenActions {
  * Default implementation of MainScreenActions
  * Can be customized for different use cases
  */
+@Stable
 class DefaultMainScreenActions(
     private val state: MainScreenState,
     private val onNavigateToCamera: () -> Unit,
