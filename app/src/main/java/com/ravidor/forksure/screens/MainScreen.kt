@@ -1,4 +1,4 @@
-package com.ravidor.forksure
+package com.ravidor.forksure.screens
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
@@ -30,10 +29,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -48,34 +46,36 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
 import dev.jeziellago.compose.markdowntext.MarkdownText
 
 // Centralized constants imports
-import com.ravidor.forksure.SampleDataConstants
+import com.ravidor.forksure.AccessibilityHelper
+import com.ravidor.forksure.BakingViewModel
+import com.ravidor.forksure.ContentReportDialog
+import com.ravidor.forksure.ContentReportingHelper
 import com.ravidor.forksure.Dimensions
-
-// Constants moved to centralized Constants.kt file
+import com.ravidor.forksure.ErrorHandler
+import com.ravidor.forksure.ErrorType
+import com.ravidor.forksure.HapticFeedbackType
+import com.ravidor.forksure.R
+import com.ravidor.forksure.SampleDataConstants
+import com.ravidor.forksure.SecurityStatusIndicator
+import com.ravidor.forksure.UiState
 
 /**
- * @deprecated This screen has been replaced by the new Navigation Compose architecture.
- * Use ForkSureNavigation and MainScreen instead.
- * This file is kept for reference but should not be used in new code.
+ * Main screen of the ForkSure app
+ * Contains the main UI for image selection, prompt input, and results display
  */
-@Deprecated(
-    message = "Use ForkSureNavigation and MainScreen instead",
-    replaceWith = ReplaceWith("ForkSureNavigation()", "com.ravidor.forksure.navigation.ForkSureNavigation")
-)
 @Composable
-fun BakingScreen(
-    bakingViewModel: BakingViewModel = viewModel()
+fun MainScreen(
+    bakingViewModel: BakingViewModel,
+    capturedImage: Bitmap?,
+    selectedImage: MutableIntState,
+    onNavigateToCamera: () -> Unit,
+    onCapturedImageUpdated: (Bitmap?) -> Unit
 ) {
-    val selectedImage = remember { mutableIntStateOf(0) }
-    var capturedImage by remember { mutableStateOf<Bitmap?>(null) }
-    var showCamera by remember { mutableStateOf(false) }
     val placeholderPrompt = stringResource(R.string.prompt_placeholder)
     val placeholderResult = stringResource(R.string.results_placeholder)
     var prompt by rememberSaveable { mutableStateOf(placeholderPrompt) }
@@ -83,65 +83,6 @@ fun BakingScreen(
     val uiState by bakingViewModel.uiState.collectAsState()
     val context = LocalContext.current
 
-    if (showCamera) {
-        CameraCapture(
-            onImageCaptured = { bitmap ->
-                capturedImage = bitmap
-                showCamera = false
-                selectedImage.intValue = -1 // Indicate that a captured image is selected
-                AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.SUCCESS)
-            },
-            onError = { error ->
-                // Handle camera error
-                showCamera = false
-                result = "Camera error: $error"
-                AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.ERROR)
-            }
-        )
-    } else {
-        BakingMainContent(
-            selectedImage = selectedImage,
-            capturedImage = capturedImage,
-            prompt = prompt,
-            result = result,
-            uiState = uiState,
-            bakingViewModel = bakingViewModel,
-            onTakePhoto = { showCamera = true },
-            onCapturedImageClick = { selectedImage.intValue = -1 },
-            onSampleImageSelected = { index ->
-                selectedImage.intValue = index
-                capturedImage = null
-            },
-            onPromptChange = { prompt = it },
-            onAnalyzeClick = {
-                val bitmap = if (capturedImage != null && selectedImage.intValue == -1) {
-                    capturedImage!!
-                } else {
-                    BitmapFactory.decodeResource(
-                        context.resources,
-                        SampleDataConstants.SAMPLE_IMAGES[selectedImage.intValue]
-                    )
-                }
-                bakingViewModel.sendPrompt(bitmap, prompt, context)
-            }
-        )
-    }
-}
-
-@Composable
-private fun BakingMainContent(
-    selectedImage: androidx.compose.runtime.MutableIntState,
-    capturedImage: Bitmap?,
-    prompt: String,
-    result: String,
-    uiState: UiState,
-    bakingViewModel: BakingViewModel,
-    onTakePhoto: () -> Unit,
-    onCapturedImageClick: () -> Unit,
-    onSampleImageSelected: (Int) -> Unit,
-    onPromptChange: (String) -> Unit,
-    onAnalyzeClick: () -> Unit
-) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -150,7 +91,7 @@ private fun BakingMainContent(
             }
     ) {
         // Main heading
-        BakingScreenHeader()
+        MainScreenHeader()
 
         // Security status indicator
         SecurityStatusIndicator(
@@ -160,7 +101,7 @@ private fun BakingMainContent(
 
         // Camera section
         CameraSection(
-            onTakePhoto = onTakePhoto
+            onTakePhoto = onNavigateToCamera
         )
 
         // Show captured image if available
@@ -168,7 +109,7 @@ private fun BakingMainContent(
             CapturedImageCard(
                 bitmap = bitmap,
                 isSelected = selectedImage.value == -1,
-                onImageClick = onCapturedImageClick
+                onImageClick = { selectedImage.intValue = -1 }
             )
         }
 
@@ -177,20 +118,33 @@ private fun BakingMainContent(
             images = SampleDataConstants.SAMPLE_IMAGES,
             imageDescriptions = SampleDataConstants.IMAGE_DESCRIPTIONS,
             selectedImageIndex = selectedImage.value,
-            onImageSelected = onSampleImageSelected
+            onImageSelected = { index ->
+                selectedImage.intValue = index
+                onCapturedImageUpdated(null) // Clear captured image when sample is selected
+            }
         )
 
         // Input section
         val isAnalyzeEnabled = prompt.isNotEmpty() && (capturedImage != null || selectedImage.value >= 0)
         PromptInputSection(
             prompt = prompt,
-            onPromptChange = onPromptChange,
+            onPromptChange = { prompt = it },
             isAnalyzeEnabled = isAnalyzeEnabled,
-            onAnalyzeClick = onAnalyzeClick
+            onAnalyzeClick = {
+                val bitmap = if (capturedImage != null && selectedImage.value == -1) {
+                    capturedImage
+                } else {
+                    BitmapFactory.decodeResource(
+                        context.resources,
+                        SampleDataConstants.SAMPLE_IMAGES[selectedImage.value]
+                    )
+                }
+                bakingViewModel.sendPrompt(bitmap, prompt, context)
+            }
         )
 
         // Results section
-        BakingResultsSection(
+        MainResultsSection(
             uiState = uiState,
             result = result,
             bakingViewModel = bakingViewModel
@@ -199,12 +153,12 @@ private fun BakingMainContent(
 }
 
 @Composable
-private fun BakingScreenHeader() {
+private fun MainScreenHeader() {
     Text(
         text = stringResource(R.string.baking_title),
         style = MaterialTheme.typography.titleLarge,
         modifier = Modifier
-            .padding(16.dp)
+            .padding(Dimensions.PADDING_STANDARD)
             .semantics {
                 contentDescription = "ForkSure - Baking with AI, main heading"
             }
@@ -212,7 +166,7 @@ private fun BakingScreenHeader() {
 }
 
 @Composable
-private fun BakingResultsSection(
+private fun MainResultsSection(
     uiState: UiState,
     result: String,
     bakingViewModel: BakingViewModel
@@ -273,7 +227,7 @@ private fun InitialStateSection(
         textAlign = TextAlign.Start,
         color = MaterialTheme.colorScheme.onSurface,
         modifier = Modifier
-            .padding(16.dp)
+            .padding(Dimensions.PADDING_STANDARD)
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
             .semantics {
@@ -292,7 +246,7 @@ private fun CameraSection(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp),
+            .padding(horizontal = Dimensions.PADDING_STANDARD),
         horizontalArrangement = Arrangement.Center
     ) {
         Button(
@@ -301,7 +255,7 @@ private fun CameraSection(
                 AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.CLICK)
             },
             modifier = Modifier
-                .padding(bottom = 8.dp)
+                .padding(bottom = Dimensions.PADDING_SMALL)
                 .semantics {
                     contentDescription = "Take photo button. Opens camera to capture baked goods"
                 }
@@ -309,7 +263,7 @@ private fun CameraSection(
             Icon(
                 imageVector = Icons.Default.Add,
                 contentDescription = "",
-                modifier = Modifier.padding(end = 8.dp)
+                modifier = Modifier.padding(end = Dimensions.PADDING_SMALL)
             )
             Text(stringResource(R.string.take_photo))
         }
@@ -327,16 +281,16 @@ private fun CapturedImageCard(
     
     Card(
         modifier = modifier
-            .padding(16.dp)
+            .padding(Dimensions.PADDING_STANDARD)
             .fillMaxWidth()
-            .height(200.dp)
+            .height(Dimensions.CAPTURED_IMAGE_HEIGHT)
             .clickable { 
                 onImageClick()
                 AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.CLICK)
             }
             .then(
                 if (isSelected) {
-                    Modifier.border(BorderStroke(4.dp, MaterialTheme.colorScheme.primary))
+                    Modifier.border(BorderStroke(Dimensions.BORDER_WIDTH_STANDARD, MaterialTheme.colorScheme.primary))
                 } else Modifier
             )
             .semantics {
@@ -368,7 +322,7 @@ private fun SampleImagesSection(
             text = stringResource(R.string.or_choose_sample),
             style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier
-                .padding(horizontal = 16.dp, vertical = 8.dp)
+                .padding(horizontal = Dimensions.PADDING_STANDARD, vertical = Dimensions.PADDING_SMALL)
                 .semantics {
                     contentDescription = "Sample images section heading"
                 }
@@ -403,8 +357,8 @@ private fun SampleImageItem(
     val context = LocalContext.current
     
     var imageModifier = Modifier
-        .padding(start = 8.dp, end = 8.dp)
-        .requiredSize(120.dp)
+        .padding(start = Dimensions.PADDING_SMALL, end = Dimensions.PADDING_SMALL)
+        .requiredSize(Dimensions.SAMPLE_IMAGE_SIZE)
         .clickable { 
             onImageClick()
             AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.CLICK)
@@ -418,7 +372,7 @@ private fun SampleImageItem(
         }
         
     if (isSelected) {
-        imageModifier = imageModifier.border(BorderStroke(4.dp, MaterialTheme.colorScheme.primary))
+        imageModifier = imageModifier.border(BorderStroke(Dimensions.BORDER_WIDTH_STANDARD, MaterialTheme.colorScheme.primary))
     }
     
     Image(
@@ -440,7 +394,7 @@ private fun PromptInputSection(
     
     Row(
         modifier = modifier
-            .padding(all = 16.dp)
+            .padding(all = Dimensions.PADDING_STANDARD)
             .semantics {
                 contentDescription = "Analysis input section"
             }
@@ -451,7 +405,7 @@ private fun PromptInputSection(
             onValueChange = onPromptChange,
             modifier = Modifier
                 .weight(0.8f)
-                .padding(end = 16.dp)
+                .padding(end = Dimensions.PADDING_STANDARD)
                 .align(Alignment.CenterVertically)
                 .semantics {
                     contentDescription = "Prompt input field. Enter your question about the baked goods"
@@ -493,7 +447,7 @@ private fun LoadingSection(
         CircularProgressIndicator()
         Text(
             text = "Analyzing your baked goods...",
-            modifier = Modifier.padding(top = 8.dp),
+            modifier = Modifier.padding(top = Dimensions.PADDING_SMALL),
             style = MaterialTheme.typography.bodyMedium
         )
     }
@@ -510,7 +464,7 @@ private fun ErrorSection(
     
     Column(
         modifier = modifier
-            .padding(16.dp)
+            .padding(Dimensions.PADDING_STANDARD)
             .semantics {
                 contentDescription = "Error occurred during analysis"
             },
@@ -530,7 +484,7 @@ private fun ErrorSection(
             text = errorIcon,
             style = MaterialTheme.typography.headlineLarge,
             modifier = Modifier
-                .padding(bottom = 16.dp)
+                .padding(bottom = Dimensions.PADDING_STANDARD)
                 .semantics {
                     contentDescription = "Error icon: ${errorState.errorType.name.lowercase().replace('_', ' ')}"
                 }
@@ -541,7 +495,7 @@ private fun ErrorSection(
             textAlign = TextAlign.Center,
             color = MaterialTheme.colorScheme.error,
             modifier = Modifier
-                .padding(bottom = 16.dp)
+                .padding(bottom = Dimensions.PADDING_STANDARD)
                 .verticalScroll(rememberScrollState())
                 .semantics {
                     contentDescription = "Error message and suggestions"
@@ -568,10 +522,10 @@ private fun ErrorActionButtons(
 ) {
     val context = LocalContext.current
     
-    if (canRetry) {
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+    Row(horizontalArrangement = Arrangement.spacedBy(Dimensions.PADDING_SMALL)) {
+        if (canRetry) {
             Button(
-                onClick = { 
+                onClick = {
                     onRetry()
                     AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.CLICK)
                 },
@@ -581,31 +535,13 @@ private fun ErrorActionButtons(
             ) {
                 Text(stringResource(R.string.action_retry))
             }
-            
-            Button(
-                onClick = { 
-                    onDismiss()
-                    AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.CLICK)
-                },
-                colors = androidx.compose.material3.ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.secondary
-                ),
-                modifier = Modifier.semantics {
-                    contentDescription = "Dismiss error button. Clear the error message"
-                }
-            ) {
-                Text(stringResource(R.string.action_dismiss))
-            }
         }
-    } else {
+        
         Button(
-            onClick = { 
+            onClick = {
                 onDismiss()
                 AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.CLICK)
             },
-            colors = androidx.compose.material3.ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.secondary
-            ),
             modifier = Modifier.semantics {
                 contentDescription = "Dismiss error button. Clear the error message"
             }
@@ -625,66 +561,47 @@ private fun RecipeResultsSection(
     
     Column(
         modifier = modifier
-            .padding(16.dp)
+            .padding(Dimensions.PADDING_STANDARD)
             .semantics {
                 contentDescription = "AI analysis results"
             }
     ) {
-        Text(
-            text = "Your Recipe",
-            style = MaterialTheme.typography.headlineSmall,
-            modifier = Modifier
-                .padding(bottom = 16.dp)
-                .semantics {
-                    contentDescription = "Recipe results section heading"
-                }
-        )
-        
-        val scrollState = rememberScrollState()
-        MarkdownText(
-            markdown = outputText,
-            style = MaterialTheme.typography.bodyLarge.copy(
-                color = MaterialTheme.colorScheme.onSurface,
-                textAlign = TextAlign.Start
-            ),
-            modifier = Modifier
-                .weight(1f)
-                .verticalScroll(scrollState)
-                .semantics {
-                    contentDescription = "AI-generated recipe and analysis"
-                }
-        )
-        
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 16.dp),
-            horizontalArrangement = Arrangement.Center
+                .padding(bottom = Dimensions.PADDING_STANDARD),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
+            Text(
+                text = stringResource(R.string.results_heading),
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.semantics {
+                    contentDescription = "AI analysis results section"
+                }
+            )
+            
             Button(
-                onClick = { 
+                onClick = {
                     onReportContent()
                     AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.CLICK)
                 },
-                colors = androidx.compose.material3.ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.error
-                ),
                 modifier = Modifier.semantics {
                     contentDescription = "Report content button. Report inappropriate AI-generated content"
                 }
             ) {
-                Text(stringResource(R.string.action_report_content))
+                Text(stringResource(R.string.action_report))
             }
         }
+        
+        MarkdownText(
+            markdown = outputText,
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .semantics {
+                    contentDescription = "AI-generated recipe and analysis: $outputText"
+                }
+        )
     }
-    
-    LaunchedEffect(outputText) {
-        AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.SUCCESS)
-    }
-}
-
-@Preview(showSystemUi = true)
-@Composable
-fun BakingScreenPreview() {
-    BakingScreen()
-}
+} 
