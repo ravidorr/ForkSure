@@ -20,6 +20,7 @@ object AppConstants {
     const val DEVELOPER_EMAIL = "ravidor@gmail.com"
     
     // Logging tags
+    const val TAG_APPLICATION = "ForkSureApplication"
     const val TAG_BAKING_VIEW_MODEL = "BakingViewModel"
     const val TAG_SECURITY_MANAGER = "SecurityManager"
     const val TAG_ERROR_HANDLER = "ErrorHandler"

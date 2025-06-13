@@ -57,7 +57,7 @@ fun SecurityStatusIndicator(
     // Initial status check
     LaunchedEffect(viewModel) {
         delay(SecurityConstants.INITIAL_DELAY_MS)
-        securityStatus = viewModel.getSecurityStatus(context)
+        securityStatus = viewModel.getSecurityStatus()
         rateLimitStatus = SecurityManager.checkRateLimit(context, "ai_requests")
         requestCount = viewModel.getRequestCount()
     }
@@ -68,7 +68,7 @@ fun SecurityStatusIndicator(
             delay(SecurityConstants.UPDATE_INTERVAL_MS)
             if (isActive) {
                 try {
-                    securityStatus = viewModel.getSecurityStatus(context)
+                    securityStatus = viewModel.getSecurityStatus()
                     rateLimitStatus = SecurityManager.checkRateLimit(context, "ai_requests")
                     requestCount = viewModel.getRequestCount()
                 } catch (e: Exception) {

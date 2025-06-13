@@ -9,7 +9,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -33,7 +33,7 @@ import com.ravidor.forksure.state.rememberNavigationState
 @Composable
 fun ForkSureNavigation(
     navController: NavHostController = rememberNavController(),
-    bakingViewModel: BakingViewModel = viewModel()
+    bakingViewModel: BakingViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
     

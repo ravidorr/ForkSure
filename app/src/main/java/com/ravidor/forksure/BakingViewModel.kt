@@ -1,37 +1,35 @@
 package com.ravidor.forksure
 
-import android.content.Context
 import android.graphics.Bitmap
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.ai.client.generativeai.GenerativeModel
-import com.google.ai.client.generativeai.type.content
-import kotlinx.coroutines.Dispatchers
+import com.ravidor.forksure.repository.AIRepository
+import com.ravidor.forksure.repository.SecurityRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 // Centralized constants imports
 import com.ravidor.forksure.AppConstants
 
-class BakingViewModel : ViewModel() {
+@HiltViewModel
+class BakingViewModel @Inject constructor(
+    private val aiRepository: AIRepository,
+    private val securityRepository: SecurityRepository
+) : ViewModel() {
+    
     private val _uiState: MutableStateFlow<UiState> =
         MutableStateFlow(UiState.Initial)
     val uiState: StateFlow<UiState> =
         _uiState.asStateFlow()
 
-    private val generativeModel = GenerativeModel(
-        modelName = "gemini-1.5-flash",
-        apiKey = BuildConfig.apiKey
-    )
-
     // Store last request for retry functionality
     private var lastBitmap: Bitmap? = null
     private var lastPrompt: String? = null
-    private var lastContext: Context? = null
     private var requestCount = 0
 
     companion object {
@@ -40,13 +38,12 @@ class BakingViewModel : ViewModel() {
 
     fun sendPrompt(
         bitmap: Bitmap,
-        prompt: String,
-        context: Context
+        prompt: String
     ) {
         viewModelScope.launch {
             try {
                 // 1. Check security environment
-                val securityCheck = SecurityManager.checkSecurityEnvironment(context)
+                val securityCheck = securityRepository.checkSecurityEnvironment()
                 if (securityCheck is SecurityEnvironmentResult.Insecure) {
                     Log.w(TAG, "Security issues detected: ${securityCheck.issues}")
                     _uiState.value = UiState.Error(
@@ -58,7 +55,7 @@ class BakingViewModel : ViewModel() {
                 }
 
                 // 2. Validate user input
-                val inputValidation = EnhancedErrorHandler.validateUserInput(prompt)
+                val inputValidation = securityRepository.validateUserInput(prompt)
                 when (inputValidation) {
                     is UserInputValidationResult.Invalid -> {
                         _uiState.value = UiState.Error(
@@ -71,25 +68,23 @@ class BakingViewModel : ViewModel() {
                     is UserInputValidationResult.Valid -> {
                         // Use sanitized input
                         val sanitizedPrompt = inputValidation.sanitizedInput
-                        processSafeRequest(bitmap, sanitizedPrompt, context)
+                        processSafeRequest(bitmap, sanitizedPrompt)
                     }
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Error in sendPrompt", e)
-                val enhancedError = EnhancedErrorHandler.handleError(context, e, prompt)
-                handleEnhancedError(enhancedError)
+                handleGenericError(e)
             }
         }
     }
 
     private suspend fun processSafeRequest(
         bitmap: Bitmap,
-        sanitizedPrompt: String,
-        context: Context
+        sanitizedPrompt: String
     ) {
         try {
             // 3. Check rate limiting
-            val rateLimitResult = SecurityManager.checkRateLimit(context, "ai_requests")
+            val rateLimitResult = securityRepository.checkRateLimit("ai_requests")
             when (rateLimitResult) {
                 is RateLimitResult.Blocked -> {
                     _uiState.value = UiState.Error(
@@ -107,42 +102,17 @@ class BakingViewModel : ViewModel() {
             // Store for potential retry (only after validation)
             lastBitmap = bitmap
             lastPrompt = sanitizedPrompt
-            lastContext = context
             requestCount++
 
             _uiState.value = UiState.Loading
 
-            // 4. Make AI request with timeout and error handling
-            viewModelScope.launch(Dispatchers.IO) {
-                try {
-                    val response = generativeModel.generateContent(
-                        content {
-                            image(bitmap)
-                            text(sanitizedPrompt)
-                        }
-                    )
-
-                    response.text?.let { outputContent ->
-                        // 5. Validate AI response for safety
-                        val responseValidation = EnhancedErrorHandler.processAIResponse(outputContent)
-                        handleAIResponse(responseValidation)
-                    } ?: run {
-                        _uiState.value = UiState.Error(
-                            "No response received from AI service. Please try again.",
-                            ErrorType.SERVER_ERROR,
-                            true
-                        )
-                    }
-                } catch (e: Exception) {
-                    Log.e(TAG, "AI request failed", e)
-                    val enhancedError = EnhancedErrorHandler.handleError(context, e, sanitizedPrompt, null)
-                    handleEnhancedError(enhancedError)
-                }
-            }
+            // 4. Make AI request through repository
+            val responseValidation = aiRepository.generateContent(bitmap, sanitizedPrompt)
+            handleAIResponse(responseValidation)
+            
         } catch (e: Exception) {
             Log.e(TAG, "Error in processSafeRequest", e)
-            val enhancedError = EnhancedErrorHandler.handleError(context, e, sanitizedPrompt)
-            handleEnhancedError(enhancedError)
+            handleGenericError(e)
         }
     }
 
@@ -178,61 +148,21 @@ class BakingViewModel : ViewModel() {
         }
     }
 
-    private fun handleEnhancedError(enhancedError: EnhancedErrorResult) {
-        when (enhancedError) {
-            is EnhancedErrorResult.Recoverable -> {
-                _uiState.value = UiState.Error(
-                    "${enhancedError.message} ${enhancedError.suggestion}",
-                    ErrorType.NETWORK,
-                    enhancedError.canRetry
-                )
-            }
-            is EnhancedErrorResult.Temporary -> {
-                _uiState.value = UiState.Error(
-                    "${enhancedError.message} ${enhancedError.suggestion}",
-                    ErrorType.QUOTA_EXCEEDED,
-                    false
-                )
-            }
-            is EnhancedErrorResult.UserError -> {
-                _uiState.value = UiState.Error(
-                    "${enhancedError.message} ${enhancedError.suggestion}",
-                    ErrorType.CONTENT_POLICY,
-                    false
-                )
-            }
-            is EnhancedErrorResult.ServiceError -> {
-                _uiState.value = UiState.Error(
-                    "${enhancedError.message} ${enhancedError.suggestion}",
-                    ErrorType.SERVER_ERROR,
-                    true
-                )
-            }
-            is EnhancedErrorResult.Critical -> {
-                _uiState.value = UiState.Error(
-                    "${enhancedError.message} ${enhancedError.suggestion}",
-                    ErrorType.UNKNOWN,
-                    false
-                )
-            }
-            is EnhancedErrorResult.Unknown -> {
-                _uiState.value = UiState.Error(
-                    "${enhancedError.message} ${enhancedError.suggestion}",
-                    ErrorType.UNKNOWN,
-                    true
-                )
-            }
-        }
+    private fun handleGenericError(error: Throwable) {
+        _uiState.value = UiState.Error(
+            "An unexpected error occurred: ${error.message}",
+            ErrorType.UNKNOWN,
+            true
+        )
     }
 
     fun retryLastRequest() {
         val bitmap = lastBitmap
         val prompt = lastPrompt
-        val context = lastContext
         
-        if (bitmap != null && prompt != null && context != null) {
+        if (bitmap != null && prompt != null) {
             Log.d(TAG, "Retrying last request (attempt ${requestCount + 1})")
-            sendPrompt(bitmap, prompt, context)
+            sendPrompt(bitmap, prompt)
         } else {
             Log.w(TAG, "Cannot retry: missing request data")
             _uiState.value = UiState.Error(
@@ -249,8 +179,8 @@ class BakingViewModel : ViewModel() {
         }
     }
 
-    fun getSecurityStatus(context: Context): SecurityEnvironmentResult {
-        return SecurityManager.checkSecurityEnvironment(context)
+    suspend fun getSecurityStatus(): SecurityEnvironmentResult {
+        return securityRepository.checkSecurityEnvironment()
     }
 
     fun getRequestCount(): Int = requestCount
@@ -260,7 +190,6 @@ class BakingViewModel : ViewModel() {
         // Clear sensitive data
         lastBitmap = null
         lastPrompt = null
-        lastContext = null
         Log.d(TAG, "ViewModel cleared, sensitive data removed")
     }
 }

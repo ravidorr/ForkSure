@@ -116,7 +116,7 @@ fun MainScreen(
             state = mainScreenState,
             onNavigateToCamera = onNavigateToCamera,
             onAnalyze = { bitmap, prompt ->
-                bakingViewModel.sendPrompt(bitmap, prompt, context)
+                bakingViewModel.sendPrompt(bitmap, prompt)
             },
             onSubmitReport = { report ->
                 coroutineScope.launch {
@@ -163,14 +163,14 @@ private fun MainScreenContent(
     val handleAnalyzeClick: () -> Unit = {
         if (state.hasSelectedCapturedImage) {
             state.capturedImage?.let { bitmap ->
-                bakingViewModel.sendPrompt(bitmap, state.prompt, context)
+                bakingViewModel.sendPrompt(bitmap, state.prompt)
             }
         } else if (state.hasSelectedSampleImage) {
             val bitmap = BitmapFactory.decodeResource(
                 context.resources,
                 SampleDataConstants.SAMPLE_IMAGES[state.selectedImageIndex]
             )
-            bakingViewModel.sendPrompt(bitmap, state.prompt, context)
+            bakingViewModel.sendPrompt(bitmap, state.prompt)
         }
     }
     
