@@ -341,4 +341,154 @@ class MainScreenIntegrationTest {
         composeTestRule.onNodeWithContentDescription("Analyze button. Start AI analysis of selected image with your prompt")
             .assertIsDisplayed()
     }
+
+    @Test
+    fun mainScreen_successfulAnalysis_showsPrintButton() {
+        // Setup successful AI response
+        fakeAIRepository.setSuccessResponse("# Chocolate Chip Cookies\n\nDelicious homemade cookies with chocolate chips.")
+
+        composeTestRule.setContent {
+            ForkSureTheme {
+                val selectedImage = remember { androidx.compose.runtime.mutableIntStateOf(0) }
+                MainScreen(
+                    bakingViewModel = bakingViewModel,
+                    capturedImage = null,
+                    selectedImage = selectedImage,
+                    onNavigateToCamera = {},
+                    onCapturedImageUpdated = {}
+                )
+            }
+        }
+
+        // Enter prompt and analyze
+        composeTestRule.onNodeWithContentDescription("Prompt input field. Enter your question about the baked goods")
+            .performTextInput("What is this recipe?")
+        
+        composeTestRule.onNodeWithContentDescription("Analyze button. Start AI analysis of selected image with your prompt")
+            .performClick()
+
+        // Wait for results and verify print button is displayed
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithText("Results").assertIsDisplayed()
+        composeTestRule.onNodeWithContentDescription("Print recipe button. Print the AI-generated recipe").assertIsDisplayed()
+        composeTestRule.onNodeWithText("🖨️ Print").assertIsDisplayed()
+    }
+
+    @Test
+    fun mainScreen_printAndReportButtons_displayedTogether() {
+        // Setup successful AI response
+        fakeAIRepository.setSuccessResponse("Recipe content for testing print and report buttons")
+
+        composeTestRule.setContent {
+            ForkSureTheme {
+                val selectedImage = remember { androidx.compose.runtime.mutableIntStateOf(0) }
+                MainScreen(
+                    bakingViewModel = bakingViewModel,
+                    capturedImage = null,
+                    selectedImage = selectedImage,
+                    onNavigateToCamera = {},
+                    onCapturedImageUpdated = {}
+                )
+            }
+        }
+
+        // Enter prompt and analyze
+        composeTestRule.onNodeWithContentDescription("Prompt input field. Enter your question about the baked goods")
+            .performTextInput("Analyze this recipe")
+        
+        composeTestRule.onNodeWithContentDescription("Analyze button. Start AI analysis of selected image with your prompt")
+            .performClick()
+
+        // Wait for results and verify both buttons are displayed
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithContentDescription("Print recipe button. Print the AI-generated recipe").assertIsDisplayed()
+        composeTestRule.onNodeWithContentDescription("Report content button. Report inappropriate AI-generated content").assertIsDisplayed()
+        composeTestRule.onNodeWithText("🖨️ Print").assertIsDisplayed()
+        composeTestRule.onNodeWithText("🚩 Report").assertIsDisplayed()
+    }
+
+    @Test
+    fun mainScreen_printButton_isClickable() {
+        // Setup successful AI response
+        fakeAIRepository.setSuccessResponse("Test recipe for print functionality")
+
+        composeTestRule.setContent {
+            ForkSureTheme {
+                val selectedImage = remember { androidx.compose.runtime.mutableIntStateOf(0) }
+                MainScreen(
+                    bakingViewModel = bakingViewModel,
+                    capturedImage = null,
+                    selectedImage = selectedImage,
+                    onNavigateToCamera = {},
+                    onCapturedImageUpdated = {}
+                )
+            }
+        }
+
+        // Enter prompt and analyze
+        composeTestRule.onNodeWithContentDescription("Prompt input field. Enter your question about the baked goods")
+            .performTextInput("Test recipe")
+        
+        composeTestRule.onNodeWithContentDescription("Analyze button. Start AI analysis of selected image with your prompt")
+            .performClick()
+
+        // Wait for results and verify print button is clickable
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithContentDescription("Print recipe button. Print the AI-generated recipe")
+            .assertIsEnabled()
+            .performClick() // This should not crash the test
+    }
+
+    @Test
+    fun mainScreen_noResults_noPrintButton() {
+        composeTestRule.setContent {
+            ForkSureTheme {
+                val selectedImage = remember { androidx.compose.runtime.mutableIntStateOf(0) }
+                MainScreen(
+                    bakingViewModel = bakingViewModel,
+                    capturedImage = null,
+                    selectedImage = selectedImage,
+                    onNavigateToCamera = {},
+                    onCapturedImageUpdated = {}
+                )
+            }
+        }
+
+        // Verify print button is not displayed in initial state
+        composeTestRule.onNodeWithContentDescription("Print recipe button. Print the AI-generated recipe")
+            .assertDoesNotExist()
+    }
+
+    @Test
+    fun mainScreen_errorState_noPrintButton() {
+        // Setup error response
+        fakeAIRepository.setErrorResponse("Analysis failed")
+
+        composeTestRule.setContent {
+            ForkSureTheme {
+                val selectedImage = remember { androidx.compose.runtime.mutableIntStateOf(0) }
+                MainScreen(
+                    bakingViewModel = bakingViewModel,
+                    capturedImage = null,
+                    selectedImage = selectedImage,
+                    onNavigateToCamera = {},
+                    onCapturedImageUpdated = {}
+                )
+            }
+        }
+
+        // Enter prompt and analyze (will fail)
+        composeTestRule.onNodeWithContentDescription("Prompt input field. Enter your question about the baked goods")
+            .performTextInput("What is this?")
+        
+        composeTestRule.onNodeWithContentDescription("Analyze button. Start AI analysis of selected image with your prompt")
+            .performClick()
+
+        composeTestRule.waitForIdle()
+
+        // Verify print button is not displayed in error state
+        composeTestRule.onNodeWithContentDescription("Print recipe button. Print the AI-generated recipe")
+            .assertDoesNotExist()
+        composeTestRule.onNodeWithContentDescription("Error occurred during analysis").assertIsDisplayed()
+    }
 } 
