@@ -70,7 +70,7 @@ object PrintHelper {
     /**
      * Convert markdown recipe content to formatted HTML for printing
      */
-    private fun convertRecipeToHtml(markdownContent: String, recipeName: String): String {
+    fun convertRecipeToHtml(markdownContent: String, recipeName: String): String {
         val timestamp = SimpleDateFormat("MMM dd, yyyy 'at' HH:mm", Locale.getDefault()).format(Date())
         
         // Basic markdown to HTML conversion
@@ -200,7 +200,7 @@ object PrintHelper {
     /**
      * Generate a unique job name for the print job
      */
-    private fun generateJobName(recipeName: String): String {
+    fun generateJobName(recipeName: String): String {
         val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
         val cleanName = recipeName.replace(Regex("[^a-zA-Z0-9\\s]"), "").take(20)
         return "ForkSure_${cleanName}_$timestamp"
