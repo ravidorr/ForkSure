@@ -696,7 +696,7 @@ private fun RecipeResultsSection(
                     contentDescription = "Print recipe button. Print the AI-generated recipe"
                 }
             ) {
-                Text("🖨️ Print")
+                Text(stringResource(R.string.action_print))
             }
             
             // Report button
