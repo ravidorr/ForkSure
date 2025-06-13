@@ -3,12 +3,10 @@ package com.ravidor.forksure.navigation
 import android.graphics.Bitmap
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -25,9 +23,11 @@ import com.ravidor.forksure.NavigationConstants.ACCESSIBILITY_NAVIGATION_TO_MAIN
 import com.ravidor.forksure.NavigationConstants.ROUTE_CAMERA
 import com.ravidor.forksure.NavigationConstants.ROUTE_MAIN
 import com.ravidor.forksure.screens.MainScreen
+import com.ravidor.forksure.state.NavigationState
+import com.ravidor.forksure.state.rememberNavigationState
 
 /**
- * Main navigation composable for the ForkSure app
+ * Main navigation composable for the ForkSure app with proper state hoisting
  * Manages navigation between main screen and camera screen
  */
 @Composable
@@ -37,9 +37,8 @@ fun ForkSureNavigation(
 ) {
     val context = LocalContext.current
     
-    // Shared state for captured images and selections
-    var capturedImage by remember { mutableStateOf<Bitmap?>(null) }
-    val selectedImage = remember { mutableIntStateOf(0) }
+    // Centralized navigation state management
+    val navigationState = rememberNavigationState()
     
     NavHost(
         navController = navController,
@@ -55,15 +54,13 @@ fun ForkSureNavigation(
             
             MainScreen(
                 bakingViewModel = bakingViewModel,
-                capturedImage = capturedImage,
-                selectedImage = selectedImage,
+                capturedImage = navigationState.capturedImage,
+                selectedImage = navigationState.selectedImageState,
                 onNavigateToCamera = {
                     AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.CLICK)
                     navController.navigate(ROUTE_CAMERA)
                 },
-                onCapturedImageUpdated = { bitmap ->
-                    capturedImage = bitmap
-                }
+                onCapturedImageUpdated = navigationState::updateCapturedImage
             )
         }
         
@@ -77,8 +74,8 @@ fun ForkSureNavigation(
             
             CameraCapture(
                 onImageCaptured = { bitmap ->
-                    capturedImage = bitmap
-                    selectedImage.intValue = -1 // Indicate captured image is selected
+                    navigationState.updateCapturedImage(bitmap)
+                    navigationState.selectCapturedImage()
                     AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.SUCCESS)
                     navController.popBackStack()
                 },
