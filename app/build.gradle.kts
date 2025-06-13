@@ -28,7 +28,7 @@ android {
         versionCode = 6
         versionName = "1.1.5"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.ravidor.forksure.HiltTestRunner"
     }
 
     signingConfigs {
@@ -109,11 +109,44 @@ dependencies {
     // Markdown rendering for Compose
     implementation("com.github.jeziellago:compose-markdown:0.5.4")
     
+    // Unit Testing
     testImplementation(libs.junit)
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+    testImplementation("androidx.arch.core:core-testing:2.2.0")
+    testImplementation("io.mockk:mockk:1.13.8")
+    testImplementation("app.cash.turbine:turbine:1.0.0")
+    testImplementation("com.google.truth:truth:1.1.4")
+    
+    // Hilt Testing
+    testImplementation("com.google.dagger:hilt-android-testing:2.48")
+    kaptTest("com.google.dagger:hilt-android-compiler:2.48")
+    
+    // Robolectric for Android unit tests
+    testImplementation("org.robolectric:robolectric:4.11.1")
+    
+    // Instrumented Testing
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.test:runner:1.5.2")
+    androidTestImplementation("androidx.test:rules:1.5.0")
+    androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+    androidTestImplementation("io.mockk:mockk-android:1.13.8")
+    androidTestImplementation("com.google.truth:truth:1.1.4")
+    
+    // Hilt Instrumented Testing
+    androidTestImplementation("com.google.dagger:hilt-android-testing:2.48")
+    kaptAndroidTest("com.google.dagger:hilt-android-compiler:2.48")
+    
+    // Compose Testing
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
+    androidTestImplementation("androidx.compose.ui:ui-test-manifest")
+    androidTestImplementation("androidx.navigation:navigation-testing:2.7.6")
+    androidTestImplementation("androidx.hilt:hilt-navigation-compose:1.1.0")
+    
+    // Debug implementations
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 }
