@@ -5,12 +5,17 @@ import android.util.Log
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import javax.net.ssl.SSLException
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
+
+// Centralized constants imports
+import com.ravidor.forksure.AppConstants
 
 /**
  * Enhanced error handler with security integration
  */
 object EnhancedErrorHandler {
-    private const val TAG = "EnhancedErrorHandler"
+    private const val TAG = AppConstants.TAG_ENHANCED_ERROR_HANDLER
     
     /**
      * Processes and categorizes errors with security considerations

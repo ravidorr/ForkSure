@@ -6,9 +6,13 @@ import android.net.NetworkCapabilities
 import android.util.Log
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
+import androidx.compose.runtime.Composable
+
+// Centralized constants imports
+import com.ravidor.forksure.AppConstants
 
 object ErrorHandler {
-    private const val TAG = "ErrorHandler"
+    private const val TAG = AppConstants.TAG_ERROR_HANDLER
 
     /**
      * Check if device has network connectivity

@@ -54,25 +54,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
 import dev.jeziellago.compose.markdowntext.MarkdownText
 
-/**
- * Constants for the baking screen
- */
-object BakingConstants {
-    val SAMPLE_IMAGES = arrayOf(
-        // Image generated using Gemini from the prompt "cupcake image"
-        R.drawable.baked_goods_1,
-        // Image generated using Gemini from the prompt "cookies images"
-        R.drawable.baked_goods_2,
-        // Image generated using Gemini from the prompt "cake images"
-        R.drawable.baked_goods_3,
-    )
-    
-    val IMAGE_DESCRIPTIONS = arrayOf(
-        R.string.image1_description,
-        R.string.image2_description,
-        R.string.image3_description,
-    )
-}
+// Centralized constants imports
+import com.ravidor.forksure.SampleDataConstants
+import com.ravidor.forksure.Dimensions
+
+// Constants moved to centralized Constants.kt file
 
 @Composable
 fun BakingScreen(
@@ -124,7 +110,7 @@ fun BakingScreen(
                 } else {
                     BitmapFactory.decodeResource(
                         context.resources,
-                        BakingConstants.SAMPLE_IMAGES[selectedImage.intValue]
+                        SampleDataConstants.SAMPLE_IMAGES[selectedImage.intValue]
                     )
                 }
                 bakingViewModel.sendPrompt(bitmap, prompt, context)
@@ -160,7 +146,7 @@ private fun BakingMainContent(
         // Security status indicator
         SecurityStatusIndicator(
             viewModel = bakingViewModel,
-            modifier = Modifier.padding(bottom = 8.dp)
+            modifier = Modifier.padding(bottom = Dimensions.PADDING_SMALL)
         )
 
         // Camera section
@@ -179,8 +165,8 @@ private fun BakingMainContent(
 
         // Sample images section
         SampleImagesSection(
-            images = BakingConstants.SAMPLE_IMAGES,
-            imageDescriptions = BakingConstants.IMAGE_DESCRIPTIONS,
+            images = SampleDataConstants.SAMPLE_IMAGES,
+            imageDescriptions = SampleDataConstants.IMAGE_DESCRIPTIONS,
             selectedImageIndex = selectedImage.value,
             onImageSelected = onSampleImageSelected
         )
