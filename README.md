@@ -82,4 +82,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ---
 
-*Transform any photo into a baking opportunity with ForkSure! 🧁✨* 
+*Transform any photo into a baking opportunity with ForkSure! 🧁✨*
