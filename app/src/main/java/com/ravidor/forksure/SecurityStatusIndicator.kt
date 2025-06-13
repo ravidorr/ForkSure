@@ -20,6 +20,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -34,6 +35,21 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+
+/**
+ * Constants for security status updates
+ */
+private object SecurityStatusConstants {
+    const val UPDATE_INTERVAL_MS = 5000L // 5 seconds
+    const val INITIAL_DELAY_MS = 100L // Small initial delay
+    const val LOW_REQUESTS_THRESHOLD = 3 // Show warning when requests < 3
+    
+    // Status colors
+    val SUCCESS_COLOR = Color(0xFF4CAF50) // Green
+    val WARNING_COLOR = Color(0xFFFF9800) // Orange  
+    val ERROR_COLOR = Color(0xFFF44336) // Red
+}
 
 @Composable
 fun SecurityStatusIndicator(
@@ -45,13 +61,28 @@ fun SecurityStatusIndicator(
     var rateLimitStatus by remember { mutableStateOf<RateLimitResult?>(null) }
     var requestCount by remember { mutableStateOf(0) }
 
-    // Update status periodically
-    LaunchedEffect(Unit) {
-        while (true) {
-            securityStatus = viewModel.getSecurityStatus(context)
-            rateLimitStatus = SecurityManager.checkRateLimit(context, "ai_requests")
-            requestCount = viewModel.getRequestCount()
-            delay(5000) // Update every 5 seconds
+    // Initial status check
+    LaunchedEffect(viewModel) {
+        delay(SecurityStatusConstants.INITIAL_DELAY_MS)
+        securityStatus = viewModel.getSecurityStatus(context)
+        rateLimitStatus = SecurityManager.checkRateLimit(context, "ai_requests")
+        requestCount = viewModel.getRequestCount()
+    }
+
+    // Periodic status updates with proper lifecycle management
+    LaunchedEffect(viewModel) {
+        while (isActive) {
+            delay(SecurityStatusConstants.UPDATE_INTERVAL_MS)
+            if (isActive) {
+                try {
+                    securityStatus = viewModel.getSecurityStatus(context)
+                    rateLimitStatus = SecurityManager.checkRateLimit(context, "ai_requests")
+                    requestCount = viewModel.getRequestCount()
+                } catch (e: Exception) {
+                    // Handle potential errors gracefully
+                    android.util.Log.w("SecurityStatusIndicator", "Error updating status", e)
+                }
+            }
         }
     }
 
@@ -61,8 +92,9 @@ fun SecurityStatusIndicator(
         securityStatus is SecurityEnvironmentResult.Insecure -> true
         // Show if rate limited/blocked
         rateLimitStatus is RateLimitResult.Blocked -> true
-        // Show if low on requests (less than 3 remaining)
-        rateLimitStatus is RateLimitResult.Allowed && (rateLimitStatus as RateLimitResult.Allowed).requestsRemaining < 3 -> true
+        // Show if low on requests (less than threshold remaining)
+        rateLimitStatus is RateLimitResult.Allowed && 
+            (rateLimitStatus as RateLimitResult.Allowed).requestsRemaining < SecurityStatusConstants.LOW_REQUESTS_THRESHOLD -> true
         // Hide when everything is normal
         else -> false
     }
@@ -122,12 +154,12 @@ private fun SecurityStatusItem(
         val (icon, color, text) = when (status) {
             is SecurityEnvironmentResult.Secure -> Triple(
                 Icons.Default.Check,
-                Color(0xFF4CAF50), // Green
+                SecurityStatusConstants.SUCCESS_COLOR,
                 "Secure"
             )
             is SecurityEnvironmentResult.Insecure -> Triple(
                 Icons.Default.Warning,
-                Color(0xFFFF9800), // Orange
+                SecurityStatusConstants.WARNING_COLOR,
                 "Warning"
             )
             null -> Triple(
@@ -183,14 +215,14 @@ private fun RateLimitStatusItem(
             is RateLimitResult.Allowed -> {
                 val remaining = rateLimitStatus.requestsRemaining
                 val color = when {
-                    remaining > 5 -> Color(0xFF4CAF50) // Green
-                    remaining > 2 -> Color(0xFFFF9800) // Orange
-                    else -> Color(0xFFF44336) // Red
+                    remaining > 5 -> SecurityStatusConstants.SUCCESS_COLOR
+                    remaining > 2 -> SecurityStatusConstants.WARNING_COLOR
+                    else -> SecurityStatusConstants.ERROR_COLOR
                 }
                 color to "$remaining left"
             }
             is RateLimitResult.Blocked -> {
-                Color(0xFFF44336) to "Blocked"
+                SecurityStatusConstants.ERROR_COLOR to "Blocked"
             }
             null -> {
                 MaterialTheme.colorScheme.onSurfaceVariant to "..."
@@ -233,7 +265,7 @@ fun SecurityWarningBanner(
                 contentDescription = "Security warning: ${issues.joinToString(", ")}"
             },
         colors = CardDefaults.cardColors(
-            containerColor = Color(0xFFFFEBEE) // Light red background
+            containerColor = SecurityStatusConstants.ERROR_COLOR.copy(alpha = 0.1f)
         ),
         shape = RoundedCornerShape(8.dp)
     ) {
@@ -246,13 +278,13 @@ fun SecurityWarningBanner(
                 Icon(
                     imageVector = Icons.Default.Warning,
                     contentDescription = "",
-                    tint = Color(0xFFF44336),
+                    tint = SecurityStatusConstants.ERROR_COLOR,
                     modifier = Modifier.size(24.dp)
                 )
                 Text(
                     text = "Security Warning",
                     style = MaterialTheme.typography.titleMedium,
-                    color = Color(0xFFF44336),
+                    color = SecurityStatusConstants.ERROR_COLOR,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(start = 8.dp)
                 )
