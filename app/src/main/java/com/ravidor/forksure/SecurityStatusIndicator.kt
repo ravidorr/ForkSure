@@ -55,22 +55,35 @@ fun SecurityStatusIndicator(
         }
     }
 
-    Card(
+    // Only show when there are issues or important information
+    val shouldShow = when {
+        // Show if security is insecure
+        securityStatus is SecurityEnvironmentResult.Insecure -> true
+        // Show if rate limited/blocked
+        rateLimitStatus is RateLimitResult.Blocked -> true
+        // Show if low on requests (less than 3 remaining)
+        rateLimitStatus is RateLimitResult.Allowed && (rateLimitStatus as RateLimitResult.Allowed).requestsRemaining < 3 -> true
+        // Hide when everything is normal
+        else -> false
+    }
+
+    if (shouldShow) {
+        Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 4.dp)
+            .padding(horizontal = 16.dp, vertical = 2.dp)
             .semantics {
                 contentDescription = "Security and rate limit status indicator"
             },
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.7f)
         ),
-        shape = RoundedCornerShape(8.dp)
+        shape = RoundedCornerShape(6.dp)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(12.dp),
+                .padding(horizontal = 12.dp, vertical = 6.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -87,6 +100,7 @@ fun SecurityStatusIndicator(
                 modifier = Modifier.weight(1f)
             )
         }
+    }
     }
 }
 
@@ -125,7 +139,7 @@ private fun SecurityStatusItem(
 
         Box(
             modifier = Modifier
-                .size(8.dp)
+                .size(6.dp)
                 .background(color, CircleShape)
         )
 
@@ -133,17 +147,17 @@ private fun SecurityStatusItem(
             imageVector = icon,
             contentDescription = "",
             modifier = Modifier
-                .size(16.dp)
-                .padding(start = 4.dp),
+                .size(12.dp)
+                .padding(start = 3.dp),
             tint = color
         )
 
         Text(
             text = text,
-            style = MaterialTheme.typography.bodySmall,
+            style = MaterialTheme.typography.labelSmall,
             color = color,
             fontWeight = FontWeight.Medium,
-            modifier = Modifier.padding(start = 4.dp)
+            modifier = Modifier.padding(start = 3.dp)
         )
     }
 }
@@ -185,13 +199,13 @@ private fun RateLimitStatusItem(
 
         Text(
             text = "Requests: ",
-            style = MaterialTheme.typography.bodySmall,
+            style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
         Text(
             text = text,
-            style = MaterialTheme.typography.bodySmall,
+            style = MaterialTheme.typography.labelSmall,
             color = color,
             fontWeight = FontWeight.Medium
         )
@@ -199,7 +213,7 @@ private fun RateLimitStatusItem(
         if (requestCount > 0) {
             Text(
                 text = " ($requestCount used)",
-                style = MaterialTheme.typography.bodySmall,
+                style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
             )
         }

@@ -96,6 +96,9 @@ dependencies {
     // Lifecycle compose
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.7.0")
     
+    // Markdown rendering for Compose
+    implementation("com.github.jeziellago:compose-markdown:0.5.4")
+    
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

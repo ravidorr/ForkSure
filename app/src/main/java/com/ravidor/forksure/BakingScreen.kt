@@ -32,6 +32,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -51,20 +52,27 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
+import dev.jeziellago.compose.markdowntext.MarkdownText
 
-val images = arrayOf(
-    // Image generated using Gemini from the prompt "cupcake image"
-    R.drawable.baked_goods_1,
-    // Image generated using Gemini from the prompt "cookies images"
-    R.drawable.baked_goods_2,
-    // Image generated using Gemini from the prompt "cake images"
-    R.drawable.baked_goods_3,
-)
-val imageDescriptions = arrayOf(
-    R.string.image1_description,
-    R.string.image2_description,
-    R.string.image3_description,
-)
+/**
+ * Constants for the baking screen
+ */
+object BakingConstants {
+    val SAMPLE_IMAGES = arrayOf(
+        // Image generated using Gemini from the prompt "cupcake image"
+        R.drawable.baked_goods_1,
+        // Image generated using Gemini from the prompt "cookies images"
+        R.drawable.baked_goods_2,
+        // Image generated using Gemini from the prompt "cake images"
+        R.drawable.baked_goods_3,
+    )
+    
+    val IMAGE_DESCRIPTIONS = arrayOf(
+        R.string.image1_description,
+        R.string.image2_description,
+        R.string.image3_description,
+    )
+}
 
 @Composable
 fun BakingScreen(
@@ -96,413 +104,187 @@ fun BakingScreen(
             }
         )
     } else {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .semantics { 
-                    contentDescription = "ForkSure baking assistant main screen"
+        BakingMainContent(
+            selectedImage = selectedImage,
+            capturedImage = capturedImage,
+            prompt = prompt,
+            result = result,
+            uiState = uiState,
+            bakingViewModel = bakingViewModel,
+            onTakePhoto = { showCamera = true },
+            onCapturedImageClick = { selectedImage.intValue = -1 },
+            onSampleImageSelected = { index ->
+                selectedImage.intValue = index
+                capturedImage = null
+            },
+            onPromptChange = { prompt = it },
+            onAnalyzeClick = {
+                val bitmap = if (capturedImage != null && selectedImage.intValue == -1) {
+                    capturedImage!!
+                } else {
+                    BitmapFactory.decodeResource(
+                        context.resources,
+                        BakingConstants.SAMPLE_IMAGES[selectedImage.intValue]
+                    )
                 }
-        ) {
-            // Main heading
-            Text(
-                text = stringResource(R.string.baking_title),
-                style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier
-                    .padding(16.dp)
-                    .semantics {
-                        contentDescription = "ForkSure - Baking with AI, main heading"
-                    }
+                bakingViewModel.sendPrompt(bitmap, prompt, context)
+            }
+        )
+    }
+}
+
+@Composable
+private fun BakingMainContent(
+    selectedImage: androidx.compose.runtime.MutableIntState,
+    capturedImage: Bitmap?,
+    prompt: String,
+    result: String,
+    uiState: UiState,
+    bakingViewModel: BakingViewModel,
+    onTakePhoto: () -> Unit,
+    onCapturedImageClick: () -> Unit,
+    onSampleImageSelected: (Int) -> Unit,
+    onPromptChange: (String) -> Unit,
+    onAnalyzeClick: () -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .semantics { 
+                contentDescription = "ForkSure baking assistant main screen"
+            }
+    ) {
+        // Main heading
+        BakingScreenHeader()
+
+        // Security status indicator
+        SecurityStatusIndicator(
+            viewModel = bakingViewModel,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+
+        // Camera section
+        CameraSection(
+            onTakePhoto = onTakePhoto
+        )
+
+        // Show captured image if available
+        capturedImage?.let { bitmap ->
+            CapturedImageCard(
+                bitmap = bitmap,
+                isSelected = selectedImage.value == -1,
+                onImageClick = onCapturedImageClick
             )
+        }
 
-            // Security status indicator
-            SecurityStatusIndicator(
-                viewModel = bakingViewModel,
-                modifier = Modifier.padding(bottom = 8.dp)
+        // Sample images section
+        SampleImagesSection(
+            images = BakingConstants.SAMPLE_IMAGES,
+            imageDescriptions = BakingConstants.IMAGE_DESCRIPTIONS,
+            selectedImageIndex = selectedImage.value,
+            onImageSelected = onSampleImageSelected
+        )
+
+        // Input section
+        val isAnalyzeEnabled = prompt.isNotEmpty() && (capturedImage != null || selectedImage.value >= 0)
+        PromptInputSection(
+            prompt = prompt,
+            onPromptChange = onPromptChange,
+            isAnalyzeEnabled = isAnalyzeEnabled,
+            onAnalyzeClick = onAnalyzeClick
+        )
+
+        // Results section
+        BakingResultsSection(
+            uiState = uiState,
+            result = result,
+            bakingViewModel = bakingViewModel
+        )
+    }
+}
+
+@Composable
+private fun BakingScreenHeader() {
+    Text(
+        text = stringResource(R.string.baking_title),
+        style = MaterialTheme.typography.titleLarge,
+        modifier = Modifier
+            .padding(16.dp)
+            .semantics {
+                contentDescription = "ForkSure - Baking with AI, main heading"
+            }
+    )
+}
+
+@Composable
+private fun BakingResultsSection(
+    uiState: UiState,
+    result: String,
+    bakingViewModel: BakingViewModel
+) {
+    when (uiState) {
+        is UiState.Loading -> {
+            LoadingSection(
+                modifier = Modifier.fillMaxSize()
             )
-
-            // Camera section
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Button(
-                    onClick = { 
-                        showCamera = true
-                        AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.CLICK)
-                    },
-                    modifier = Modifier
-                        .padding(bottom = 8.dp)
-                        .semantics {
-                            contentDescription = "Take photo button. Opens camera to capture baked goods"
-                        }
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = "", // Handled by button description
-                        modifier = Modifier.padding(end = 8.dp)
-                    )
-                    Text(stringResource(R.string.take_photo))
-                }
-            }
-
-            // Show captured image if available
-            capturedImage?.let { bitmap ->
-                Card(
-                    modifier = Modifier
-                        .padding(16.dp)
-                        .fillMaxWidth()
-                        .height(200.dp)
-                        .clickable { 
-                            selectedImage.intValue = -1
-                            AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.CLICK)
-                        }
-                        .then(
-                            if (selectedImage.intValue == -1) {
-                                Modifier.border(BorderStroke(4.dp, MaterialTheme.colorScheme.primary))
-                            } else Modifier
-                        )
-                        .semantics {
-                            contentDescription = if (selectedImage.intValue == -1) {
-                                "Captured image, currently selected for analysis"
-                            } else {
-                                "Captured image, tap to select for analysis"
-                            }
-                        }
-                ) {
-                    Image(
-                        bitmap = bitmap.asImageBitmap(),
-                        contentDescription = "", // Handled by Card
-                        modifier = Modifier.fillMaxSize()
-                    )
-                }
-            }
-
-            // Sample images section
-            Text(
-                text = stringResource(R.string.or_choose_sample),
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
-                    .semantics {
-                        contentDescription = "Sample images section heading"
-                    }
+        }
+        is UiState.Error -> {
+            ErrorSection(
+                errorState = uiState,
+                onRetry = { bakingViewModel.retryLastRequest() },
+                onDismiss = { bakingViewModel.clearError() },
+                modifier = Modifier.fillMaxSize()
             )
-
-            LazyRow(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .semantics {
-                        contentDescription = "Horizontal list of sample baking images"
-                    }
-            ) {
-                itemsIndexed(images) { index, image ->
-                    val isSelected = index == selectedImage.intValue
-                    val imageDescription = stringResource(imageDescriptions[index])
-                    
-                    var imageModifier = Modifier
-                        .padding(start = 8.dp, end = 8.dp)
-                        .requiredSize(200.dp)
-                        .clickable {
-                            selectedImage.intValue = index
-                            capturedImage = null // Clear captured image when selecting preset
-                            AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.CLICK)
-                        }
-                        .semantics {
-                            contentDescription = if (isSelected) {
-                                "$imageDescription sample image, currently selected for analysis"
-                            } else {
-                                "$imageDescription sample image, tap to select for analysis"
-                            }
-                        }
-                        
-                    if (isSelected) {
-                        imageModifier = imageModifier.border(BorderStroke(4.dp, MaterialTheme.colorScheme.primary))
-                    }
-                    
-                    Image(
-                        painter = painterResource(image),
-                        contentDescription = "", // Handled by modifier
-                        modifier = imageModifier
-                    )
-                }
-            }
-
-            // Input section
-            Row(
-                modifier = Modifier
-                    .padding(all = 16.dp)
-                    .semantics {
-                        contentDescription = "Analysis input section"
-                    }
-            ) {
-                TextField(
-                    value = prompt,
-                    label = { Text(stringResource(R.string.label_prompt)) },
-                    onValueChange = { prompt = it },
-                    modifier = Modifier
-                        .weight(0.8f)
-                        .padding(end = 16.dp)
-                        .align(Alignment.CenterVertically)
-                        .semantics {
-                            contentDescription = "Prompt input field. Enter your question about the baked goods"
-                        }
-                )
-
-                val isAnalyzeEnabled = prompt.isNotEmpty() && (capturedImage != null || selectedImage.intValue >= 0)
-                Button(
-                    onClick = {
-                        val bitmap = if (capturedImage != null && selectedImage.intValue == -1) {
-                            capturedImage!!
-                        } else {
-                            BitmapFactory.decodeResource(
-                                context.resources,
-                                images[selectedImage.intValue]
-                            )
-                        }
-                        bakingViewModel.sendPrompt(bitmap, prompt, context)
-                        AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.CLICK)
-                    },
-                    enabled = isAnalyzeEnabled,
-                    modifier = Modifier
-                        .align(Alignment.CenterVertically)
-                        .semantics {
-                            contentDescription = if (isAnalyzeEnabled) {
-                                "Analyze button. Start AI analysis of selected image with your prompt"
-                            } else {
-                                "Analyze button. Disabled. Select an image and enter a prompt to enable"
-                            }
-                        }
-                ) {
-                    Text(text = stringResource(R.string.action_go))
-                }
-            }
-
-            // Results section
-            if (uiState is UiState.Loading) {
-                Column(
-                    modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
-                        .semantics {
-                            contentDescription = "Loading AI analysis results"
-                        }
-                ) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.align(Alignment.CenterHorizontally)
-                    )
-                    Text(
-                        text = "Analyzing your baked goods...",
-                        modifier = Modifier
-                            .padding(top = 8.dp)
-                            .align(Alignment.CenterHorizontally),
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                }
-            } else {
-                when (val currentState = uiState) {
-                    is UiState.Error -> {
-                        // Enhanced error display
-                        Column(
-                            modifier = Modifier
-                                .align(Alignment.CenterHorizontally)
-                                .padding(16.dp)
-                                .fillMaxSize()
-                                .semantics {
-                                    contentDescription = "Error occurred during analysis"
-                                },
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            // Error icon based on error type
-                            val errorIcon = when (currentState.errorType) {
-                                ErrorType.NETWORK -> "📶"
-                                ErrorType.API_KEY -> "🔑"
-                                ErrorType.QUOTA_EXCEEDED -> "⏰"
-                                ErrorType.CONTENT_POLICY -> "🚫"
-                                ErrorType.IMAGE_SIZE -> "📷"
-                                ErrorType.SERVER_ERROR -> "🔧"
-                                ErrorType.UNKNOWN -> "⚠️"
-                            }
-                            
-                            Text(
-                                text = errorIcon,
-                                style = MaterialTheme.typography.headlineLarge,
-                                modifier = Modifier
-                                    .padding(bottom = 16.dp)
-                                    .semantics {
-                                        contentDescription = "Error icon: ${currentState.errorType.name.lowercase().replace('_', ' ')}"
-                                    }
-                            )
-                            
-                            Text(
-                                text = ErrorHandler.getErrorMessageWithSuggestion(currentState),
-                                textAlign = TextAlign.Center,
-                                color = MaterialTheme.colorScheme.error,
-                                modifier = Modifier
-                                    .padding(bottom = 16.dp)
-                                    .verticalScroll(rememberScrollState())
-                                    .semantics {
-                                        contentDescription = "Error message and suggestions"
-                                    }
-                            )
-                            
-                            // Retry button (only show if retry is possible)
-                            if (currentState.canRetry) {
-                                Row(
-                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                                ) {
-                                    Button(
-                                        onClick = { 
-                                            bakingViewModel.retryLastRequest()
-                                            AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.CLICK)
-                                        },
-                                        modifier = Modifier.semantics {
-                                            contentDescription = "Retry analysis button. Try the AI analysis again"
-                                        }
-                                    ) {
-                                        Text(stringResource(R.string.action_retry))
-                                    }
-                                    
-                                    Button(
-                                        onClick = { 
-                                            bakingViewModel.clearError()
-                                            AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.CLICK)
-                                        },
-                                        colors = androidx.compose.material3.ButtonDefaults.buttonColors(
-                                            containerColor = MaterialTheme.colorScheme.secondary
-                                        ),
-                                        modifier = Modifier.semantics {
-                                            contentDescription = "Dismiss error button. Clear the error message"
-                                        }
-                                    ) {
-                                        Text(stringResource(R.string.action_dismiss))
-                                    }
-                                }
-                            } else {
-                                Button(
-                                    onClick = { 
-                                        bakingViewModel.clearError()
-                                        AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.CLICK)
-                                    },
-                                    colors = androidx.compose.material3.ButtonDefaults.buttonColors(
-                                        containerColor = MaterialTheme.colorScheme.secondary
-                                    ),
-                                    modifier = Modifier.semantics {
-                                        contentDescription = "Dismiss error button. Clear the error message"
-                                    }
-                                ) {
-                                    Text(stringResource(R.string.action_dismiss))
-                                }
-                            }
-                        }
-                        
-                        // Announce error with haptic feedback
-                        LaunchedEffect(currentState) {
-                            AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.ERROR)
-                        }
-                    }
-                    is UiState.Success -> {
-                        var showReportDialog by remember { mutableStateOf(false) }
-                        val coroutineScope = rememberCoroutineScope()
-                        
-                        Column(
-                            modifier = Modifier
-                                .align(Alignment.CenterHorizontally)
-                                .padding(16.dp)
-                                .fillMaxSize()
-                                .semantics {
-                                    contentDescription = "AI analysis results"
-                                }
-                        ) {
-                            // Results heading
-                            Text(
-                                text = "AI Analysis Results",
-                                style = MaterialTheme.typography.headlineSmall,
-                                modifier = Modifier
-                                    .padding(bottom = 8.dp)
-                                    .semantics {
-                                        contentDescription = "AI analysis results section heading"
-                                    }
-                            )
-                            
-                            // Report button
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.End
-                            ) {
-                                Button(
-                                    onClick = { 
-                                        showReportDialog = true
-                                        AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.CLICK)
-                                    },
-                                    colors = androidx.compose.material3.ButtonDefaults.buttonColors(
-                                        containerColor = MaterialTheme.colorScheme.error
-                                    ),
-                                    modifier = Modifier
-                                        .padding(bottom = 8.dp)
-                                        .semantics {
-                                            contentDescription = "Report content button. Report inappropriate AI-generated content"
-                                        }
-                                ) {
-                                    Text(stringResource(R.string.action_report_content))
-                                }
-                            }
-                            
-                            // AI-generated content
-                            val scrollState = rememberScrollState()
-                            Text(
-                                text = currentState.outputText,
-                                textAlign = TextAlign.Start,
-                                color = MaterialTheme.colorScheme.onSurface,
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .verticalScroll(scrollState)
-                                    .semantics {
-                                        contentDescription = "AI-generated recipe and analysis"
-                                    }
-                            )
-                        }
-                        
-                        // Report dialog
-                        if (showReportDialog) {
-                            ContentReportDialog(
-                                content = currentState.outputText,
-                                onDismiss = { showReportDialog = false },
-                                onReportSubmitted = { report ->
-                                    showReportDialog = false
-                                    coroutineScope.launch {
-                                        val result = ContentReportingHelper.submitReport(context, report)
-                                        AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.SUCCESS)
-                                    }
-                                }
-                            )
-                        }
-                        
-                        // Announce success with haptic feedback
-                        LaunchedEffect(currentState) {
+        }
+        is UiState.Success -> {
+            var showReportDialog by remember { mutableStateOf(false) }
+            val coroutineScope = rememberCoroutineScope()
+            val context = LocalContext.current
+            
+            RecipeResultsSection(
+                outputText = uiState.outputText,
+                onReportContent = { showReportDialog = true },
+                modifier = Modifier.fillMaxSize()
+            )
+            
+            // Report dialog
+            if (showReportDialog) {
+                ContentReportDialog(
+                    content = uiState.outputText,
+                    onDismiss = { showReportDialog = false },
+                    onReportSubmitted = { report ->
+                        showReportDialog = false
+                        coroutineScope.launch {
+                            ContentReportingHelper.submitReport(context, report)
                             AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.SUCCESS)
                         }
                     }
-                    else -> {
-                        // Initial state - show placeholder
-                        Text(
-                            text = result,
-                            textAlign = TextAlign.Start,
-                            color = MaterialTheme.colorScheme.onSurface,
-                            modifier = Modifier
-                                .align(Alignment.CenterHorizontally)
-                                .padding(16.dp)
-                                .fillMaxSize()
-                                .verticalScroll(rememberScrollState())
-                                .semantics {
-                                    contentDescription = "Welcome message"
-                                }
-                        )
-                    }
-                }
+                )
             }
         }
+        else -> {
+            // Initial state - show placeholder
+            InitialStateSection(result = result)
+        }
     }
+}
+
+@Composable
+private fun InitialStateSection(
+    result: String
+) {
+    Text(
+        text = result,
+        textAlign = TextAlign.Start,
+        color = MaterialTheme.colorScheme.onSurface,
+        modifier = Modifier
+            .padding(16.dp)
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .semantics {
+                contentDescription = "Welcome message"
+            }
+    )
 }
 
 @Preview(showSystemUi = true)
