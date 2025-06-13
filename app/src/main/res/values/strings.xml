@@ -28,4 +28,86 @@
     <string name="action_cancel">Cancel</string>
     <string name="report_success_message">Thank you for your report. We will review the content.</string>
     <string name="report_error_message">Failed to submit report. Please try again.</string>
+    
+    <!-- Accessibility strings -->
+    <string name="accessibility_main_screen_description">ForkSure baking assistant main screen</string>
+    <string name="accessibility_app_title_description">ForkSure - Baking with AI</string>
+    <string name="accessibility_camera_section_description">Camera section. Take a photo of your baked goods</string>
+    <string name="accessibility_take_photo_description">Take photo button. Opens camera to capture baked goods</string>
+    <string name="accessibility_captured_image_selected">Captured image, currently selected for analysis</string>
+    <string name="accessibility_captured_image_not_selected">Captured image, tap to select for analysis</string>
+    <string name="accessibility_sample_images_heading">Sample images section</string>
+    <string name="accessibility_sample_images_list">Horizontal list of sample baking images</string>
+    <string name="accessibility_sample_image_selected">%1$s sample image, currently selected for analysis</string>
+    <string name="accessibility_sample_image_not_selected">%1$s sample image, tap to select for analysis</string>
+    <string name="accessibility_input_section">Analysis input section</string>
+    <string name="accessibility_prompt_field">Prompt input field. Enter your question about the baked goods. Current text: %1$s</string>
+    <string name="accessibility_analyze_button_enabled">Analyze button. Start AI analysis of selected image with your prompt</string>
+    <string name="accessibility_analyze_button_disabled">Analyze button. Disabled. Select an image and enter a prompt to enable</string>
+    <string name="accessibility_loading_analysis">Loading AI analysis results</string>
+    <string name="accessibility_analyzing_status">Analyzing your baked goods...</string>
+    <string name="accessibility_error_occurred">Error occurred during analysis</string>
+    <string name="accessibility_error_icon">Error icon: %1$s</string>
+    <string name="accessibility_error_message">Error message: %1$s</string>
+    <string name="accessibility_retry_button">Retry analysis button. Try the AI analysis again</string>
+    <string name="accessibility_dismiss_error_button">Dismiss error button. Clear the error message</string>
+    <string name="accessibility_results_section">AI analysis results</string>
+    <string name="accessibility_results_heading">AI analysis results section</string>
+    <string name="accessibility_report_button">Report content button. Report inappropriate AI-generated content</string>
+    <string name="accessibility_ai_content">AI-generated recipe and analysis: %1$s</string>
+    <string name="accessibility_welcome_message">Welcome message: %1$s</string>
+    
+    <!-- Camera accessibility strings -->
+    <string name="accessibility_camera_screen">Camera capture screen</string>
+    <string name="accessibility_camera_permission_required">Camera permission required</string>
+    <string name="accessibility_camera_icon">Camera icon</string>
+    <string name="accessibility_camera_permission_explanation">Camera permission explanation: Camera permission is required to take photos of your baked goods.</string>
+    <string name="accessibility_camera_permission_instruction">Permission instruction: Please grant camera permission in your device settings if the permission dialog didn\'t appear.</string>
+    <string name="accessibility_camera_viewfinder">Camera viewfinder. Point your camera at baked goods to capture</string>
+    <string name="accessibility_camera_preview">Camera preview showing live view from camera</string>
+    <string name="accessibility_camera_initializing">Camera status: Initializing camera</string>
+    <string name="accessibility_capture_button_ready">Capture photo button. Tap to take a photo of your baked goods</string>
+    <string name="accessibility_capture_button_initializing">Capture photo button. Camera is initializing, please wait</string>
+    <string name="accessibility_capture_button_capturing">Capture photo button. Currently capturing photo, please wait</string>
+    <string name="accessibility_capture_status">Status: Capturing photo</string>
+    
+    <!-- Report dialog accessibility strings -->
+    <string name="accessibility_report_dialog">Content report dialog. Report inappropriate AI-generated content</string>
+    <string name="accessibility_report_dialog_title">Report content dialog. %1$s</string>
+    <string name="accessibility_report_form">Content reporting form</string>
+    <string name="accessibility_report_instructions">Report instructions: %1$s</string>
+    <string name="accessibility_report_reason_heading">Select reason for reporting section</string>
+    <string name="accessibility_report_reason_options">Report reason options. Select one reason for reporting this content</string>
+    <string name="accessibility_report_reason_selected">%1$s, selected</string>
+    <string name="accessibility_report_reason_not_selected">%1$s, not selected</string>
+    <string name="accessibility_report_details_field">Additional details text field. Optional. Provide more information about why you\'re reporting this content. Current text: %1$s</string>
+    <string name="accessibility_submit_report_button">Submit report button. Send the content report to the developer</string>
+    <string name="accessibility_cancel_report_button">Cancel button. Close the report dialog without submitting</string>
+    
+    <!-- State descriptions -->
+    <string name="accessibility_state_selected">Selected</string>
+    <string name="accessibility_state_not_selected">Not selected</string>
+    <string name="accessibility_state_enabled">Enabled</string>
+    <string name="accessibility_state_disabled">Disabled</string>
+    <string name="accessibility_state_camera_not_ready">Camera not ready</string>
+    <string name="accessibility_state_capturing">Capturing</string>
+    <string name="accessibility_state_ready_to_capture">Ready to capture</string>
+    <string name="accessibility_state_empty">empty</string>
+    
+    <!-- Custom actions -->
+    <string name="accessibility_action_select_for_analysis">Select for analysis</string>
+    <string name="accessibility_action_select_image_for_analysis">Select %1$s for analysis</string>
+    
+    <!-- Security strings -->
+    <string name="security_status_secure">Secure</string>
+    <string name="security_status_warning">Warning</string>
+    <string name="security_status_checking">Checking...</string>
+    <string name="rate_limit_requests_remaining">%1$d requests remaining</string>
+    <string name="rate_limit_blocked">Rate limit exceeded</string>
+    <string name="rate_limit_checking">Checking limits...</string>
+    <string name="security_warning_title">Security Warning</string>
+    <string name="security_warning_message">Security issues detected. Some features may be limited.</string>
+    <string name="input_validation_failed">Invalid input detected. Please check your request.</string>
+    <string name="response_validation_failed">AI response validation failed.</string>
+    <string name="food_safety_warning">⚠️ Food Safety Notice: Please verify cooking instructions and temperatures.</string>
 </resources>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Minimum touch target sizes for accessibility -->
+    <dimen name="accessibility_min_touch_target">48dp</dimen>
+    <dimen name="accessibility_recommended_touch_target">56dp</dimen>
+    
+    <!-- Text sizes for better readability -->
+    <dimen name="accessibility_min_text_size">14sp</dimen>
+    <dimen name="accessibility_large_text_size">18sp</dimen>
+    <dimen name="accessibility_extra_large_text_size">22sp</dimen>
+    
+    <!-- Spacing for better touch accessibility -->
+    <dimen name="accessibility_min_spacing">8dp</dimen>
+    <dimen name="accessibility_recommended_spacing">16dp</dimen>
+    
+    <!-- Focus indicators -->
+    <dimen name="accessibility_focus_border_width">2dp</dimen>
+    
+    <!-- Animation durations for accessibility -->
+    <integer name="accessibility_short_animation_duration">200</integer>
+    <integer name="accessibility_medium_animation_duration">300</integer>
+    <integer name="accessibility_long_animation_duration">500</integer>
+    
+    <!-- Accessibility service descriptions -->
+    <string name="accessibility_service_description">ForkSure accessibility service for enhanced baking assistance</string>
+    
+    <!-- Content descriptions for complex UI elements -->
+    <string name="accessibility_image_gallery_description">Image gallery with %1$d baking images. Swipe left or right to browse, double-tap to select.</string>
+    <string name="accessibility_camera_controls_description">Camera controls. Capture button at bottom center, settings available in top right.</string>
+    <string name="accessibility_results_container_description">AI analysis results container. Scroll to read full content, use report button if content is inappropriate.</string>
+    
+    <!-- Accessibility hints for complex interactions -->
+    <string name="accessibility_hint_double_tap_to_select">Double-tap to select this image for analysis</string>
+    <string name="accessibility_hint_swipe_to_browse">Swipe left or right to browse images</string>
+    <string name="accessibility_hint_long_press_for_options">Long press for additional options</string>
+    <string name="accessibility_hint_scroll_for_more">Scroll to see more content</string>
+    
+    <!-- Error announcements for screen readers -->
+    <string name="accessibility_error_network">Network error occurred. Check your internet connection and try again.</string>
+    <string name="accessibility_error_camera">Camera error occurred. Please check camera permissions and try again.</string>
+    <string name="accessibility_error_analysis">Analysis error occurred. The AI service may be temporarily unavailable.</string>
+    
+    <!-- Success announcements -->
+    <string name="accessibility_success_image_captured">Photo captured successfully. Image selected for analysis.</string>
+    <string name="accessibility_success_analysis_complete">Analysis complete. Results are now available.</string>
+    <string name="accessibility_success_report_submitted">Report submitted successfully. Thank you for helping improve our service.</string>
+    
+    <!-- Navigation announcements -->
+    <string name="accessibility_navigation_main_screen">Navigated to main screen</string>
+    <string name="accessibility_navigation_camera_screen">Navigated to camera screen</string>
+    <string name="accessibility_navigation_results_screen">Navigated to results screen</string>
+    
+    <!-- Progress announcements -->
+    <string name="accessibility_progress_initializing_camera">Initializing camera, please wait</string>
+    <string name="accessibility_progress_analyzing_image">Analyzing image with AI, this may take a moment</string>
+    <string name="accessibility_progress_submitting_report">Submitting report, please wait</string>
+</resources> 
