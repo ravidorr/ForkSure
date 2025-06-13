@@ -29,6 +29,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -43,6 +44,8 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -83,24 +86,41 @@ fun BakingScreen(
                 capturedImage = bitmap
                 showCamera = false
                 selectedImage.intValue = -1 // Indicate that a captured image is selected
+                AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.SUCCESS)
             },
             onError = { error ->
                 // Handle camera error
                 showCamera = false
                 result = "Camera error: $error"
+                AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.ERROR)
             }
         )
     } else {
         Column(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
+                .semantics { 
+                    contentDescription = "ForkSure baking assistant main screen"
+                }
         ) {
+            // Main heading
             Text(
                 text = stringResource(R.string.baking_title),
                 style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier
+                    .padding(16.dp)
+                    .semantics {
+                        contentDescription = "ForkSure - Baking with AI, main heading"
+                    }
             )
 
-            // Camera button
+            // Security status indicator
+            SecurityStatusIndicator(
+                viewModel = bakingViewModel,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+
+            // Camera section
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -108,12 +128,19 @@ fun BakingScreen(
                 horizontalArrangement = Arrangement.Center
             ) {
                 Button(
-                    onClick = { showCamera = true },
-                    modifier = Modifier.padding(bottom = 8.dp)
+                    onClick = { 
+                        showCamera = true
+                        AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.CLICK)
+                    },
+                    modifier = Modifier
+                        .padding(bottom = 8.dp)
+                        .semantics {
+                            contentDescription = "Take photo button. Opens camera to capture baked goods"
+                        }
                 ) {
                     Icon(
                         imageVector = Icons.Default.Add,
-                        contentDescription = "Take Photo",
+                        contentDescription = "", // Handled by button description
                         modifier = Modifier.padding(end = 8.dp)
                     )
                     Text(stringResource(R.string.take_photo))
@@ -127,52 +154,88 @@ fun BakingScreen(
                         .padding(16.dp)
                         .fillMaxWidth()
                         .height(200.dp)
-                        .clickable { selectedImage.intValue = -1 }
+                        .clickable { 
+                            selectedImage.intValue = -1
+                            AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.CLICK)
+                        }
                         .then(
                             if (selectedImage.intValue == -1) {
                                 Modifier.border(BorderStroke(4.dp, MaterialTheme.colorScheme.primary))
                             } else Modifier
                         )
+                        .semantics {
+                            contentDescription = if (selectedImage.intValue == -1) {
+                                "Captured image, currently selected for analysis"
+                            } else {
+                                "Captured image, tap to select for analysis"
+                            }
+                        }
                 ) {
                     Image(
                         bitmap = bitmap.asImageBitmap(),
-                        contentDescription = "Captured Image",
+                        contentDescription = "", // Handled by Card
                         modifier = Modifier.fillMaxSize()
                     )
                 }
             }
 
+            // Sample images section
             Text(
                 text = stringResource(R.string.or_choose_sample),
                 style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                modifier = Modifier
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .semantics {
+                        contentDescription = "Sample images section heading"
+                    }
             )
 
             LazyRow(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .semantics {
+                        contentDescription = "Horizontal list of sample baking images"
+                    }
             ) {
                 itemsIndexed(images) { index, image ->
+                    val isSelected = index == selectedImage.intValue
+                    val imageDescription = stringResource(imageDescriptions[index])
+                    
                     var imageModifier = Modifier
                         .padding(start = 8.dp, end = 8.dp)
                         .requiredSize(200.dp)
                         .clickable {
                             selectedImage.intValue = index
                             capturedImage = null // Clear captured image when selecting preset
+                            AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.CLICK)
                         }
-                    if (index == selectedImage.intValue) {
-                        imageModifier =
-                            imageModifier.border(BorderStroke(4.dp, MaterialTheme.colorScheme.primary))
+                        .semantics {
+                            contentDescription = if (isSelected) {
+                                "$imageDescription sample image, currently selected for analysis"
+                            } else {
+                                "$imageDescription sample image, tap to select for analysis"
+                            }
+                        }
+                        
+                    if (isSelected) {
+                        imageModifier = imageModifier.border(BorderStroke(4.dp, MaterialTheme.colorScheme.primary))
                     }
+                    
                     Image(
                         painter = painterResource(image),
-                        contentDescription = stringResource(imageDescriptions[index]),
+                        contentDescription = "", // Handled by modifier
                         modifier = imageModifier
                     )
                 }
             }
 
+            // Input section
             Row(
-                modifier = Modifier.padding(all = 16.dp)
+                modifier = Modifier
+                    .padding(all = 16.dp)
+                    .semantics {
+                        contentDescription = "Analysis input section"
+                    }
             ) {
                 TextField(
                     value = prompt,
@@ -182,8 +245,12 @@ fun BakingScreen(
                         .weight(0.8f)
                         .padding(end = 16.dp)
                         .align(Alignment.CenterVertically)
+                        .semantics {
+                            contentDescription = "Prompt input field. Enter your question about the baked goods"
+                        }
                 )
 
+                val isAnalyzeEnabled = prompt.isNotEmpty() && (capturedImage != null || selectedImage.intValue >= 0)
                 Button(
                     onClick = {
                         val bitmap = if (capturedImage != null && selectedImage.intValue == -1) {
@@ -195,17 +262,43 @@ fun BakingScreen(
                             )
                         }
                         bakingViewModel.sendPrompt(bitmap, prompt, context)
+                        AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.CLICK)
                     },
-                    enabled = prompt.isNotEmpty() && (capturedImage != null || selectedImage.intValue >= 0),
+                    enabled = isAnalyzeEnabled,
                     modifier = Modifier
                         .align(Alignment.CenterVertically)
+                        .semantics {
+                            contentDescription = if (isAnalyzeEnabled) {
+                                "Analyze button. Start AI analysis of selected image with your prompt"
+                            } else {
+                                "Analyze button. Disabled. Select an image and enter a prompt to enable"
+                            }
+                        }
                 ) {
                     Text(text = stringResource(R.string.action_go))
                 }
             }
 
+            // Results section
             if (uiState is UiState.Loading) {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
+                Column(
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .semantics {
+                            contentDescription = "Loading AI analysis results"
+                        }
+                ) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.align(Alignment.CenterHorizontally)
+                    )
+                    Text(
+                        text = "Analyzing your baked goods...",
+                        modifier = Modifier
+                            .padding(top = 8.dp)
+                            .align(Alignment.CenterHorizontally),
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
             } else {
                 when (val currentState = uiState) {
                     is UiState.Error -> {
@@ -214,7 +307,10 @@ fun BakingScreen(
                             modifier = Modifier
                                 .align(Alignment.CenterHorizontally)
                                 .padding(16.dp)
-                                .fillMaxSize(),
+                                .fillMaxSize()
+                                .semantics {
+                                    contentDescription = "Error occurred during analysis"
+                                },
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             // Error icon based on error type
@@ -231,7 +327,11 @@ fun BakingScreen(
                             Text(
                                 text = errorIcon,
                                 style = MaterialTheme.typography.headlineLarge,
-                                modifier = Modifier.padding(bottom = 16.dp)
+                                modifier = Modifier
+                                    .padding(bottom = 16.dp)
+                                    .semantics {
+                                        contentDescription = "Error icon: ${currentState.errorType.name.lowercase().replace('_', ' ')}"
+                                    }
                             )
                             
                             Text(
@@ -241,6 +341,9 @@ fun BakingScreen(
                                 modifier = Modifier
                                     .padding(bottom = 16.dp)
                                     .verticalScroll(rememberScrollState())
+                                    .semantics {
+                                        contentDescription = "Error message and suggestions"
+                                    }
                             )
                             
                             // Retry button (only show if retry is possible)
@@ -249,30 +352,53 @@ fun BakingScreen(
                                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                                 ) {
                                     Button(
-                                        onClick = { bakingViewModel.retryLastRequest() }
+                                        onClick = { 
+                                            bakingViewModel.retryLastRequest()
+                                            AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.CLICK)
+                                        },
+                                        modifier = Modifier.semantics {
+                                            contentDescription = "Retry analysis button. Try the AI analysis again"
+                                        }
                                     ) {
                                         Text(stringResource(R.string.action_retry))
                                     }
                                     
                                     Button(
-                                        onClick = { bakingViewModel.clearError() },
+                                        onClick = { 
+                                            bakingViewModel.clearError()
+                                            AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.CLICK)
+                                        },
                                         colors = androidx.compose.material3.ButtonDefaults.buttonColors(
                                             containerColor = MaterialTheme.colorScheme.secondary
-                                        )
+                                        ),
+                                        modifier = Modifier.semantics {
+                                            contentDescription = "Dismiss error button. Clear the error message"
+                                        }
                                     ) {
                                         Text(stringResource(R.string.action_dismiss))
                                     }
                                 }
                             } else {
                                 Button(
-                                    onClick = { bakingViewModel.clearError() },
+                                    onClick = { 
+                                        bakingViewModel.clearError()
+                                        AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.CLICK)
+                                    },
                                     colors = androidx.compose.material3.ButtonDefaults.buttonColors(
                                         containerColor = MaterialTheme.colorScheme.secondary
-                                    )
+                                    ),
+                                    modifier = Modifier.semantics {
+                                        contentDescription = "Dismiss error button. Clear the error message"
+                                    }
                                 ) {
                                     Text(stringResource(R.string.action_dismiss))
                                 }
                             }
+                        }
+                        
+                        // Announce error with haptic feedback
+                        LaunchedEffect(currentState) {
+                            AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.ERROR)
                         }
                     }
                     is UiState.Success -> {
@@ -284,18 +410,39 @@ fun BakingScreen(
                                 .align(Alignment.CenterHorizontally)
                                 .padding(16.dp)
                                 .fillMaxSize()
+                                .semantics {
+                                    contentDescription = "AI analysis results"
+                                }
                         ) {
+                            // Results heading
+                            Text(
+                                text = "AI Analysis Results",
+                                style = MaterialTheme.typography.headlineSmall,
+                                modifier = Modifier
+                                    .padding(bottom = 8.dp)
+                                    .semantics {
+                                        contentDescription = "AI analysis results section heading"
+                                    }
+                            )
+                            
                             // Report button
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.End
                             ) {
                                 Button(
-                                    onClick = { showReportDialog = true },
+                                    onClick = { 
+                                        showReportDialog = true
+                                        AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.CLICK)
+                                    },
                                     colors = androidx.compose.material3.ButtonDefaults.buttonColors(
                                         containerColor = MaterialTheme.colorScheme.error
                                     ),
-                                    modifier = Modifier.padding(bottom = 8.dp)
+                                    modifier = Modifier
+                                        .padding(bottom = 8.dp)
+                                        .semantics {
+                                            contentDescription = "Report content button. Report inappropriate AI-generated content"
+                                        }
                                 ) {
                                     Text(stringResource(R.string.action_report_content))
                                 }
@@ -310,6 +457,9 @@ fun BakingScreen(
                                 modifier = Modifier
                                     .fillMaxSize()
                                     .verticalScroll(scrollState)
+                                    .semantics {
+                                        contentDescription = "AI-generated recipe and analysis"
+                                    }
                             )
                         }
                         
@@ -322,10 +472,15 @@ fun BakingScreen(
                                     showReportDialog = false
                                     coroutineScope.launch {
                                         val result = ContentReportingHelper.submitReport(context, report)
-                                        // You could show a toast or snackbar here to confirm submission
+                                        AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.SUCCESS)
                                     }
                                 }
                             )
+                        }
+                        
+                        // Announce success with haptic feedback
+                        LaunchedEffect(currentState) {
+                            AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.SUCCESS)
                         }
                     }
                     else -> {
@@ -339,6 +494,9 @@ fun BakingScreen(
                                 .padding(16.dp)
                                 .fillMaxSize()
                                 .verticalScroll(rememberScrollState())
+                                .semantics {
+                                    contentDescription = "Welcome message"
+                                }
                         )
                     }
                 }

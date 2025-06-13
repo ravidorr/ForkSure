@@ -23,7 +23,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -43,53 +44,95 @@ fun ContentReportDialog(
         ContentReportingHelper.ReportReason.OTHER
     )
     
+    val dialogTitle = stringResource(R.string.report_dialog_title)
+    val dialogMessage = stringResource(R.string.report_dialog_message)
+    val additionalDetailsLabel = stringResource(R.string.report_additional_details)
+    val submitButtonText = stringResource(R.string.action_submit_report)
+    val cancelButtonText = stringResource(R.string.action_cancel)
+    
     AlertDialog(
         onDismissRequest = onDismiss,
         title = {
             Text(
-                text = stringResource(R.string.report_dialog_title),
-                style = MaterialTheme.typography.headlineSmall
+                text = dialogTitle,
+                style = MaterialTheme.typography.headlineSmall,
+                modifier = Modifier.semantics {
+                    contentDescription = "Report content dialog title"
+                }
             )
         },
         text = {
             Column(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .semantics {
+                        contentDescription = "Content reporting form"
+                    },
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Text(
-                    text = stringResource(R.string.report_dialog_message),
-                    style = MaterialTheme.typography.bodyMedium
+                    text = dialogMessage,
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.semantics {
+                        contentDescription = "Report instructions"
+                    }
                 )
                 
                 // Report reason selection
                 Text(
                     text = "Reason for reporting:",
-                    style = MaterialTheme.typography.labelLarge
+                    style = MaterialTheme.typography.labelLarge,
+                    modifier = Modifier.semantics {
+                        contentDescription = "Select reason for reporting section"
+                    }
                 )
                 
                 Column(
-                    modifier = Modifier.selectableGroup()
+                    modifier = Modifier
+                        .selectableGroup()
+                        .semantics {
+                            contentDescription = "Report reason options"
+                        }
                 ) {
                     reportReasons.forEach { reason ->
+                        val reasonDisplayName = ContentReportingHelper.getReasonDisplayName(context, reason)
+                        val isSelected = selectedReason == reason
+                        
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .selectable(
-                                    selected = (selectedReason == reason),
-                                    onClick = { selectedReason = reason },
-                                    role = Role.RadioButton
+                                    selected = isSelected,
+                                    onClick = { 
+                                        selectedReason = reason
+                                        AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.CLICK)
+                                    }
                                 )
-                                .padding(vertical = 4.dp),
+                                .padding(vertical = 4.dp)
+                                .semantics {
+                                    contentDescription = if (isSelected) {
+                                        "$reasonDisplayName, selected"
+                                    } else {
+                                        "$reasonDisplayName, not selected"
+                                    }
+                                },
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             RadioButton(
-                                selected = (selectedReason == reason),
-                                onClick = null // handled by selectable modifier
+                                selected = isSelected,
+                                onClick = null, // handled by selectable modifier
+                                modifier = Modifier.semantics {
+                                    contentDescription = "" // Handled by Row
+                                }
                             )
                             Text(
-                                text = ContentReportingHelper.getReasonDisplayName(context, reason),
+                                text = reasonDisplayName,
                                 style = MaterialTheme.typography.bodyMedium,
-                                modifier = Modifier.padding(start = 8.dp)
+                                modifier = Modifier
+                                    .padding(start = 8.dp)
+                                    .semantics {
+                                        contentDescription = "" // Handled by Row
+                                    }
                             )
                         }
                     }
@@ -99,10 +142,29 @@ fun ContentReportDialog(
                 OutlinedTextField(
                     value = additionalDetails,
                     onValueChange = { additionalDetails = it },
-                    label = { Text(stringResource(R.string.report_additional_details)) },
-                    modifier = Modifier.fillMaxWidth(),
+                    label = { 
+                        Text(
+                            additionalDetailsLabel,
+                            modifier = Modifier.semantics {
+                                contentDescription = "" // Handled by TextField
+                            }
+                        ) 
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .semantics {
+                            contentDescription = "Additional details text field. Optional"
+                        },
                     maxLines = 3,
-                    singleLine = false
+                    singleLine = false,
+                    placeholder = {
+                        Text(
+                            "Optional: Provide additional details about your report",
+                            modifier = Modifier.semantics {
+                                contentDescription = "" // Handled by TextField
+                            }
+                        )
+                    }
                 )
             }
         },
@@ -115,15 +177,30 @@ fun ContentReportDialog(
                         additionalDetails = additionalDetails.trim()
                     )
                     onReportSubmitted(report)
+                    AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.SUCCESS)
+                },
+                modifier = Modifier.semantics {
+                    contentDescription = "Submit report button"
                 }
             ) {
-                Text(stringResource(R.string.action_submit_report))
+                Text(submitButtonText)
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text(stringResource(R.string.action_cancel))
+            TextButton(
+                onClick = {
+                    onDismiss()
+                    AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.CLICK)
+                },
+                modifier = Modifier.semantics {
+                    contentDescription = "Cancel button"
+                }
+            ) {
+                Text(cancelButtonText)
             }
+        },
+        modifier = Modifier.semantics {
+            contentDescription = "Content report dialog"
         }
     )
 }
