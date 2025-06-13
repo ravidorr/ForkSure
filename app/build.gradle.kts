@@ -31,10 +31,12 @@ android {
 
     signingConfigs {
         create("release") {
-            storeFile = file("forksure-release-key.keystore")
-            storePassword = "***REMOVED***"
-            keyAlias = "forksure"
-            keyPassword = "***REMOVED***"
+            if (keystorePropertiesFile.exists()) {
+                storeFile = rootProject.file(keystoreProperties["storeFile"] as String)
+                storePassword = keystoreProperties["storePassword"] as String
+                keyAlias = keystoreProperties["keyAlias"] as String
+                keyPassword = keystoreProperties["keyPassword"] as String
+            }
         }
     }
 
