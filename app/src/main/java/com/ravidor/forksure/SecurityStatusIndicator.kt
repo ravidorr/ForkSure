@@ -37,19 +37,12 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 
-/**
- * Constants for security status updates
- */
-private object SecurityStatusConstants {
-    const val UPDATE_INTERVAL_MS = 5000L // 5 seconds
-    const val INITIAL_DELAY_MS = 100L // Small initial delay
-    const val LOW_REQUESTS_THRESHOLD = 3 // Show warning when requests < 3
-    
-    // Status colors
-    val SUCCESS_COLOR = Color(0xFF4CAF50) // Green
-    val WARNING_COLOR = Color(0xFFFF9800) // Orange  
-    val ERROR_COLOR = Color(0xFFF44336) // Red
-}
+// Centralized constants imports
+import com.ravidor.forksure.SecurityConstants
+import com.ravidor.forksure.AppColors
+import com.ravidor.forksure.Dimensions
+
+// Constants moved to centralized Constants.kt file
 
 @Composable
 fun SecurityStatusIndicator(
@@ -63,7 +56,7 @@ fun SecurityStatusIndicator(
 
     // Initial status check
     LaunchedEffect(viewModel) {
-        delay(SecurityStatusConstants.INITIAL_DELAY_MS)
+        delay(SecurityConstants.INITIAL_DELAY_MS)
         securityStatus = viewModel.getSecurityStatus(context)
         rateLimitStatus = SecurityManager.checkRateLimit(context, "ai_requests")
         requestCount = viewModel.getRequestCount()
@@ -72,7 +65,7 @@ fun SecurityStatusIndicator(
     // Periodic status updates with proper lifecycle management
     LaunchedEffect(viewModel) {
         while (isActive) {
-            delay(SecurityStatusConstants.UPDATE_INTERVAL_MS)
+            delay(SecurityConstants.UPDATE_INTERVAL_MS)
             if (isActive) {
                 try {
                     securityStatus = viewModel.getSecurityStatus(context)
@@ -94,7 +87,7 @@ fun SecurityStatusIndicator(
         rateLimitStatus is RateLimitResult.Blocked -> true
         // Show if low on requests (less than threshold remaining)
         rateLimitStatus is RateLimitResult.Allowed && 
-            (rateLimitStatus as RateLimitResult.Allowed).requestsRemaining < SecurityStatusConstants.LOW_REQUESTS_THRESHOLD -> true
+            (rateLimitStatus as RateLimitResult.Allowed).requestsRemaining < SecurityConstants.LOW_REQUESTS_THRESHOLD -> true
         // Hide when everything is normal
         else -> false
     }
@@ -103,19 +96,19 @@ fun SecurityStatusIndicator(
         Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 2.dp)
+            .padding(horizontal = Dimensions.PADDING_STANDARD, vertical = Dimensions.PADDING_EXTRA_SMALL / 2)
             .semantics {
                 contentDescription = "Security and rate limit status indicator"
             },
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.7f)
         ),
-        shape = RoundedCornerShape(6.dp)
+                  shape = RoundedCornerShape(Dimensions.CORNER_RADIUS_SMALL)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 12.dp, vertical = 6.dp),
+                .padding(horizontal = Dimensions.PADDING_MEDIUM, vertical = Dimensions.CORNER_RADIUS_SMALL),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -154,12 +147,12 @@ private fun SecurityStatusItem(
         val (icon, color, text) = when (status) {
             is SecurityEnvironmentResult.Secure -> Triple(
                 Icons.Default.Check,
-                SecurityStatusConstants.SUCCESS_COLOR,
+                AppColors.SUCCESS_COLOR,
                 "Secure"
             )
             is SecurityEnvironmentResult.Insecure -> Triple(
                 Icons.Default.Warning,
-                SecurityStatusConstants.WARNING_COLOR,
+                AppColors.WARNING_COLOR,
                 "Warning"
             )
             null -> Triple(
@@ -171,7 +164,7 @@ private fun SecurityStatusItem(
 
         Box(
             modifier = Modifier
-                .size(6.dp)
+                .size(Dimensions.STATUS_DOT_SIZE)
                 .background(color, CircleShape)
         )
 
@@ -179,8 +172,8 @@ private fun SecurityStatusItem(
             imageVector = icon,
             contentDescription = "",
             modifier = Modifier
-                .size(12.dp)
-                .padding(start = 3.dp),
+                            .size(Dimensions.ICON_SIZE_SMALL)
+            .padding(start = Dimensions.PADDING_EXTRA_SMALL - 1.dp),
             tint = color
         )
 
@@ -189,7 +182,7 @@ private fun SecurityStatusItem(
             style = MaterialTheme.typography.labelSmall,
             color = color,
             fontWeight = FontWeight.Medium,
-            modifier = Modifier.padding(start = 3.dp)
+            modifier = Modifier.padding(start = Dimensions.PADDING_EXTRA_SMALL - 1.dp)
         )
     }
 }
@@ -215,14 +208,14 @@ private fun RateLimitStatusItem(
             is RateLimitResult.Allowed -> {
                 val remaining = rateLimitStatus.requestsRemaining
                 val color = when {
-                    remaining > 5 -> SecurityStatusConstants.SUCCESS_COLOR
-                    remaining > 2 -> SecurityStatusConstants.WARNING_COLOR
-                    else -> SecurityStatusConstants.ERROR_COLOR
+                    remaining > 5 -> AppColors.SUCCESS_COLOR
+                    remaining > 2 -> AppColors.WARNING_COLOR
+                    else -> AppColors.ERROR_COLOR
                 }
                 color to "$remaining left"
             }
             is RateLimitResult.Blocked -> {
-                SecurityStatusConstants.ERROR_COLOR to "Blocked"
+                AppColors.ERROR_COLOR to "Blocked"
             }
             null -> {
                 MaterialTheme.colorScheme.onSurfaceVariant to "..."
@@ -260,17 +253,17 @@ fun SecurityWarningBanner(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(16.dp)
+            .padding(Dimensions.PADDING_STANDARD)
             .semantics {
                 contentDescription = "Security warning: ${issues.joinToString(", ")}"
             },
         colors = CardDefaults.cardColors(
-            containerColor = SecurityStatusConstants.ERROR_COLOR.copy(alpha = 0.1f)
+            containerColor = AppColors.ERROR_COLOR.copy(alpha = AppColors.ALPHA_LOW)
         ),
-        shape = RoundedCornerShape(8.dp)
+                  shape = RoundedCornerShape(Dimensions.CORNER_RADIUS_STANDARD)
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(Dimensions.PADDING_STANDARD)
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically
@@ -278,29 +271,29 @@ fun SecurityWarningBanner(
                 Icon(
                     imageVector = Icons.Default.Warning,
                     contentDescription = "",
-                    tint = SecurityStatusConstants.ERROR_COLOR,
-                    modifier = Modifier.size(24.dp)
+                    tint = AppColors.ERROR_COLOR,
+                    modifier = Modifier.size(Dimensions.ICON_SIZE_LARGE)
                 )
                 Text(
                     text = "Security Warning",
                     style = MaterialTheme.typography.titleMedium,
-                    color = SecurityStatusConstants.ERROR_COLOR,
+                    color = AppColors.ERROR_COLOR,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(start = 8.dp)
+                    modifier = Modifier.padding(start = Dimensions.PADDING_SMALL)
                 )
             }
 
             Text(
                 text = "The following security issues were detected:",
                 style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.padding(top = 8.dp)
+                modifier = Modifier.padding(top = Dimensions.PADDING_SMALL)
             )
 
             issues.forEach { issue ->
                 Text(
                     text = "• $issue",
                     style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.padding(start = 16.dp, top = 4.dp)
+                    modifier = Modifier.padding(start = Dimensions.PADDING_STANDARD, top = Dimensions.PADDING_EXTRA_SMALL)
                 )
             }
 
@@ -308,7 +301,7 @@ fun SecurityWarningBanner(
                 text = "For your security, some features may be limited. Please use the app in a secure environment.",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(top = 8.dp)
+                modifier = Modifier.padding(top = Dimensions.PADDING_SMALL)
             )
         }
     }

@@ -14,6 +14,9 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
+// Centralized constants imports
+import com.ravidor.forksure.AppConstants
+
 /**
  * Helper class to handle user reports for AI-generated content
  * This satisfies Google Play's AI-Generated Content policy requirement
@@ -35,8 +38,8 @@ class ContentReportingHelper {
     }
     
     companion object {
-        private const val TAG = "ContentReporting"
-        private const val DEVELOPER_EMAIL = "ravidor@gmail.com"
+        private const val TAG = AppConstants.TAG_CONTENT_REPORTING
+        private const val DEVELOPER_EMAIL = AppConstants.DEVELOPER_EMAIL
         
         /**
          * Submit a content report via webhook (no email client required)

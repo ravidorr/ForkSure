@@ -9,19 +9,24 @@ import java.security.MessageDigest
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.regex.Pattern
+import java.util.concurrent.TimeUnit
+
+// Centralized constants imports
+import com.ravidor.forksure.AppConstants
+import com.ravidor.forksure.SecurityConstants
 
 /**
  * Comprehensive security manager for ForkSure app
  * Handles rate limiting, input validation, and AI response safety
  */
 object SecurityManager {
-    private const val TAG = "SecurityManager"
-    private const val PREFS_NAME = "forksure_security"
-    private const val MAX_REQUESTS_PER_MINUTE = 2
-    private const val MAX_REQUESTS_PER_HOUR = 20
-    private const val MAX_REQUESTS_PER_DAY = 80
-    private const val MAX_PROMPT_LENGTH = 1000
-    private const val MAX_RESPONSE_LENGTH = 10000
+    private const val TAG = AppConstants.TAG_SECURITY_MANAGER
+    private const val PREFS_NAME = SecurityConstants.PREFS_NAME
+    private const val MAX_REQUESTS_PER_MINUTE = SecurityConstants.MAX_REQUESTS_PER_MINUTE
+    private const val MAX_REQUESTS_PER_HOUR = SecurityConstants.MAX_REQUESTS_PER_HOUR
+    private const val MAX_REQUESTS_PER_DAY = SecurityConstants.MAX_REQUESTS_PER_DAY
+    private const val MAX_PROMPT_LENGTH = SecurityConstants.MAX_PROMPT_LENGTH
+    private const val MAX_RESPONSE_LENGTH = SecurityConstants.MAX_RESPONSE_LENGTH
     
     // Rate limiting storage
     private val requestCounts = ConcurrentHashMap<String, AtomicInteger>()

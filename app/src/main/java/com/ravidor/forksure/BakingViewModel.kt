@@ -12,6 +12,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+
+// Centralized constants imports
+import com.ravidor.forksure.AppConstants
 
 class BakingViewModel : ViewModel() {
     private val _uiState: MutableStateFlow<UiState> =
@@ -31,7 +35,7 @@ class BakingViewModel : ViewModel() {
     private var requestCount = 0
 
     companion object {
-        private const val TAG = "BakingViewModel"
+        private const val TAG = AppConstants.TAG_BAKING_VIEW_MODEL
     }
 
     fun sendPrompt(
