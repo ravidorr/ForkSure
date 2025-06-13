@@ -62,11 +62,17 @@ import com.ravidor.forksure.HapticFeedbackType
 import com.ravidor.forksure.R
 import com.ravidor.forksure.SampleDataConstants
 import com.ravidor.forksure.SecurityStatusIndicator
+import com.ravidor.forksure.StatelessContentReportDialog
 import com.ravidor.forksure.UiState
+import com.ravidor.forksure.state.MainScreenState
+import com.ravidor.forksure.state.MainScreenActions
+import com.ravidor.forksure.state.DefaultMainScreenActions
+import com.ravidor.forksure.state.rememberMainScreenState
+import com.ravidor.forksure.state.rememberContentReportDialogState
 
 /**
- * Main screen of the ForkSure app
- * Contains the main UI for image selection, prompt input, and results display
+ * Main screen of the ForkSure app with proper state hoisting
+ * All state is managed through MainScreenState and actions through MainScreenActions
  */
 @Composable
 fun MainScreen(
@@ -78,11 +84,96 @@ fun MainScreen(
 ) {
     val placeholderPrompt = stringResource(R.string.prompt_placeholder)
     val placeholderResult = stringResource(R.string.results_placeholder)
-    var prompt by rememberSaveable { mutableStateOf(placeholderPrompt) }
-    var result by rememberSaveable { mutableStateOf(placeholderResult) }
     val uiState by bakingViewModel.uiState.collectAsState()
     val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
+    
+    // Centralized state management
+    val mainScreenState = rememberMainScreenState(
+        initialPrompt = placeholderPrompt,
+        initialResult = placeholderResult,
+        initialSelectedImageIndex = selectedImage.value
+    )
+    
+    // Sync external state with internal state
+    LaunchedEffect(capturedImage) {
+        mainScreenState.updateCapturedImage(capturedImage)
+    }
+    
+    LaunchedEffect(selectedImage.value) {
+        if (selectedImage.value != mainScreenState.selectedImageIndex) {
+            if (selectedImage.value == -1) {
+                mainScreenState.selectCapturedImage()
+            } else {
+                mainScreenState.selectSampleImage(selectedImage.value)
+            }
+        }
+    }
+    
+    // Actions implementation
+    val actions = remember(mainScreenState, bakingViewModel) {
+        DefaultMainScreenActions(
+            state = mainScreenState,
+            onNavigateToCamera = onNavigateToCamera,
+            onAnalyze = { bitmap, prompt ->
+                bakingViewModel.sendPrompt(bitmap, prompt, context)
+            },
+            onSubmitReport = { report ->
+                coroutineScope.launch {
+                    ContentReportingHelper.submitReport(context, report)
+                    AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.SUCCESS)
+                }
+            },
+            onRetry = { bakingViewModel.retryLastRequest() },
+            onDismissError = { bakingViewModel.clearError() }
+        )
+    }
+    
+    // Update external state when internal state changes
+    LaunchedEffect(mainScreenState.selectedImageIndex) {
+        selectedImage.intValue = mainScreenState.selectedImageIndex
+    }
+    
+    LaunchedEffect(mainScreenState.capturedImage) {
+        onCapturedImageUpdated(mainScreenState.capturedImage)
+    }
 
+    MainScreenContent(
+        state = mainScreenState,
+        actions = actions,
+        uiState = uiState,
+        bakingViewModel = bakingViewModel
+    )
+}
+
+/**
+ * Stateless main screen content
+ * Receives all state and actions as parameters
+ */
+@Composable
+private fun MainScreenContent(
+    state: MainScreenState,
+    actions: MainScreenActions,
+    uiState: UiState,
+    bakingViewModel: BakingViewModel
+) {
+    val context = LocalContext.current
+    
+    // Create analyze action that handles bitmap creation
+    val handleAnalyzeClick: () -> Unit = {
+        if (state.hasSelectedCapturedImage) {
+            state.capturedImage?.let { bitmap ->
+                bakingViewModel.sendPrompt(bitmap, state.prompt, context)
+            }
+        } else if (state.hasSelectedSampleImage) {
+            val bitmap = BitmapFactory.decodeResource(
+                context.resources,
+                SampleDataConstants.SAMPLE_IMAGES[state.selectedImageIndex]
+            )
+            bakingViewModel.sendPrompt(bitmap, state.prompt, context)
+        }
+    }
+    
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -101,15 +192,15 @@ fun MainScreen(
 
         // Camera section
         CameraSection(
-            onTakePhoto = onNavigateToCamera
+            onTakePhoto = actions::onNavigateToCamera
         )
 
         // Show captured image if available
-        capturedImage?.let { bitmap ->
+        state.capturedImage?.let { bitmap ->
             CapturedImageCard(
                 bitmap = bitmap,
-                isSelected = selectedImage.value == -1,
-                onImageClick = { selectedImage.intValue = -1 }
+                isSelected = state.hasSelectedCapturedImage,
+                onImageClick = actions::onCapturedImageSelected
             )
         }
 
@@ -117,37 +208,28 @@ fun MainScreen(
         SampleImagesSection(
             images = SampleDataConstants.SAMPLE_IMAGES,
             imageDescriptions = SampleDataConstants.IMAGE_DESCRIPTIONS,
-            selectedImageIndex = selectedImage.value,
-            onImageSelected = { index ->
-                selectedImage.intValue = index
-                onCapturedImageUpdated(null) // Clear captured image when sample is selected
-            }
+            selectedImageIndex = if (state.hasSelectedSampleImage) state.selectedImageIndex else -1,
+            onImageSelected = actions::onSampleImageSelected
         )
 
         // Input section
-        val isAnalyzeEnabled = prompt.isNotEmpty() && (capturedImage != null || selectedImage.value >= 0)
         PromptInputSection(
-            prompt = prompt,
-            onPromptChange = { prompt = it },
-            isAnalyzeEnabled = isAnalyzeEnabled,
-            onAnalyzeClick = {
-                val bitmap = if (capturedImage != null && selectedImage.value == -1) {
-                    capturedImage
-                } else {
-                    BitmapFactory.decodeResource(
-                        context.resources,
-                        SampleDataConstants.SAMPLE_IMAGES[selectedImage.value]
-                    )
-                }
-                bakingViewModel.sendPrompt(bitmap, prompt, context)
-            }
+            prompt = state.prompt,
+            onPromptChange = actions::onPromptChange,
+            isAnalyzeEnabled = state.isAnalyzeEnabled,
+            onAnalyzeClick = handleAnalyzeClick
         )
 
         // Results section
         MainResultsSection(
             uiState = uiState,
-            result = result,
-            bakingViewModel = bakingViewModel
+            result = state.result,
+            showReportDialog = state.showReportDialog,
+            onShowReportDialog = actions::onShowReportDialog,
+            onHideReportDialog = actions::onHideReportDialog,
+            onReportSubmitted = actions::onReportSubmitted,
+            onRetry = actions::onRetryAnalysis,
+            onDismiss = actions::onDismissError
         )
     }
 }
@@ -169,7 +251,12 @@ private fun MainScreenHeader() {
 private fun MainResultsSection(
     uiState: UiState,
     result: String,
-    bakingViewModel: BakingViewModel
+    showReportDialog: Boolean,
+    onShowReportDialog: () -> Unit,
+    onHideReportDialog: () -> Unit,
+    onReportSubmitted: (ContentReportingHelper.ContentReport) -> Unit,
+    onRetry: () -> Unit,
+    onDismiss: () -> Unit
 ) {
     when (uiState) {
         is UiState.Loading -> {
@@ -180,34 +267,24 @@ private fun MainResultsSection(
         is UiState.Error -> {
             ErrorSection(
                 errorState = uiState,
-                onRetry = { bakingViewModel.retryLastRequest() },
-                onDismiss = { bakingViewModel.clearError() },
+                onRetry = onRetry,
+                onDismiss = onDismiss,
                 modifier = Modifier.fillMaxSize()
             )
         }
         is UiState.Success -> {
-            var showReportDialog by remember { mutableStateOf(false) }
-            val coroutineScope = rememberCoroutineScope()
-            val context = LocalContext.current
-            
             RecipeResultsSection(
                 outputText = uiState.outputText,
-                onReportContent = { showReportDialog = true },
+                onReportContent = onShowReportDialog,
                 modifier = Modifier.fillMaxSize()
             )
             
             // Report dialog
             if (showReportDialog) {
-                ContentReportDialog(
+                StatelessContentReportDialog(
                     content = uiState.outputText,
-                    onDismiss = { showReportDialog = false },
-                    onReportSubmitted = { report ->
-                        showReportDialog = false
-                        coroutineScope.launch {
-                            ContentReportingHelper.submitReport(context, report)
-                            AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.SUCCESS)
-                        }
-                    }
+                    onDismiss = onHideReportDialog,
+                    onReportSubmitted = onReportSubmitted
                 )
             }
         }

@@ -26,16 +26,76 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
+import com.ravidor.forksure.state.ContentReportDialogState
+import com.ravidor.forksure.state.rememberContentReportDialogState
 
+/**
+ * Stateful ContentReportDialog with internal state management
+ * @deprecated Use StatelessContentReportDialog for better state hoisting
+ */
+@Deprecated("Use StatelessContentReportDialog for better state hoisting")
 @Composable
 fun ContentReportDialog(
     content: String,
     onDismiss: () -> Unit,
     onReportSubmitted: (ContentReportingHelper.ContentReport) -> Unit
 ) {
-    val context = LocalContext.current
+    val dialogState = rememberContentReportDialogState()
+    
+    StatelessContentReportDialog(
+        content = content,
+        selectedReason = dialogState.selectedReason,
+        additionalDetails = dialogState.additionalDetails,
+        onReasonSelected = dialogState::updateSelectedReason,
+        onAdditionalDetailsChanged = dialogState::updateAdditionalDetails,
+        onDismiss = onDismiss,
+        onReportSubmitted = { 
+            val report = dialogState.createReport(content)
+            onReportSubmitted(report)
+        }
+    )
+}
+
+/**
+ * Stateless ContentReportDialog with proper state hoisting
+ * All state is passed as parameters
+ */
+@Composable
+fun StatelessContentReportDialog(
+    content: String,
+    onDismiss: () -> Unit,
+    onReportSubmitted: (ContentReportingHelper.ContentReport) -> Unit
+) {
+    // Internal state for this dialog instance
     var selectedReason by remember { mutableStateOf(ContentReportingHelper.ReportReason.INAPPROPRIATE) }
     var additionalDetails by remember { mutableStateOf("") }
+    
+    StatelessContentReportDialog(
+        content = content,
+        selectedReason = selectedReason,
+        additionalDetails = additionalDetails,
+        onReasonSelected = { selectedReason = it },
+        onAdditionalDetailsChanged = { additionalDetails = it },
+        onDismiss = onDismiss,
+        onReportSubmitted = onReportSubmitted
+    )
+}
+
+/**
+ * Fully stateless ContentReportDialog
+ * All state and actions are passed as parameters
+ */
+@Composable
+fun StatelessContentReportDialog(
+    content: String,
+    selectedReason: ContentReportingHelper.ReportReason,
+    additionalDetails: String,
+    onReasonSelected: (ContentReportingHelper.ReportReason) -> Unit,
+    onAdditionalDetailsChanged: (String) -> Unit,
+    onDismiss: () -> Unit,
+    onReportSubmitted: (ContentReportingHelper.ContentReport) -> Unit
+) {
+    val context = LocalContext.current
     
     val reportReasons = listOf(
         ContentReportingHelper.ReportReason.INAPPROPRIATE,
@@ -104,7 +164,7 @@ fun ContentReportDialog(
                                 .selectable(
                                     selected = isSelected,
                                     onClick = { 
-                                        selectedReason = reason
+                                        onReasonSelected(reason)
                                         AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.CLICK)
                                     }
                                 )
@@ -141,7 +201,7 @@ fun ContentReportDialog(
                 // Additional details field
                 OutlinedTextField(
                     value = additionalDetails,
-                    onValueChange = { additionalDetails = it },
+                    onValueChange = onAdditionalDetailsChanged,
                     label = { 
                         Text(
                             additionalDetailsLabel,
