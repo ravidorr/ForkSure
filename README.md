@@ -58,7 +58,7 @@ export JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home"
 
 ## 📄 Privacy Policy
 
-The privacy policy is available at: [Privacy Policy](https://yourusername.github.io/forksure-privacy)
+The privacy policy is available at: [Privacy Policy](https://ravidor.github.io/ForkSure/)
 
 ## 🤝 Contributing
 
