@@ -6,6 +6,10 @@ import android.net.Uri
 import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.json.JSONObject
+import java.io.OutputStreamWriter
+import java.net.HttpURLConnection
+import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -35,9 +39,91 @@ class ContentReportingHelper {
         private const val DEVELOPER_EMAIL = "ravidor@gmail.com"
         
         /**
-         * Submit a content report via email
+         * Submit a content report via webhook (no email client required)
          */
         suspend fun submitReport(
+            context: Context,
+            report: ContentReport
+        ): Result<Unit> = withContext(Dispatchers.IO) {
+            try {
+                // Try webhook first (silent reporting)
+                val webhookResult = submitReportViaWebhook(context, report)
+                if (webhookResult.isSuccess) {
+                    Log.i(TAG, "Content report sent successfully via webhook")
+                    return@withContext Result.success(Unit)
+                }
+                
+                // Fallback to email if webhook fails
+                Log.w(TAG, "Webhook failed, falling back to email")
+                return@withContext submitReportViaEmail(context, report)
+                
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to submit content report", e)
+                Result.failure(e)
+            }
+        }
+        
+        /**
+         * Submit report via webhook (silent, no UI)
+         */
+        private suspend fun submitReportViaWebhook(
+            context: Context,
+            report: ContentReport
+        ): Result<Unit> = withContext(Dispatchers.IO) {
+            try {
+                // Using Make.com webhook for silent content reporting
+                val webhookUrl = "https://hook.eu2.make.com/6d7lvk43jha8gpw17uywn3289erh1jn3"
+                
+                val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+                val formattedDate = dateFormat.format(Date(report.timestamp))
+                
+                val jsonReport = JSONObject().apply {
+                    put("app", "ForkSure")
+                    put("timestamp", formattedDate)
+                    put("reason", getReasonDisplayName(context, report.reason))
+                    put("content", report.content)
+                    put("additional_details", report.additionalDetails)
+                    put("app_version", getAppVersion(context))
+                    put("device_info", "${android.os.Build.MODEL} (${android.os.Build.VERSION.RELEASE})")
+                    put("developer_email", DEVELOPER_EMAIL)
+                }
+                
+                val url = URL(webhookUrl)
+                val connection = url.openConnection() as HttpURLConnection
+                connection.apply {
+                    requestMethod = "POST"
+                    setRequestProperty("Content-Type", "application/json")
+                    setRequestProperty("Accept", "application/json")
+                    doOutput = true
+                    connectTimeout = 10000
+                    readTimeout = 10000
+                }
+                
+                // Send the JSON data
+                OutputStreamWriter(connection.outputStream).use { writer ->
+                    writer.write(jsonReport.toString())
+                    writer.flush()
+                }
+                
+                val responseCode = connection.responseCode
+                if (responseCode in 200..299) {
+                    Log.i(TAG, "Webhook report sent successfully")
+                    Result.success(Unit)
+                } else {
+                    Log.w(TAG, "Webhook returned code: $responseCode")
+                    Result.failure(Exception("Webhook failed with code: $responseCode"))
+                }
+                
+            } catch (e: Exception) {
+                Log.e(TAG, "Webhook submission failed", e)
+                Result.failure(e)
+            }
+        }
+        
+        /**
+         * Submit a content report via email (fallback method)
+         */
+        private suspend fun submitReportViaEmail(
             context: Context,
             report: ContentReport
         ): Result<Unit> = withContext(Dispatchers.Main) {
@@ -45,9 +131,7 @@ class ContentReportingHelper {
                 val emailIntent = createEmailIntent(context, report)
                 context.startActivity(Intent.createChooser(emailIntent, "Send Report via Email"))
                 
-                // Log the report for development purposes
-                Log.i(TAG, "Content report initiated: ${report.reason} - ${report.content.take(100)}")
-                
+                Log.i(TAG, "Content report initiated via email fallback")
                 Result.success(Unit)
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to initiate content report email", e)
