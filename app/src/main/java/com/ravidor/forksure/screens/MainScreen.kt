@@ -544,8 +544,7 @@ private fun ErrorSection(
             .padding(Dimensions.PADDING_STANDARD)
             .semantics {
                 contentDescription = "Error occurred during analysis"
-            },
-        horizontalAlignment = Alignment.CenterHorizontally
+            }
     ) {
         val errorIcon = when (errorState.errorType) {
             ErrorType.NETWORK -> "📶"
@@ -557,33 +556,47 @@ private fun ErrorSection(
             ErrorType.UNKNOWN -> "⚠️"
         }
         
-        Text(
-            text = errorIcon,
-            style = MaterialTheme.typography.headlineLarge,
+        // Error icon and message in a row for better alignment
+        Row(
             modifier = Modifier
-                .padding(bottom = Dimensions.PADDING_STANDARD)
-                .semantics {
-                    contentDescription = "Error icon: ${errorState.errorType.name.lowercase().replace('_', ' ')}"
-                }
-        )
+                .fillMaxWidth()
+                .padding(bottom = Dimensions.PADDING_STANDARD),
+            verticalAlignment = Alignment.Top
+        ) {
+            Text(
+                text = errorIcon,
+                style = MaterialTheme.typography.headlineLarge,
+                modifier = Modifier
+                    .padding(end = Dimensions.PADDING_MEDIUM)
+                    .semantics {
+                        contentDescription = "Error icon: ${errorState.errorType.name.lowercase().replace('_', ' ')}"
+                    }
+            )
+            
+            Text(
+                text = ErrorHandler.getErrorMessageWithSuggestion(errorState),
+                textAlign = TextAlign.Start,
+                color = MaterialTheme.colorScheme.error,
+                modifier = Modifier
+                    .weight(1f)
+                    .verticalScroll(rememberScrollState())
+                    .semantics {
+                        contentDescription = "Error message and suggestions"
+                    }
+            )
+        }
         
-        Text(
-            text = ErrorHandler.getErrorMessageWithSuggestion(errorState),
-            textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.error,
-            modifier = Modifier
-                .padding(bottom = Dimensions.PADDING_STANDARD)
-                .verticalScroll(rememberScrollState())
-                .semantics {
-                    contentDescription = "Error message and suggestions"
-                }
-        )
-        
-        ErrorActionButtons(
-            canRetry = errorState.canRetry,
-            onRetry = onRetry,
-            onDismiss = onDismiss
-        )
+        // Center the action buttons
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            ErrorActionButtons(
+                canRetry = errorState.canRetry,
+                onRetry = onRetry,
+                onDismiss = onDismiss
+            )
+        }
     }
     
     LaunchedEffect(errorState) {
