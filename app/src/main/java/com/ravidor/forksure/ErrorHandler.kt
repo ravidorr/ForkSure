@@ -7,10 +7,12 @@ import android.util.Log
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
 
 // Centralized constants imports
 import com.ravidor.forksure.AppConstants
 
+@Stable
 object ErrorHandler {
     private const val TAG = AppConstants.TAG_ERROR_HANDLER
 

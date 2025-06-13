@@ -3,6 +3,7 @@ package com.ravidor.forksure
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.runtime.Immutable
 
 /**
  * Centralized constants for the ForkSure application
@@ -13,6 +14,7 @@ import androidx.compose.ui.unit.dp
 /**
  * Application-wide configuration constants
  */
+@Immutable
 object AppConstants {
     const val APP_NAME = "ForkSure"
     const val DEVELOPER_EMAIL = "ravidor@gmail.com"
@@ -29,6 +31,7 @@ object AppConstants {
 /**
  * UI dimension constants for consistent spacing and sizing
  */
+@Immutable
 object Dimensions {
     // Standard padding values
     val PADDING_EXTRA_SMALL: Dp = 4.dp
@@ -63,6 +66,7 @@ object Dimensions {
 /**
  * Color constants for consistent theming
  */
+@Immutable
 object AppColors {
     // Status colors
     val SUCCESS_COLOR = Color(0xFF4CAF50) // Green
@@ -92,6 +96,7 @@ object AppColors {
 /**
  * Security and rate limiting constants
  */
+@Immutable
 object SecurityConstants {
     // SharedPreferences
     const val PREFS_NAME = "forksure_security"
@@ -115,6 +120,7 @@ object SecurityConstants {
 /**
  * Animation and timing constants
  */
+@Immutable
 object AnimationConstants {
     // Duration constants
     const val SHORT_ANIMATION_DURATION = 200L
@@ -131,6 +137,7 @@ object AnimationConstants {
 /**
  * Network and API constants
  */
+@Immutable
 object NetworkConstants {
     // Timeouts
     const val CONNECTION_TIMEOUT_MS = 30000L // 30 seconds
@@ -145,6 +152,7 @@ object NetworkConstants {
 /**
  * Content reporting constants
  */
+@Immutable
 object ContentReportingConstants {
     // Report types
     const val REPORT_TYPE_INAPPROPRIATE = "inappropriate"
@@ -160,6 +168,7 @@ object ContentReportingConstants {
 /**
  * Sample data constants
  */
+@Immutable
 object SampleDataConstants {
     // Sample images resource IDs
     val SAMPLE_IMAGES = arrayOf(
@@ -186,6 +195,7 @@ object SampleDataConstants {
 /**
  * Navigation constants
  */
+@Immutable
 object NavigationConstants {
     // Route definitions
     const val ROUTE_MAIN = "main"

@@ -10,6 +10,8 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.regex.Pattern
 import java.util.concurrent.TimeUnit
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
 
 // Centralized constants imports
 import com.ravidor.forksure.AppConstants
@@ -19,6 +21,7 @@ import com.ravidor.forksure.SecurityConstants
  * Comprehensive security manager for ForkSure app
  * Handles rate limiting, input validation, and AI response safety
  */
+@Stable
 object SecurityManager {
     private const val TAG = AppConstants.TAG_SECURITY_MANAGER
     private const val PREFS_NAME = SecurityConstants.PREFS_NAME
@@ -307,12 +310,15 @@ object SecurityManager {
 }
 
 // Result classes
+@Immutable
 sealed class RateLimitResult {
+    @Immutable
     data class Allowed(
         val requestsRemaining: Int,
         val resetTimeSeconds: Int
     ) : RateLimitResult()
     
+    @Immutable
     data class Blocked(
         val reason: String,
         val retryAfterSeconds: Int,
@@ -320,20 +326,32 @@ sealed class RateLimitResult {
     ) : RateLimitResult()
 }
 
+@Immutable
 sealed class InputValidationResult {
+    @Immutable
     data class Valid(val sanitizedInput: String) : InputValidationResult()
+    @Immutable
     data class Invalid(val reason: String) : InputValidationResult()
 }
 
+@Immutable
 sealed class AIResponseValidationResult {
+    @Immutable
     data class Valid(val response: String) : AIResponseValidationResult()
+    @Immutable
     data class Invalid(val reason: String, val message: String) : AIResponseValidationResult()
+    @Immutable
     data class Unsafe(val reason: String, val warning: String) : AIResponseValidationResult()
+    @Immutable
     data class Suspicious(val reason: String, val warning: String) : AIResponseValidationResult()
+    @Immutable
     data class RequiresWarning(val response: String, val warning: String) : AIResponseValidationResult()
 }
 
+@Immutable
 sealed class SecurityEnvironmentResult {
+    @Immutable
     object Secure : SecurityEnvironmentResult()
+    @Immutable
     data class Insecure(val issues: List<String>) : SecurityEnvironmentResult()
 } 

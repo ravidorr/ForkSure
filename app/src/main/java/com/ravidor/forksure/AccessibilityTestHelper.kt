@@ -9,10 +9,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
 
 /**
- * Helper object for accessibility testing and validation
+ * Comprehensive accessibility testing helper for ForkSure app
+ * Provides tools for testing and validating accessibility features
  */
+@Stable
 object AccessibilityTestHelper {
     
     /**
@@ -135,18 +139,15 @@ object AccessibilityTestHelper {
     }
 }
 
-/**
- * Result of accessibility validation
- */
+@Stable
 enum class AccessibilityValidationResult {
     PASS,
     WARNING,
-    FAIL
+    FAIL,
+    NOT_APPLICABLE
 }
 
-/**
- * Comprehensive accessibility report
- */
+@Immutable
 data class AccessibilityReport(
     val isAccessibilityEnabled: Boolean,
     val isScreenReaderEnabled: Boolean,
@@ -154,9 +155,7 @@ data class AccessibilityReport(
     val recommendations: List<String>
 )
 
-/**
- * Accessibility testing constants
- */
+@Immutable
 object AccessibilityConstants {
     // WCAG 2.1 AA compliance
     const val MIN_CONTRAST_RATIO_NORMAL = 4.5
