@@ -122,7 +122,7 @@ fun BakingScreen(
                         SampleDataConstants.SAMPLE_IMAGES[selectedImage.intValue]
                     )
                 }
-                bakingViewModel.sendPrompt(bitmap, prompt, context)
+                bakingViewModel.sendPrompt(bitmap, prompt)
             }
         )
     }
