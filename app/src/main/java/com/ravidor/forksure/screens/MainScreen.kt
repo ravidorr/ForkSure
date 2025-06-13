@@ -656,21 +656,33 @@ private fun RecipeResultsSection(
                 contentDescription = "AI analysis results"
             }
     ) {
+        Text(
+            text = stringResource(R.string.results_heading),
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier
+                .padding(bottom = Dimensions.PADDING_STANDARD)
+                .semantics {
+                    contentDescription = "AI analysis results section"
+                }
+        )
+        
+        MarkdownText(
+            markdown = outputText,
+            modifier = Modifier
+                .weight(1f)
+                .verticalScroll(rememberScrollState())
+                .semantics {
+                    contentDescription = "AI-generated recipe and analysis: $outputText"
+                }
+        )
+        
+        // Report button at the bottom
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = Dimensions.PADDING_STANDARD),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+                .padding(top = Dimensions.PADDING_STANDARD),
+            horizontalArrangement = Arrangement.Center
         ) {
-            Text(
-                text = stringResource(R.string.results_heading),
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.semantics {
-                    contentDescription = "AI analysis results section"
-                }
-            )
-            
             Button(
                 onClick = {
                     onReportContent()
@@ -683,15 +695,5 @@ private fun RecipeResultsSection(
                 Text(stringResource(R.string.action_report))
             }
         }
-        
-        MarkdownText(
-            markdown = outputText,
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .semantics {
-                    contentDescription = "AI-generated recipe and analysis: $outputText"
-                }
-        )
     }
 } 
