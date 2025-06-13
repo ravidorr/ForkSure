@@ -34,6 +34,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -46,6 +47,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.launch
 
 val images = arrayOf(
     // Image generated using Gemini from the prompt "cupcake image"
@@ -274,17 +276,57 @@ fun BakingScreen(
                         }
                     }
                     is UiState.Success -> {
-                        val scrollState = rememberScrollState()
-                        Text(
-                            text = currentState.outputText,
-                            textAlign = TextAlign.Start,
-                            color = MaterialTheme.colorScheme.onSurface,
+                        var showReportDialog by remember { mutableStateOf(false) }
+                        val coroutineScope = rememberCoroutineScope()
+                        
+                        Column(
                             modifier = Modifier
                                 .align(Alignment.CenterHorizontally)
                                 .padding(16.dp)
                                 .fillMaxSize()
-                                .verticalScroll(scrollState)
-                        )
+                        ) {
+                            // Report button
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.End
+                            ) {
+                                Button(
+                                    onClick = { showReportDialog = true },
+                                    colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                                        containerColor = MaterialTheme.colorScheme.error
+                                    ),
+                                    modifier = Modifier.padding(bottom = 8.dp)
+                                ) {
+                                    Text(stringResource(R.string.action_report_content))
+                                }
+                            }
+                            
+                            // AI-generated content
+                            val scrollState = rememberScrollState()
+                            Text(
+                                text = currentState.outputText,
+                                textAlign = TextAlign.Start,
+                                color = MaterialTheme.colorScheme.onSurface,
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .verticalScroll(scrollState)
+                            )
+                        }
+                        
+                        // Report dialog
+                        if (showReportDialog) {
+                            ContentReportDialog(
+                                content = currentState.outputText,
+                                onDismiss = { showReportDialog = false },
+                                onReportSubmitted = { report ->
+                                    showReportDialog = false
+                                    coroutineScope.launch {
+                                        val result = ContentReportingHelper.submitReport(context, report)
+                                        // You could show a toast or snackbar here to confirm submission
+                                    }
+                                }
+                            )
+                        }
                     }
                     else -> {
                         // Initial state - show placeholder

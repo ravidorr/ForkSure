@@ -14,4 +14,18 @@
     <string name="action_dismiss">✕ Dismiss</string>
     <string name="take_photo">Take Photo</string>
     <string name="or_choose_sample">Or choose from sample images:</string>
+    
+    <!-- Content reporting strings -->
+    <string name="action_report_content">🚩 Report Content</string>
+    <string name="report_dialog_title">Report Content</string>
+    <string name="report_dialog_message">Help us improve by reporting inappropriate, offensive, or harmful content. Your report will help us moderate AI-generated content better.</string>
+    <string name="report_reason_inappropriate">Inappropriate content</string>
+    <string name="report_reason_offensive">Offensive language</string>
+    <string name="report_reason_harmful">Potentially harmful instructions</string>
+    <string name="report_reason_other">Other</string>
+    <string name="report_additional_details">Additional details (optional)</string>
+    <string name="action_submit_report">Submit Report</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="report_success_message">Thank you for your report. We will review the content.</string>
+    <string name="report_error_message">Failed to submit report. Please try again.</string>
 </resources>
