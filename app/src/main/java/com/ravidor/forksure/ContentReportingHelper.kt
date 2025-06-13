@@ -72,7 +72,7 @@ class ContentReportingHelper {
         ): Result<Unit> = withContext(Dispatchers.IO) {
             try {
                 // Using Make.com webhook for silent content reporting
-                val webhookUrl = "https://hook.eu2.make.com/6d7lvk43jha8gpw17uywn3289erh1jn3"
+                val webhookUrl = "https://hook.eu2.make.com/m6bfqyz9x7thlxis94fj9lte5t7bmvi1"
                 
                 val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
                 val formattedDate = dateFormat.format(Date(report.timestamp))
@@ -85,7 +85,6 @@ class ContentReportingHelper {
                     put("additional_details", report.additionalDetails)
                     put("app_version", getAppVersion(context))
                     put("device_info", "${android.os.Build.MODEL} (${android.os.Build.VERSION.RELEASE})")
-                    put("developer_email", DEVELOPER_EMAIL)
                 }
                 
                 val url = URL(webhookUrl)
