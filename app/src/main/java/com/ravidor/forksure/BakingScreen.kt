@@ -287,6 +287,407 @@ private fun InitialStateSection(
     )
 }
 
+@Composable
+private fun CameraSection(
+    onTakePhoto: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val context = LocalContext.current
+    
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp),
+        horizontalArrangement = Arrangement.Center
+    ) {
+        Button(
+            onClick = { 
+                onTakePhoto()
+                AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.CLICK)
+            },
+            modifier = Modifier
+                .padding(bottom = 8.dp)
+                .semantics {
+                    contentDescription = "Take photo button. Opens camera to capture baked goods"
+                }
+        ) {
+            Icon(
+                imageVector = Icons.Default.Add,
+                contentDescription = "",
+                modifier = Modifier.padding(end = 8.dp)
+            )
+            Text(stringResource(R.string.take_photo))
+        }
+    }
+}
+
+@Composable
+private fun CapturedImageCard(
+    bitmap: Bitmap,
+    isSelected: Boolean,
+    onImageClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val context = LocalContext.current
+    
+    Card(
+        modifier = modifier
+            .padding(16.dp)
+            .fillMaxWidth()
+            .height(200.dp)
+            .clickable { 
+                onImageClick()
+                AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.CLICK)
+            }
+            .then(
+                if (isSelected) {
+                    Modifier.border(BorderStroke(4.dp, MaterialTheme.colorScheme.primary))
+                } else Modifier
+            )
+            .semantics {
+                contentDescription = if (isSelected) {
+                    "Captured image, currently selected for analysis"
+                } else {
+                    "Captured image, tap to select for analysis"
+                }
+            }
+    ) {
+        Image(
+            bitmap = bitmap.asImageBitmap(),
+            contentDescription = "",
+            modifier = Modifier.fillMaxSize()
+        )
+    }
+}
+
+@Composable
+private fun SampleImagesSection(
+    images: Array<Int>,
+    imageDescriptions: Array<Int>,
+    selectedImageIndex: Int,
+    onImageSelected: (Int) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(modifier = modifier) {
+        Text(
+            text = stringResource(R.string.or_choose_sample),
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier
+                .padding(horizontal = 16.dp, vertical = 8.dp)
+                .semantics {
+                    contentDescription = "Sample images section heading"
+                }
+        )
+
+        LazyRow(
+            modifier = Modifier
+                .fillMaxWidth()
+                .semantics {
+                    contentDescription = "Horizontal list of sample baking images"
+                }
+        ) {
+            itemsIndexed(images) { index, image ->
+                SampleImageItem(
+                    imageRes = image,
+                    imageDescription = stringResource(imageDescriptions[index]),
+                    isSelected = index == selectedImageIndex,
+                    onImageClick = { onImageSelected(index) }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun SampleImageItem(
+    imageRes: Int,
+    imageDescription: String,
+    isSelected: Boolean,
+    onImageClick: () -> Unit
+) {
+    val context = LocalContext.current
+    
+    var imageModifier = Modifier
+        .padding(start = 8.dp, end = 8.dp)
+        .requiredSize(120.dp)
+        .clickable { 
+            onImageClick()
+            AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.CLICK)
+        }
+        .semantics {
+            contentDescription = if (isSelected) {
+                "$imageDescription sample image, currently selected for analysis"
+            } else {
+                "$imageDescription sample image, tap to select for analysis"
+            }
+        }
+        
+    if (isSelected) {
+        imageModifier = imageModifier.border(BorderStroke(4.dp, MaterialTheme.colorScheme.primary))
+    }
+    
+    Image(
+        painter = painterResource(imageRes),
+        contentDescription = "",
+        modifier = imageModifier
+    )
+}
+
+@Composable
+private fun PromptInputSection(
+    prompt: String,
+    onPromptChange: (String) -> Unit,
+    isAnalyzeEnabled: Boolean,
+    onAnalyzeClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val context = LocalContext.current
+    
+    Row(
+        modifier = modifier
+            .padding(all = 16.dp)
+            .semantics {
+                contentDescription = "Analysis input section"
+            }
+    ) {
+        TextField(
+            value = prompt,
+            label = { Text(stringResource(R.string.label_prompt)) },
+            onValueChange = onPromptChange,
+            modifier = Modifier
+                .weight(0.8f)
+                .padding(end = 16.dp)
+                .align(Alignment.CenterVertically)
+                .semantics {
+                    contentDescription = "Prompt input field. Enter your question about the baked goods"
+                }
+        )
+
+        Button(
+            onClick = {
+                onAnalyzeClick()
+                AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.CLICK)
+            },
+            enabled = isAnalyzeEnabled,
+            modifier = Modifier
+                .align(Alignment.CenterVertically)
+                .semantics {
+                    contentDescription = if (isAnalyzeEnabled) {
+                        "Analyze button. Start AI analysis of selected image with your prompt"
+                    } else {
+                        "Analyze button. Disabled. Select an image and enter a prompt to enable"
+                    }
+                }
+        ) {
+            Text(text = stringResource(R.string.action_go))
+        }
+    }
+}
+
+@Composable
+private fun LoadingSection(
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+            .semantics {
+                contentDescription = "Loading AI analysis results"
+            },
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        CircularProgressIndicator()
+        Text(
+            text = "Analyzing your baked goods...",
+            modifier = Modifier.padding(top = 8.dp),
+            style = MaterialTheme.typography.bodyMedium
+        )
+    }
+}
+
+@Composable
+private fun ErrorSection(
+    errorState: UiState.Error,
+    onRetry: () -> Unit,
+    onDismiss: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val context = LocalContext.current
+    
+    Column(
+        modifier = modifier
+            .padding(16.dp)
+            .semantics {
+                contentDescription = "Error occurred during analysis"
+            },
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        val errorIcon = when (errorState.errorType) {
+            ErrorType.NETWORK -> "📶"
+            ErrorType.API_KEY -> "🔑"
+            ErrorType.QUOTA_EXCEEDED -> "⏰"
+            ErrorType.CONTENT_POLICY -> "🚫"
+            ErrorType.IMAGE_SIZE -> "📷"
+            ErrorType.SERVER_ERROR -> "🔧"
+            ErrorType.UNKNOWN -> "⚠️"
+        }
+        
+        Text(
+            text = errorIcon,
+            style = MaterialTheme.typography.headlineLarge,
+            modifier = Modifier
+                .padding(bottom = 16.dp)
+                .semantics {
+                    contentDescription = "Error icon: ${errorState.errorType.name.lowercase().replace('_', ' ')}"
+                }
+        )
+        
+        Text(
+            text = ErrorHandler.getErrorMessageWithSuggestion(errorState),
+            textAlign = TextAlign.Center,
+            color = MaterialTheme.colorScheme.error,
+            modifier = Modifier
+                .padding(bottom = 16.dp)
+                .verticalScroll(rememberScrollState())
+                .semantics {
+                    contentDescription = "Error message and suggestions"
+                }
+        )
+        
+        ErrorActionButtons(
+            canRetry = errorState.canRetry,
+            onRetry = onRetry,
+            onDismiss = onDismiss
+        )
+    }
+    
+    LaunchedEffect(errorState) {
+        AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.ERROR)
+    }
+}
+
+@Composable
+private fun ErrorActionButtons(
+    canRetry: Boolean,
+    onRetry: () -> Unit,
+    onDismiss: () -> Unit
+) {
+    val context = LocalContext.current
+    
+    if (canRetry) {
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Button(
+                onClick = { 
+                    onRetry()
+                    AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.CLICK)
+                },
+                modifier = Modifier.semantics {
+                    contentDescription = "Retry analysis button. Try the AI analysis again"
+                }
+            ) {
+                Text(stringResource(R.string.action_retry))
+            }
+            
+            Button(
+                onClick = { 
+                    onDismiss()
+                    AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.CLICK)
+                },
+                colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.secondary
+                ),
+                modifier = Modifier.semantics {
+                    contentDescription = "Dismiss error button. Clear the error message"
+                }
+            ) {
+                Text(stringResource(R.string.action_dismiss))
+            }
+        }
+    } else {
+        Button(
+            onClick = { 
+                onDismiss()
+                AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.CLICK)
+            },
+            colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.secondary
+            ),
+            modifier = Modifier.semantics {
+                contentDescription = "Dismiss error button. Clear the error message"
+            }
+        ) {
+            Text(stringResource(R.string.action_dismiss))
+        }
+    }
+}
+
+@Composable
+private fun RecipeResultsSection(
+    outputText: String,
+    onReportContent: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val context = LocalContext.current
+    
+    Column(
+        modifier = modifier
+            .padding(16.dp)
+            .semantics {
+                contentDescription = "AI analysis results"
+            }
+    ) {
+        Text(
+            text = "Your Recipe",
+            style = MaterialTheme.typography.headlineSmall,
+            modifier = Modifier
+                .padding(bottom = 16.dp)
+                .semantics {
+                    contentDescription = "Recipe results section heading"
+                }
+        )
+        
+        val scrollState = rememberScrollState()
+        MarkdownText(
+            markdown = outputText,
+            style = MaterialTheme.typography.bodyLarge.copy(
+                color = MaterialTheme.colorScheme.onSurface,
+                textAlign = TextAlign.Start
+            ),
+            modifier = Modifier
+                .weight(1f)
+                .verticalScroll(scrollState)
+                .semantics {
+                    contentDescription = "AI-generated recipe and analysis"
+                }
+        )
+        
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Button(
+                onClick = { 
+                    onReportContent()
+                    AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.CLICK)
+                },
+                colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.error
+                ),
+                modifier = Modifier.semantics {
+                    contentDescription = "Report content button. Report inappropriate AI-generated content"
+                }
+            ) {
+                Text(stringResource(R.string.action_report_content))
+            }
+        }
+    }
+    
+    LaunchedEffect(outputText) {
+        AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.SUCCESS)
+    }
+}
+
 @Preview(showSystemUi = true)
 @Composable
 fun BakingScreenPreview() {
