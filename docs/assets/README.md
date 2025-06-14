@@ -6,6 +6,7 @@ This folder contains design guidelines and asset creation instructions for ForkS
 
 - **[FEATURE_GRAPHIC_DESIGN.md](FEATURE_GRAPHIC_DESIGN.md)** - Feature graphic design guidelines and specifications
 - **[ICON_PREVIEW.md](ICON_PREVIEW.md)** - Visual comparison of app icons for Google Play Store compliance
+- **[images/](images/)** - Design assets including feature graphics, icons, and launcher graphics
 
 ## 🎯 Overview
 
