@@ -13,22 +13,22 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
 /**
- * Unit tests for ForkSureNavigation
+ * Unit tests for Navigation components
  * Tests navigation logic, route handling, and state management
  */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [34])
-class ForkSureNavigationTest {
+class NavigationTest {
 
     private lateinit var mockNavController: NavHostController
     private var capturedBitmap: Bitmap? = null
-    private var selectedImageIndex: Int = 0
+    private var capturedError: String? = null
 
     @Before
     fun setup() {
         mockNavController = mockk(relaxed = true)
         capturedBitmap = null
-        selectedImageIndex = 0
+        capturedError = null
         
         // Mock nav controller methods
         every { mockNavController.navigate(any<String>()) } just Runs
@@ -74,14 +74,14 @@ class ForkSureNavigationTest {
         // When - simulate camera capture flow
         val onImageCaptured: (Bitmap) -> Unit = { bitmap ->
             capturedBitmap = bitmap
-            selectedImageIndex = -1 // Captured image selected
+            capturedError = null
         }
         
         onImageCaptured(testBitmap)
         
         // Then
         assertThat(capturedBitmap).isEqualTo(testBitmap)
-        assertThat(selectedImageIndex).isEqualTo(-1)
+        assertThat(capturedError).isNull()
     }
 
     @Test
@@ -93,12 +93,14 @@ class ForkSureNavigationTest {
         val onError: (String) -> Unit = { error ->
             // Navigation back should occur
             mockNavController.popBackStack()
+            capturedError = error
         }
         
         onError(testError)
         
         // Then
         verify { mockNavController.popBackStack() }
+        assertThat(capturedError).isEqualTo(testError)
     }
 
     @Test
@@ -110,6 +112,7 @@ class ForkSureNavigationTest {
         val onImageCaptured: (Bitmap) -> Unit = { bitmap ->
             capturedBitmap = bitmap
             mockNavController.popBackStack()
+            capturedError = null
         }
         
         onImageCaptured(testBitmap)
@@ -117,6 +120,7 @@ class ForkSureNavigationTest {
         // Then
         verify { mockNavController.popBackStack() }
         assertThat(capturedBitmap).isNotNull()
+        assertThat(capturedError).isNull()
     }
 
     @Test
@@ -125,12 +129,12 @@ class ForkSureNavigationTest {
         val sampleImageIndex = 2
         
         // When
-        selectedImageIndex = sampleImageIndex
-        capturedBitmap = null // Clear captured image when sample is selected
+        capturedBitmap = null
+        capturedError = null
         
         // Then
-        assertThat(selectedImageIndex).isEqualTo(2)
         assertThat(capturedBitmap).isNull()
+        assertThat(capturedError).isNull()
     }
 
     @Test
@@ -140,11 +144,11 @@ class ForkSureNavigationTest {
         
         // When
         capturedBitmap = testBitmap
-        selectedImageIndex = -1 // -1 indicates captured image is selected
+        capturedError = null
         
         // Then
         assertThat(capturedBitmap).isNotNull()
-        assertThat(selectedImageIndex).isEqualTo(-1)
+        assertThat(capturedError).isNull()
     }
 
     @Test
@@ -193,25 +197,25 @@ class ForkSureNavigationTest {
         // Test that navigation state remains consistent across operations
         
         // Initial state
-        assertThat(selectedImageIndex).isEqualTo(0)
         assertThat(capturedBitmap).isNull()
+        assertThat(capturedError).isNull()
         
         // Navigate to camera and capture image
         val testBitmap = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888)
         capturedBitmap = testBitmap
-        selectedImageIndex = -1
+        capturedError = null
         
         // Verify state
         assertThat(capturedBitmap).isNotNull()
-        assertThat(selectedImageIndex).isEqualTo(-1)
+        assertThat(capturedError).isNull()
         
         // Select sample image (should clear captured image)
         capturedBitmap = null
-        selectedImageIndex = 1
+        capturedError = null
         
         // Verify final state
         assertThat(capturedBitmap).isNull()
-        assertThat(selectedImageIndex).isEqualTo(1)
+        assertThat(capturedError).isNull()
     }
 
     @Test
