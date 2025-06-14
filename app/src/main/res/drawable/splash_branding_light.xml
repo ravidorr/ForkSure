@@ -1,29 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="120dp"
-    android:height="24dp"
+    android:height="60dp"
     android:viewportWidth="120"
-    android:viewportHeight="24">
+    android:viewportHeight="60">
     
-    <!-- ForkSure text -->
+    <!-- White Fork on the Left -->
+    <!-- Fork handle -->
     <path
-        android:fillColor="@color/forksure_on_background_light"
-        android:pathData="M10,6 L10,18 M6,6 L14,6 M6,12 L12,12"/>
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M20,25L24,25L24,45L20,45Z"/>
     
-    <!-- Simple text representation - in a real app you'd use a proper font/text -->
-    <group android:translateX="20">
-        <path
-            android:fillColor="@color/forksure_on_background_light"
-            android:pathData="M0,6 L0,18 L8,18 L8,12 L4,12 M12,6 L12,18 L20,18 L20,15 L16,15 L16,12 L20,12 L20,9 L16,9 L16,6"/>
-    </group>
+    <!-- Fork tines -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M15,18L29,18L29,28L26,28L26,22L24,22L24,28L22,28L22,22L20,22L20,28L15,28Z"/>
     
-    <!-- Cupcake icon -->
-    <group android:translateX="85" android:translateY="4" android:scaleX="0.8" android:scaleY="0.8">
-        <path
-            android:fillColor="@color/forksure_primary_light"
-            android:pathData="M8,8 C8,4 12,0 16,0 C20,0 24,4 24,8 L8,8 Z"/>
-        <path
-            android:fillColor="@color/forksure_tertiary_light"
-            android:pathData="M6,8 L26,8 L28,16 L4,16 Z"/>
-    </group>
+    <!-- Pink and White Cupcake on the Right -->
+    <!-- Cupcake base/liner with pink color -->
+    <path
+        android:fillColor="#FFFF1493"
+        android:pathData="M50,35L70,35C72,35 74,37 74,39L74,50C74,52 72,54 70,54L50,54C48,54 46,52 46,50L46,39C46,37 48,35 50,35Z"/>
+    
+    <!-- White vertical stripes on cupcake liner -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M52,37L54,37L54,52L52,52Z"/>
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M58,37L60,37L60,52L58,52Z"/>
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M64,37L66,37L66,52L64,52Z"/>
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M70,37L72,37L72,52L70,52Z"/>
+    
+    <!-- Scalloped top edge of liner -->
+    <path
+        android:fillColor="#FFFF1493"
+        android:pathData="M46,35C48,33 50,33 52,35C54,33 56,33 58,35C60,33 62,33 64,35C66,33 68,33 70,35C72,33 74,33 74,35L74,37L46,37Z"/>
+    
+    <!-- White frosting -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M48,25C48,20 52,15 58,15C64,15 68,20 68,25C70,22 72,20 74,22C76,24 74,28 72,30C70,32 68,30 66,28C64,32 60,35 58,35C56,35 52,32 50,28C48,30 46,32 44,30C42,28 42,24 44,22C46,20 48,22 48,25Z"/>
+    
+    <!-- Pink outline for frosting -->
+    <path
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="#FFFF1493"
+        android:strokeWidth="1.5"
+        android:pathData="M48,25C48,20 52,15 58,15C64,15 68,20 68,25C70,22 72,20 74,22C76,24 74,28 72,30C70,32 68,30 66,28C64,32 60,35 58,35C56,35 52,32 50,28C48,30 46,32 44,30C42,28 42,24 44,22C46,20 48,22 48,25Z"/>
+    
 </vector> 

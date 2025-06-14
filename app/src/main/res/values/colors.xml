@@ -8,6 +8,11 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     
+    <!-- New ForkSure Icon Colors -->
+    <color name="forksure_icon_background">#FF2D1B69</color>
+    <color name="forksure_icon_white">#FFFFFFFF</color>
+    <color name="forksure_icon_pink">#FFFF1493</color>
+    
     <!-- ForkSure Brand Colors - Light Theme -->
     <color name="forksure_primary_light">#FF6650a4</color>
     <color name="forksure_secondary_light">#FF625b71</color>

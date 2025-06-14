@@ -4,34 +4,37 @@
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-  <group android:scaleX="0.6"
-      android:scaleY="0.6"
-      android:translateX="21.6"
-      android:translateY="21.6">
-    <!-- Cupcake base -->
-    <path
-        android:fillColor="#000000"
-        android:pathData="M30,45L60,45L65,75L25,75Z"/>
+  <group android:scaleX="0.7"
+      android:scaleY="0.7"
+      android:translateX="18.9"
+      android:translateY="18.9">
     
-    <!-- Cupcake frosting -->
+    <!-- Fork on the Left -->
+    <!-- Fork handle -->
     <path
-        android:fillColor="#000000"
-        android:pathData="M25,45C25,35 35,25 45,25C55,25 65,35 65,45C65,40 60,35 55,35C50,30 40,30 35,35C30,35 25,40 25,45Z"/>
+        android:fillColor="#FF000000"
+        android:pathData="M25,45L29,45L29,75L25,75Z"/>
     
-    <!-- Cherry on top -->
+    <!-- Fork tines -->
     <path
-        android:fillColor="#000000"
-        android:pathData="M45,31C47.2,31 49,32.8 49,35C49,37.2 47.2,39 45,39C42.8,39 41,37.2 41,35C41,32.8 42.8,31 45,31Z"/>
+        android:fillColor="#FF000000"
+        android:pathData="M20,35L34,35L34,48L30,48L30,40L28,40L28,48L26,48L26,40L24,40L24,48L20,48Z"/>
     
-    <!-- Fork -->
+    <!-- Cupcake on the Right -->
+    <!-- Cupcake base/liner -->
     <path
-        android:fillColor="#000000"
-        android:pathData="M15,20L17,20L17,50L15,50Z"/>
+        android:fillColor="#FF000000"
+        android:pathData="M50,55L70,55C72,55 74,57 74,59L74,75C74,77 72,79 70,79L50,79C48,79 46,77 46,75L46,59C46,57 48,55 50,55Z"/>
+    
+    <!-- Scalloped top edge of liner -->
     <path
-        android:fillColor="#000000"
-        android:pathData="M13,18L19,18L19,22L13,22Z"/>
+        android:fillColor="#FF000000"
+        android:pathData="M46,55C48,53 50,53 52,55C54,53 56,53 58,55C60,53 62,53 64,55C66,53 68,53 70,55C72,53 74,53 74,55L74,57L46,57Z"/>
+    
+    <!-- Frosting -->
     <path
-        android:fillColor="#000000"
-        android:pathData="M13,18L13,25M16,18L16,25M19,18L19,25"/>
+        android:fillColor="#FF000000"
+        android:pathData="M48,45C48,40 52,35 58,35C64,35 68,40 68,45C70,42 72,40 74,42C76,44 74,48 72,50C70,52 68,50 66,48C64,52 60,55 58,55C56,55 52,52 50,48C48,50 46,52 44,50C42,48 42,44 44,42C46,40 48,42 48,45Z"/>
+    
   </group>
 </vector> 
