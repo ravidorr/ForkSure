@@ -1,9 +1,7 @@
 package com.ravidor.forksure
 
-import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -260,8 +258,6 @@ private fun BakingResultsSection(
                     content = uiState.outputText,
                     onDismiss = { showReportDialog = false },
                     onReportSubmitted = { report ->
-                        Log.d("ContentReporting", "🚩 Report button clicked in BakingScreen - Submitting report")
-                        Log.d("ContentReporting", "Report reason: ${report.reason}, content length: ${report.content.length}")
                         showReportDialog = false
                         coroutineScope.launch {
                             ContentReportingHelper.submitReport(context, report)
@@ -706,7 +702,6 @@ private fun RecipeResultsSection(
             // Report button
             Button(
                 onClick = { 
-                    Log.d("ContentReporting", "🚩 Report button tapped - Opening report dialog")
                     onReportContent()
                     AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.CLICK)
                 },
