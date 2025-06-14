@@ -133,7 +133,6 @@ class MainScreenIntegrationTest {
 
         // Wait for and verify results
         composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithText("Results").assertIsDisplayed()
         composeTestRule.onNodeWithText("This is a delicious chocolate cake with rich frosting.").assertIsDisplayed()
         composeTestRule.onNodeWithContentDescription("Report content button. Report inappropriate AI-generated content").assertIsDisplayed()
     }
@@ -369,7 +368,6 @@ class MainScreenIntegrationTest {
 
         // Wait for results and verify print button is displayed
         composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithText("Results").assertIsDisplayed()
         composeTestRule.onNodeWithContentDescription("Print recipe button. Print the AI-generated recipe").assertIsDisplayed()
         composeTestRule.onNodeWithText("🖨️ Print").assertIsDisplayed()
     }

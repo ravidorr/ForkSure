@@ -653,15 +653,7 @@ private fun RecipeResultsSection(
                 contentDescription = "AI analysis results"
             }
     ) {
-        Text(
-            text = "Your Recipe",
-            style = MaterialTheme.typography.headlineSmall,
-            modifier = Modifier
-                .padding(bottom = 16.dp)
-                .semantics {
-                    contentDescription = "Recipe results section heading"
-                }
-        )
+
         
         val scrollState = rememberScrollState()
         MarkdownText(
