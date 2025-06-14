@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.google.android.libraries.mapsplatform.secrets.gradle.plugin)
     id("com.google.dagger.hilt.android")
+    id("jacoco")
 }
 
 // Load keystore properties
@@ -90,6 +91,72 @@ android {
             enableSplit = false
         }
     }
+    
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+            isReturnDefaultValues = true
+        }
+        unitTests.all {
+            it.testLogging {
+                events("passed", "skipped", "failed", "standardOut", "standardError")
+            }
+        }
+    }
+}
+
+// JaCoCo Configuration
+jacoco {
+    toolVersion = "0.8.10"
+}
+
+tasks.register<JacocoReport>("jacocoTestReport") {
+    dependsOn("testDebugUnitTest")
+    
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+        csv.required.set(false)
+    }
+    
+    val fileFilter = listOf(
+        "**/R.class",
+        "**/R$*.class",
+        "**/BuildConfig.*",
+        "**/Manifest*.*",
+        "**/*Test*.*",
+        "android/**/*.*",
+        "**/Hilt_*.*",
+        "**/*_Factory.*",
+        "**/*_MembersInjector.*",
+        "**/*Module.*",
+        "**/*Component.*",
+        "**/DaggerApplicationComponent*.*"
+    )
+    
+    val debugTree = fileTree("${project.buildDir}/tmp/kotlin-classes/debug")
+    val mainSrc = "${project.projectDir}/src/main/java"
+    
+    sourceDirectories.setFrom(files(mainSrc))
+    classDirectories.setFrom(files(debugTree.exclude(fileFilter)))
+    executionData.setFrom(fileTree(project.buildDir).include("jacoco/testDebugUnitTest.exec"))
+}
+
+tasks.register<JacocoCoverageVerification>("jacocoCoverageVerification") {
+    dependsOn("jacocoTestReport")
+    
+    violationRules {
+        rule {
+            limit {
+                minimum = "0.60".toBigDecimal() // 60% minimum coverage
+            }
+        }
+    }
+}
+
+// Make check depend on jacoco coverage verification
+tasks.named("check") {
+    dependsOn("jacocoCoverageVerification")
 }
 
 dependencies {
@@ -145,7 +212,7 @@ dependencies {
     kspTest("com.google.dagger:hilt-android-compiler:2.48")
     
     // Robolectric for Android unit tests
-    testImplementation("org.robolectric:robolectric:4.11.1")
+    testImplementation("org.robolectric:robolectric:4.13")
     
     // Instrumented Testing
     androidTestImplementation(libs.androidx.junit)

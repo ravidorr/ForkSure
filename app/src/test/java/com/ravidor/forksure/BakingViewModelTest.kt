@@ -33,7 +33,7 @@ import javax.inject.Inject
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltAndroidTest
 @RunWith(RobolectricTestRunner::class)
-@Config(application = HiltTestApplication::class)
+@Config(application = HiltTestApplication::class, sdk = [34])
 class BakingViewModelTest {
 
     @get:Rule

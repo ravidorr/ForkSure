@@ -11,12 +11,14 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 
 /**
  * Unit tests for SecurityManager
  * Tests security validation, rate limiting, and input sanitization
  */
 @RunWith(RobolectricTestRunner::class)
+@Config(sdk = [34])
 class SecurityManagerTest {
 
     private lateinit var mockContext: Context
