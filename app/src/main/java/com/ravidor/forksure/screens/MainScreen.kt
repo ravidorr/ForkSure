@@ -18,12 +18,11 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
+
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
+
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -348,9 +347,9 @@ private fun CameraSection(
                     contentDescription = "Take photo button. Opens camera to capture baked goods"
                 }
         ) {
-            Icon(
-                imageVector = Icons.Default.Add,
-                contentDescription = "",
+            Text(
+                text = "📷",
+                style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(end = Dimensions.PADDING_SMALL)
             )
             Text(stringResource(R.string.take_photo))
