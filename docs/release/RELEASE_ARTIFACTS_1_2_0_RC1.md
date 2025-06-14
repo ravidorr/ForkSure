@@ -111,7 +111,7 @@ apksigner verify --verbose app-release.apk
 ```
 
 ## 📝 Release Notes
-See `release-notes-1.2.0-rc1.txt` for detailed changelog and feature descriptions.
+See [RELEASE_NOTES_1_2_0_RC1.md](RELEASE_NOTES_1_2_0_RC1.md) for detailed changelog and feature descriptions.
 
 ## 🎯 Next Steps
 1. **Beta Testing**: Distribute APK to beta testers
