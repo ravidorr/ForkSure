@@ -120,4 +120,14 @@
     <string name="print_recipe_error">Unable to print recipe. Please try again.</string>
     <string name="print_not_available">Printing is not available on this device</string>
     <string name="accessibility_print_button">Print recipe button. Print the AI-generated recipe</string>
+    
+    <!-- Share strings -->
+    <string name="action_share">📤 Share</string>
+    <string name="action_share_to_keep">📤 Save to Keep</string>
+    <string name="share_recipe_success">Recipe shared successfully</string>
+    <string name="share_recipe_error">Unable to share recipe. Please try again.</string>
+    <string name="share_chooser_title">Save recipe to...</string>
+    <string name="share_with_photo_chooser_title">Share recipe with photo...</string>
+    <string name="accessibility_share_button">Share recipe button. Share the AI-generated recipe to other apps</string>
+    <string name="accessibility_share_to_keep_button">Save to Google Keep button. Save the recipe to Google Keep notes</string>
 </resources>
