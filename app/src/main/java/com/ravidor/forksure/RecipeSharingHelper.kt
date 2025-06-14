@@ -129,7 +129,7 @@ object RecipeSharingHelper {
     /**
      * Format recipe content for sharing with proper structure
      */
-    private fun formatRecipeForSharing(
+    fun formatRecipeForSharing(
         recipeContent: String,
         recipeName: String
     ): String {
