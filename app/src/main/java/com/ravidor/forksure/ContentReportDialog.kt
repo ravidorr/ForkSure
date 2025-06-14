@@ -26,35 +26,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
-import com.ravidor.forksure.state.ContentReportDialogState
-import com.ravidor.forksure.state.rememberContentReportDialogState
 
-/**
- * Stateful ContentReportDialog with internal state management
- * @deprecated Use StatelessContentReportDialog for better state hoisting
- */
-@Deprecated("Use StatelessContentReportDialog for better state hoisting")
-@Composable
-fun ContentReportDialog(
-    content: String,
-    onDismiss: () -> Unit,
-    onReportSubmitted: (ContentReportingHelper.ContentReport) -> Unit
-) {
-    val dialogState = rememberContentReportDialogState()
-    
-    StatelessContentReportDialog(
-        content = content,
-        selectedReason = dialogState.selectedReason,
-        additionalDetails = dialogState.additionalDetails,
-        onReasonSelected = dialogState::updateSelectedReason,
-        onAdditionalDetailsChanged = dialogState::updateAdditionalDetails,
-        onDismiss = onDismiss,
-        onReportSubmitted = { 
-            val report = dialogState.createReport(content)
-            onReportSubmitted(report)
-        }
-    )
-}
 
 /**
  * Stateless ContentReportDialog with proper state hoisting

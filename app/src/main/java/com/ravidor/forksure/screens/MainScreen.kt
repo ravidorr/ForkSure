@@ -52,7 +52,7 @@ import dev.jeziellago.compose.markdowntext.MarkdownText
 // Centralized constants imports
 import com.ravidor.forksure.AccessibilityHelper
 import com.ravidor.forksure.BakingViewModel
-import com.ravidor.forksure.ContentReportDialog
+
 import com.ravidor.forksure.ContentReportingHelper
 import com.ravidor.forksure.Dimensions
 import com.ravidor.forksure.ErrorHandler
@@ -68,7 +68,7 @@ import com.ravidor.forksure.state.MainScreenState
 import com.ravidor.forksure.state.MainScreenActions
 import com.ravidor.forksure.state.DefaultMainScreenActions
 import com.ravidor.forksure.state.rememberMainScreenState
-import com.ravidor.forksure.state.rememberContentReportDialogState
+
 
 /**
  * Main screen of the ForkSure app with proper state hoisting
