@@ -4,7 +4,7 @@ This folder contains design guidelines and asset creation instructions for ForkS
 
 ## 📁 Contents
 
-- **[feature_graphic_design.md](feature_graphic_design.md)** - Feature graphic design guidelines and specifications
+- **[FEATURE_GRAPHIC_DESIGN.md](FEATURE_GRAPHIC_DESIGN.md)** - Feature graphic design guidelines and specifications
 
 ## 🎯 Overview
 

@@ -4,8 +4,8 @@ This folder contains release processes and artifacts for ForkSure.
 
 ## 📁 Contents
 
-- **[release_checklist.md](release_checklist.md)** - Complete Google Play Store release checklist
-- **[release-artifacts-1.2.0-rc1.md](release-artifacts-1.2.0-rc1.md)** - Current release artifacts and information
+- **[RELEASE_CHECKLIST.md](RELEASE_CHECKLIST.md)** - Complete Google Play Store release checklist
+- **[RELEASE_ARTIFACTS_1_2_0_RC1.md](RELEASE_ARTIFACTS_1_2_0_RC1.md)** - Current release artifacts and information
 
 ## 🎯 Overview
 
