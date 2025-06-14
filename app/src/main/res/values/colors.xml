@@ -7,4 +7,27 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    
+    <!-- ForkSure Brand Colors - Light Theme -->
+    <color name="forksure_primary_light">#FF6650a4</color>
+    <color name="forksure_secondary_light">#FF625b71</color>
+    <color name="forksure_tertiary_light">#FF7D5260</color>
+    <color name="forksure_surface_light">#FFFFFBFE</color>
+    <color name="forksure_background_light">#FFFFFBFE</color>
+    <color name="forksure_on_primary_light">#FFFFFFFF</color>
+    <color name="forksure_on_surface_light">#FF1C1B1F</color>
+    <color name="forksure_on_background_light">#FF1C1B1F</color>
+    
+    <!-- ForkSure Brand Colors - Dark Theme -->
+    <color name="forksure_primary_dark">#FFD0BCFF</color>
+    <color name="forksure_secondary_dark">#FFCCC2DC</color>
+    <color name="forksure_tertiary_dark">#FFEFB8C8</color>
+    <color name="forksure_surface_dark">#FF1C1B1F</color>
+    <color name="forksure_background_dark">#FF121212</color>
+    <color name="forksure_on_primary_dark">#FF371E73</color>
+    <color name="forksure_on_surface_dark">#FFE6E1E5</color>
+    <color name="forksure_on_background_dark">#FFE6E1E5</color>
+    
+    <!-- Status colors -->
+    <color name="splash_icon_tint">#FF6650a4</color>
 </resources>

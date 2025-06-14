@@ -40,6 +40,7 @@ import kotlinx.coroutines.isActive
 // Centralized constants imports
 import com.ravidor.forksure.SecurityConstants
 import com.ravidor.forksure.AppColors
+import com.ravidor.forksure.ThemeColors
 import com.ravidor.forksure.Dimensions
 
 // Constants moved to centralized Constants.kt file
@@ -58,7 +59,7 @@ fun SecurityStatusIndicator(
     LaunchedEffect(viewModel) {
         delay(SecurityConstants.INITIAL_DELAY_MS)
         securityStatus = viewModel.getSecurityStatus()
-        rateLimitStatus = SecurityManager.checkRateLimit(context, "ai_requests")
+        rateLimitStatus = SecurityManager.getRateLimitStatus(context, "ai_requests")
         requestCount = viewModel.getRequestCount()
     }
 
@@ -69,7 +70,7 @@ fun SecurityStatusIndicator(
             if (isActive) {
                 try {
                     securityStatus = viewModel.getSecurityStatus()
-                    rateLimitStatus = SecurityManager.checkRateLimit(context, "ai_requests")
+                    rateLimitStatus = SecurityManager.getRateLimitStatus(context, "ai_requests")
                     requestCount = viewModel.getRequestCount()
                 } catch (e: Exception) {
                     // Handle potential errors gracefully
@@ -147,12 +148,12 @@ private fun SecurityStatusItem(
         val (icon, color, text) = when (status) {
             is SecurityEnvironmentResult.Secure -> Triple(
                 Icons.Default.Check,
-                AppColors.SUCCESS_COLOR,
+                ThemeColors.successColor(),
                 "Secure"
             )
             is SecurityEnvironmentResult.Insecure -> Triple(
                 Icons.Default.Warning,
-                AppColors.WARNING_COLOR,
+                ThemeColors.warningColor(),
                 "Warning"
             )
             null -> Triple(
@@ -208,14 +209,14 @@ private fun RateLimitStatusItem(
             is RateLimitResult.Allowed -> {
                 val remaining = rateLimitStatus.requestsRemaining
                 val color = when {
-                    remaining > 5 -> AppColors.SUCCESS_COLOR
-                    remaining > 2 -> AppColors.WARNING_COLOR
-                    else -> AppColors.ERROR_COLOR
+                    remaining > 5 -> ThemeColors.successColor()
+                    remaining > 2 -> ThemeColors.warningColor()
+                    else -> ThemeColors.errorColor()
                 }
                 color to "$remaining left"
             }
             is RateLimitResult.Blocked -> {
-                AppColors.ERROR_COLOR to "Blocked"
+                ThemeColors.errorColor() to "Blocked"
             }
             null -> {
                 MaterialTheme.colorScheme.onSurfaceVariant to "..."
@@ -258,7 +259,7 @@ fun SecurityWarningBanner(
                 contentDescription = "Security warning: ${issues.joinToString(", ")}"
             },
         colors = CardDefaults.cardColors(
-            containerColor = AppColors.ERROR_COLOR.copy(alpha = AppColors.ALPHA_LOW)
+            containerColor = ThemeColors.errorColor().copy(alpha = AppColors.ALPHA_LOW)
         ),
                   shape = RoundedCornerShape(Dimensions.CORNER_RADIUS_STANDARD)
     ) {
@@ -271,13 +272,13 @@ fun SecurityWarningBanner(
                 Icon(
                     imageVector = Icons.Default.Warning,
                     contentDescription = "",
-                    tint = AppColors.ERROR_COLOR,
+                    tint = ThemeColors.errorColor(),
                     modifier = Modifier.size(Dimensions.ICON_SIZE_LARGE)
                 )
                 Text(
                     text = "Security Warning",
                     style = MaterialTheme.typography.titleMedium,
-                    color = AppColors.ERROR_COLOR,
+                    color = ThemeColors.errorColor(),
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(start = Dimensions.PADDING_SMALL)
                 )

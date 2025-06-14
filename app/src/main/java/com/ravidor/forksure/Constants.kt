@@ -4,6 +4,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Composable
+import androidx.compose.foundation.isSystemInDarkTheme
 
 /**
  * Centralized constants for the ForkSure application
@@ -69,24 +71,50 @@ object Dimensions {
  */
 @Immutable
 object AppColors {
-    // Status colors
+    // Status colors (work well in both light and dark themes)
     val SUCCESS_COLOR = Color(0xFF4CAF50) // Green
     val WARNING_COLOR = Color(0xFFFF9800) // Orange  
     val ERROR_COLOR = Color(0xFFF44336) // Red
     val INFO_COLOR = Color(0xFF2196F3) // Blue
     
-    // Theme colors (Material 3)
-    val PURPLE_80 = Color(0xFFD0BCFF)
-    val PURPLE_GREY_80 = Color(0xFFCCC2DC)
-    val PINK_80 = Color(0xFFEFB8C8)
-    val PURPLE_40 = Color(0xFF6650a4)
-    val PURPLE_GREY_40 = Color(0xFF625b71)
-    val PINK_40 = Color(0xFF7D5260)
+    // ForkSure Brand Colors - Light Theme
+    val FORKSURE_PRIMARY_LIGHT = Color(0xFF6650a4) // Deep purple
+    val FORKSURE_SECONDARY_LIGHT = Color(0xFF625b71) // Purple grey
+    val FORKSURE_TERTIARY_LIGHT = Color(0xFF7D5260) // Pink
+    val FORKSURE_SURFACE_LIGHT = Color(0xFFFFFBFE) // Off-white
+    val FORKSURE_BACKGROUND_LIGHT = Color(0xFFFFFBFE) // Off-white
+    val FORKSURE_ON_PRIMARY_LIGHT = Color(0xFFFFFFFF) // White
+    val FORKSURE_ON_SURFACE_LIGHT = Color(0xFF1C1B1F) // Dark grey
+    val FORKSURE_ON_BACKGROUND_LIGHT = Color(0xFF1C1B1F) // Dark grey
     
-    // Background colors
-    val SURFACE_LIGHT = Color(0xFFFFFBFE)
-    val ON_BACKGROUND_LIGHT = Color(0xFF1C1B1F)
-    val ON_SURFACE_LIGHT = Color(0xFF1C1B1F)
+    // ForkSure Brand Colors - Dark Theme
+    val FORKSURE_PRIMARY_DARK = Color(0xFFD0BCFF) // Light purple
+    val FORKSURE_SECONDARY_DARK = Color(0xFFCCC2DC) // Light purple grey
+    val FORKSURE_TERTIARY_DARK = Color(0xFFEFB8C8) // Light pink
+    val FORKSURE_SURFACE_DARK = Color(0xFF1C1B1F) // Dark grey
+    val FORKSURE_BACKGROUND_DARK = Color(0xFF121212) // True dark
+    val FORKSURE_ON_PRIMARY_DARK = Color(0xFF371E73) // Dark purple
+    val FORKSURE_ON_SURFACE_DARK = Color(0xFFE6E1E5) // Light grey
+    val FORKSURE_ON_BACKGROUND_DARK = Color(0xFFE6E1E5) // Light grey
+    
+    // Legacy Material 3 colors (for backward compatibility)
+    val PURPLE_80 = FORKSURE_PRIMARY_DARK
+    val PURPLE_GREY_80 = FORKSURE_SECONDARY_DARK
+    val PINK_80 = FORKSURE_TERTIARY_DARK
+    val PURPLE_40 = FORKSURE_PRIMARY_LIGHT
+    val PURPLE_GREY_40 = FORKSURE_SECONDARY_LIGHT
+    val PINK_40 = FORKSURE_TERTIARY_LIGHT
+    
+    // Legacy background colors (for backward compatibility)
+    val SURFACE_LIGHT = FORKSURE_SURFACE_LIGHT
+    val ON_BACKGROUND_LIGHT = FORKSURE_ON_BACKGROUND_LIGHT
+    val ON_SURFACE_LIGHT = FORKSURE_ON_SURFACE_LIGHT
+    
+    // Dark theme status colors (adjusted for better visibility)
+    val SUCCESS_COLOR_DARK = Color(0xFF66BB6A) // Lighter green
+    val WARNING_COLOR_DARK = Color(0xFFFFB74D) // Lighter orange
+    val ERROR_COLOR_DARK = Color(0xFFEF5350) // Lighter red
+    val INFO_COLOR_DARK = Color(0xFF42A5F5) // Lighter blue
     
     // Transparency levels
     const val ALPHA_DISABLED = 0.38f
@@ -207,4 +235,42 @@ object NavigationConstants {
     const val ACCESSIBILITY_NAVIGATION_TO_CAMERA = "Navigating to camera screen"
     const val ACCESSIBILITY_NAVIGATION_TO_MAIN = "Navigating to main screen"
     const val ACCESSIBILITY_NAVIGATION_TO_RESULTS = "Navigating to results screen"
+}
+
+/**
+ * Theme-aware color utilities for dynamic light/dark mode support
+ */
+@Immutable
+object ThemeColors {
+    /**
+     * Get theme-aware success color
+     */
+    @Composable
+    fun successColor(isDarkTheme: Boolean = isSystemInDarkTheme()): Color {
+        return if (isDarkTheme) AppColors.SUCCESS_COLOR_DARK else AppColors.SUCCESS_COLOR
+    }
+    
+    /**
+     * Get theme-aware warning color
+     */
+    @Composable
+    fun warningColor(isDarkTheme: Boolean = isSystemInDarkTheme()): Color {
+        return if (isDarkTheme) AppColors.WARNING_COLOR_DARK else AppColors.WARNING_COLOR
+    }
+    
+    /**
+     * Get theme-aware error color
+     */
+    @Composable
+    fun errorColor(isDarkTheme: Boolean = isSystemInDarkTheme()): Color {
+        return if (isDarkTheme) AppColors.ERROR_COLOR_DARK else AppColors.ERROR_COLOR
+    }
+    
+    /**
+     * Get theme-aware info color
+     */
+    @Composable
+    fun infoColor(isDarkTheme: Boolean = isSystemInDarkTheme()): Color {
+        return if (isDarkTheme) AppColors.INFO_COLOR_DARK else AppColors.INFO_COLOR
+    }
 } 

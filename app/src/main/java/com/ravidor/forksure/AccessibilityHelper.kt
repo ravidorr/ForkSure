@@ -5,6 +5,7 @@ import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
+import android.view.View
 import android.view.accessibility.AccessibilityManager
 import androidx.compose.runtime.Stable
 
@@ -51,18 +52,28 @@ object AccessibilityHelper {
     }
     
     /**
-     * Announces text for accessibility services
+     * Announces text for accessibility services using modern View-based approach
+     * This is the recommended way to make accessibility announcements
      */
-    fun announceForAccessibility(context: Context, text: String) {
+    fun announceForAccessibility(context: Context, message: String) {
         val accessibilityManager = context.getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
-        if (accessibilityManager.isEnabled) {
-            // Create an accessibility event for announcement
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                val event = android.view.accessibility.AccessibilityEvent.obtain(
-                    android.view.accessibility.AccessibilityEvent.TYPE_ANNOUNCEMENT
-                )
-                event.text.add(text)
+        if (accessibilityManager.isEnabled && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            // Use the modern View-based approach for accessibility announcements
+            // This avoids all deprecated AccessibilityEvent APIs
+            try {
+                val view = View(context)
+                view.announceForAccessibility(message)
+            } catch (e: Exception) {
+                // Fallback: If View creation fails, we can still use the deprecated API with suppression
+                // This ensures accessibility always works even in edge cases
+                @Suppress("DEPRECATION")
+                val event = android.view.accessibility.AccessibilityEvent.obtain().apply {
+                    eventType = android.view.accessibility.AccessibilityEvent.TYPE_ANNOUNCEMENT
+                    text.add(message)
+                }
                 accessibilityManager.sendAccessibilityEvent(event)
+                @Suppress("DEPRECATION")
+                event.recycle()
             }
         }
     }

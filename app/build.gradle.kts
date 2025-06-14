@@ -5,9 +5,9 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.ksp)
     alias(libs.plugins.google.android.libraries.mapsplatform.secrets.gradle.plugin)
     id("com.google.dagger.hilt.android")
-    id("kotlin-kapt")
 }
 
 // Load keystore properties
@@ -85,9 +85,12 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.generativeai)
     
+    // Splash Screen API
+    implementation("androidx.core:core-splashscreen:1.0.1")
+    
     // Hilt dependencies
     implementation("com.google.dagger:hilt-android:2.48")
-    kapt("com.google.dagger:hilt-compiler:2.48")
+    ksp("com.google.dagger:hilt-compiler:2.48")
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
     
     // CameraX dependencies
@@ -119,7 +122,7 @@ dependencies {
     
     // Hilt Testing
     testImplementation("com.google.dagger:hilt-android-testing:2.48")
-    kaptTest("com.google.dagger:hilt-android-compiler:2.48")
+    kspTest("com.google.dagger:hilt-android-compiler:2.48")
     
     // Robolectric for Android unit tests
     testImplementation("org.robolectric:robolectric:4.11.1")
@@ -138,7 +141,7 @@ dependencies {
     
     // Hilt Instrumented Testing
     androidTestImplementation("com.google.dagger:hilt-android-testing:2.48")
-    kaptAndroidTest("com.google.dagger:hilt-android-compiler:2.48")
+    kspAndroidTest("com.google.dagger:hilt-android-compiler:2.48")
     
     // Compose Testing
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
@@ -151,7 +154,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 }
 
-// Allow references to generated code
-kapt {
-    correctErrorTypes = true
+// KSP configuration for generated code
+ksp {
+    arg("dagger.hilt.android.internal.disableAndroidSuperclassValidation", "true")
 }

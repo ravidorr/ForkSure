@@ -1,5 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.ForkSure" parent="android:Theme.Material.Light.NoActionBar" />
+    <!-- Light Theme -->
+    <style name="Theme.ForkSure" parent="Theme.Material3.Light.NoActionBar">
+        <!-- Primary brand color -->
+        <item name="colorPrimary">@color/forksure_primary_light</item>
+        <item name="colorOnPrimary">@color/forksure_on_primary_light</item>
+        <item name="colorPrimaryContainer">@color/forksure_primary_light</item>
+        <item name="colorOnPrimaryContainer">@color/forksure_on_primary_light</item>
+        
+        <!-- Background colors -->
+        <item name="android:colorBackground">@color/forksure_background_light</item>
+        <item name="colorSurface">@color/forksure_surface_light</item>
+        <item name="colorOnSurface">@color/forksure_on_surface_light</item>
+        
+        <!-- Status bar -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item>
+        
+        <!-- Splash Screen (Android 12+) -->
+        <item name="android:windowSplashScreenBackground">@color/forksure_background_light</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
+        <item name="android:windowSplashScreenIconBackgroundColor">@color/forksure_primary_light</item>
+        <item name="android:windowSplashScreenBrandingImage">@drawable/splash_branding_light</item>
+    </style>
+
+    <!-- Splash Screen Theme for older Android versions -->
+    <style name="Theme.ForkSure.Splash" parent="Theme.ForkSure">
+        <item name="android:windowBackground">@drawable/splash_background_light</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
 </resources>
