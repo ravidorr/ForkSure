@@ -121,53 +121,7 @@ fun rememberMainScreenState(
     }
 }
 
-/**
- * State holder for content reporting dialog
- * Separates dialog state from main screen state
- */
-@Stable
-class ContentReportDialogState(
-    initialReason: ContentReportingHelper.ReportReason = ContentReportingHelper.ReportReason.INAPPROPRIATE
-) {
-    var selectedReason by mutableStateOf(initialReason)
-        private set
-    
-    var additionalDetails by mutableStateOf("")
-        private set
-    
-    fun updateSelectedReason(reason: ContentReportingHelper.ReportReason) {
-        selectedReason = reason
-    }
-    
-    fun updateAdditionalDetails(details: String) {
-        additionalDetails = details
-    }
-    
-    fun createReport(content: String): ContentReportingHelper.ContentReport {
-        return ContentReportingHelper.ContentReport(
-            content = content,
-            reason = selectedReason,
-            additionalDetails = additionalDetails.trim()
-        )
-    }
-    
-    fun reset() {
-        selectedReason = ContentReportingHelper.ReportReason.INAPPROPRIATE
-        additionalDetails = ""
-    }
-}
 
-/**
- * Remember a ContentReportDialogState instance
- */
-@Composable
-fun rememberContentReportDialogState(
-    initialReason: ContentReportingHelper.ReportReason = ContentReportingHelper.ReportReason.INAPPROPRIATE
-): ContentReportDialogState {
-    return remember {
-        ContentReportDialogState(initialReason)
-    }
-}
 
 /**
  * Actions interface for main screen
