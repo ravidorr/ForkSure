@@ -667,15 +667,7 @@ private fun RecipeResultsSection(
                 contentDescription = "AI analysis results"
             }
     ) {
-        Text(
-            text = stringResource(R.string.results_heading),
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier
-                .padding(bottom = Dimensions.PADDING_STANDARD)
-                .semantics {
-                    contentDescription = "AI analysis results section"
-                }
-        )
+
         
         MarkdownText(
             markdown = outputText,
