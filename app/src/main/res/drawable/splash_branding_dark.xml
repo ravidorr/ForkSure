@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="24dp"
+    android:viewportWidth="120"
+    android:viewportHeight="24">
+    
+    <!-- ForkSure text -->
+    <path
+        android:fillColor="@color/forksure_on_background_dark"
+        android:pathData="M10,6 L10,18 M6,6 L14,6 M6,12 L12,12"/>
+    
+    <!-- Simple text representation - in a real app you'd use a proper font/text -->
+    <group android:translateX="20">
+        <path
+            android:fillColor="@color/forksure_on_background_dark"
+            android:pathData="M0,6 L0,18 L8,18 L8,12 L4,12 M12,6 L12,18 L20,18 L20,15 L16,15 L16,12 L20,12 L20,9 L16,9 L16,6"/>
+    </group>
+    
+    <!-- Cupcake icon -->
+    <group android:translateX="85" android:translateY="4" android:scaleX="0.8" android:scaleY="0.8">
+        <path
+            android:fillColor="@color/forksure_primary_dark"
+            android:pathData="M8,8 C8,4 12,0 16,0 C20,0 24,4 24,8 L8,8 Z"/>
+        <path
+            android:fillColor="@color/forksure_tertiary_dark"
+            android:pathData="M6,8 L26,8 L28,16 L4,16 Z"/>
+    </group>
+</vector> 

@@ -58,7 +58,7 @@ object SecurityManager {
     )
 
     /**
-     * Rate limiting implementation
+     * Rate limiting implementation - actually records a request
      */
     suspend fun checkRateLimit(context: Context, identifier: String = "default"): RateLimitResult {
         return rateLimitMutex.withLock {
@@ -107,6 +107,55 @@ object SecurityManager {
                     
                     RateLimitResult.Allowed(
                         requestsRemaining = MAX_REQUESTS_PER_MINUTE - minuteCount - 1,
+                        resetTimeSeconds = 60
+                    )
+                }
+            }
+        }
+    }
+    
+    /**
+     * Check rate limit status WITHOUT recording a request
+     * Use this for status display purposes
+     */
+    suspend fun getRateLimitStatus(context: Context, identifier: String = "default"): RateLimitResult {
+        return rateLimitMutex.withLock {
+            val currentTime = System.currentTimeMillis()
+            
+            // Clean old timestamps
+            cleanOldTimestamps(identifier, currentTime)
+            
+            // Check different time windows
+            val minuteCount = getRequestCount(identifier, currentTime, 60 * 1000) // 1 minute
+            val hourCount = getRequestCount(identifier, currentTime, 60 * 60 * 1000) // 1 hour
+            val dayCount = getRequestCount(identifier, currentTime, 24 * 60 * 60 * 1000) // 1 day
+            
+            when {
+                minuteCount >= MAX_REQUESTS_PER_MINUTE -> {
+                    RateLimitResult.Blocked(
+                        reason = "Too many requests. Please wait a minute before trying again.",
+                        retryAfterSeconds = 60,
+                        requestsRemaining = 0
+                    )
+                }
+                hourCount >= MAX_REQUESTS_PER_HOUR -> {
+                    RateLimitResult.Blocked(
+                        reason = "Hourly limit reached. Please try again later.",
+                        retryAfterSeconds = 3600,
+                        requestsRemaining = 0
+                    )
+                }
+                dayCount >= MAX_REQUESTS_PER_DAY -> {
+                    RateLimitResult.Blocked(
+                        reason = "Daily limit reached. Please try again tomorrow.",
+                        retryAfterSeconds = 86400,
+                        requestsRemaining = 0
+                    )
+                }
+                else -> {
+                    // DON'T record this request - just return status
+                    RateLimitResult.Allowed(
+                        requestsRemaining = MAX_REQUESTS_PER_MINUTE - minuteCount,
                         resetTimeSeconds = 60
                     )
                 }
