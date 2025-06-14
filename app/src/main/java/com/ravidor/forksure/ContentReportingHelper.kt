@@ -7,6 +7,8 @@ import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
+import java.io.BufferedReader
+import java.io.InputStreamReader
 import java.io.OutputStreamWriter
 import java.net.HttpURLConnection
 import java.net.URL
@@ -55,19 +57,22 @@ class ContentReportingHelper {
             report: ContentReport
         ): Result<Unit> = withContext(Dispatchers.IO) {
             try {
+                Log.d(TAG, "🚩 REPORT BUTTON CLICKED - Starting content report submission")
+                Log.d(TAG, "Report details: reason=${report.reason}, contentLength=${report.content.length}, hasAdditionalDetails=${report.additionalDetails.isNotBlank()}")
+                
                 // Try webhook first (silent reporting)
                 val webhookResult = submitReportViaWebhook(context, report)
                 if (webhookResult.isSuccess) {
-                    Log.i(TAG, "Content report sent successfully via webhook")
+                    Log.i(TAG, "✅ Content report sent successfully via webhook")
                     return@withContext Result.success(Unit)
                 }
                 
                 // Fallback to email if webhook fails
-                Log.w(TAG, "Webhook failed, falling back to email")
+                Log.w(TAG, "⚠️ Webhook failed, falling back to email")
                 return@withContext submitReportViaEmail(context, report)
                 
             } catch (e: Exception) {
-                Log.e(TAG, "Failed to submit content report", e)
+                Log.e(TAG, "❌ Failed to submit content report", e)
                 Result.failure(e)
             }
         }
@@ -83,6 +88,9 @@ class ContentReportingHelper {
                 // Using Make.com webhook for silent content reporting
                 val webhookUrl = "https://hook.eu2.make.com/m6bfqyz9x7thlxis94fj9lte5t7bmvi1"
                 
+                Log.d(TAG, "🌐 WEBHOOK CALL INITIATED")
+                Log.d(TAG, "Webhook URL: $webhookUrl")
+                
                 val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
                 val formattedDate = dateFormat.format(Date(report.timestamp))
                 
@@ -96,34 +104,66 @@ class ContentReportingHelper {
                     put("device_info", "${android.os.Build.MODEL} (${android.os.Build.VERSION.RELEASE})")
                 }
                 
+                Log.d(TAG, "📤 Request payload: ${jsonReport.toString(2)}")
+                
                 val url = URL(webhookUrl)
                 val connection = url.openConnection() as HttpURLConnection
                 connection.apply {
                     requestMethod = "POST"
                     setRequestProperty("Content-Type", "application/json")
                     setRequestProperty("Accept", "application/json")
+                    setRequestProperty("User-Agent", "ForkSure-Android/${getAppVersion(context)}")
                     doOutput = true
                     connectTimeout = 10000
                     readTimeout = 10000
                 }
                 
+                Log.d(TAG, "📡 Sending HTTP POST request...")
+                Log.d(TAG, "Request headers: Content-Type=application/json, Accept=application/json")
+                
                 // Send the JSON data
+                val startTime = System.currentTimeMillis()
                 OutputStreamWriter(connection.outputStream).use { writer ->
                     writer.write(jsonReport.toString())
                     writer.flush()
                 }
                 
                 val responseCode = connection.responseCode
+                val responseMessage = connection.responseMessage
+                val requestTime = System.currentTimeMillis() - startTime
+                
+                Log.d(TAG, "📥 WEBHOOK RESPONSE RECEIVED")
+                Log.d(TAG, "Response code: $responseCode")
+                Log.d(TAG, "Response message: $responseMessage")
+                Log.d(TAG, "Request time: ${requestTime}ms")
+                
+                // Read response body
+                val responseBody = try {
+                    if (responseCode in 200..299) {
+                        connection.inputStream.bufferedReader().use { it.readText() }
+                    } else {
+                        connection.errorStream?.bufferedReader()?.use { it.readText() } ?: "No error message"
+                    }
+                } catch (e: Exception) {
+                    Log.w(TAG, "Failed to read response body", e)
+                    "Failed to read response body: ${e.message}"
+                }
+                
+                Log.d(TAG, "Response body: $responseBody")
+                
                 if (responseCode in 200..299) {
-                    Log.i(TAG, "Webhook report sent successfully")
+                    Log.i(TAG, "✅ Webhook report sent successfully (HTTP $responseCode)")
                     Result.success(Unit)
                 } else {
-                    Log.w(TAG, "Webhook returned code: $responseCode")
-                    Result.failure(Exception("Webhook failed with code: $responseCode"))
+                    Log.w(TAG, "⚠️ Webhook returned error code: $responseCode - $responseMessage")
+                    Log.w(TAG, "Error response: $responseBody")
+                    Result.failure(Exception("Webhook failed with code: $responseCode - $responseMessage"))
                 }
                 
             } catch (e: Exception) {
-                Log.e(TAG, "Webhook submission failed", e)
+                Log.e(TAG, "❌ Webhook submission failed with exception", e)
+                Log.e(TAG, "Exception type: ${e.javaClass.simpleName}")
+                Log.e(TAG, "Exception message: ${e.message}")
                 Result.failure(e)
             }
         }
@@ -136,13 +176,14 @@ class ContentReportingHelper {
             report: ContentReport
         ): Result<Unit> = withContext(Dispatchers.Main) {
             try {
+                Log.d(TAG, "📧 FALLBACK TO EMAIL - Creating email intent")
                 val emailIntent = createEmailIntent(context, report)
                 context.startActivity(Intent.createChooser(emailIntent, "Send Report via Email"))
                 
-                Log.i(TAG, "Content report initiated via email fallback")
+                Log.i(TAG, "✅ Content report initiated via email fallback")
                 Result.success(Unit)
             } catch (e: Exception) {
-                Log.e(TAG, "Failed to initiate content report email", e)
+                Log.e(TAG, "❌ Failed to initiate content report email", e)
                 Result.failure(e)
             }
         }
@@ -180,6 +221,9 @@ class ContentReportingHelper {
                 appendLine("content reporting feature to comply with Google Play's")
                 appendLine("AI-Generated Content policy.")
             }
+            
+            Log.d(TAG, "Email subject: $subject")
+            Log.d(TAG, "Email recipient: $DEVELOPER_EMAIL")
             
             return Intent(Intent.ACTION_SENDTO).apply {
                 data = Uri.parse("mailto:")

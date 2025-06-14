@@ -49,6 +49,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import dev.jeziellago.compose.markdowntext.MarkdownText
+import android.util.Log
 
 // Centralized constants imports
 import com.ravidor.forksure.AccessibilityHelper
@@ -120,6 +121,8 @@ fun MainScreen(
                 bakingViewModel.sendPrompt(bitmap, prompt)
             },
             onSubmitReport = { report ->
+                Log.d("ContentReporting", "🚩 Report button clicked in MainScreen - Submitting report")
+                Log.d("ContentReporting", "Report reason: ${report.reason}, content length: ${report.content.length}")
                 coroutineScope.launch {
                     ContentReportingHelper.submitReport(context, report)
                     AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.SUCCESS)
@@ -711,6 +714,7 @@ private fun RecipeResultsSection(
             // Report button
             Button(
                 onClick = {
+                    Log.d("ContentReporting", "🚩 Report button tapped - Opening report dialog")
                     onReportContent()
                     AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.CLICK)
                 },
