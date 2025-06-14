@@ -25,10 +25,15 @@ android {
         applicationId = "com.ravidor.forksure"
         minSdk = 29
         targetSdk = 35
-        versionCode = 8
-        versionName = "1.2.0-rc2"
+        versionCode = 9
+        versionName = "1.2.0-rc3"
 
         testInstrumentationRunner = "com.ravidor.forksure.HiltTestRunner"
+        
+        ndk {
+            // Enable 16KB page alignment for better performance on modern devices
+            debugSymbolLevel = "SYMBOL_TABLE"
+        }
     }
 
     signingConfigs {
@@ -69,6 +74,21 @@ android {
     buildFeatures {
         compose = true
         buildConfig = true
+    }
+    
+    packaging {
+        jniLibs {
+            useLegacyPackaging = false
+        }
+    }
+    
+    bundle {
+        abi {
+            enableSplit = true
+        }
+        language {
+            enableSplit = false
+        }
     }
 }
 
