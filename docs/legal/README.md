@@ -4,7 +4,7 @@ This folder contains legal documents and privacy policies for ForkSure.
 
 ## 📁 Contents
 
-- **[privacy_policy.md](privacy_policy.md)** - Comprehensive privacy policy for the application
+- **[PRIVACY_POLICY.md](PRIVACY_POLICY.md)** - Comprehensive privacy policy for the application
 
 ## 🎯 Overview
 
