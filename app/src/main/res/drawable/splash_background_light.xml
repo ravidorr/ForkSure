@@ -1,19 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- Background -->
-    <item android:drawable="@color/forksure_background_light" />
-    
-    <!-- ForkSure logo/icon in center -->
-    <item android:gravity="center">
-        <bitmap android:src="@mipmap/ic_launcher"
-            android:gravity="center" />
-    </item>
-    
-    <!-- Optional: App name at bottom -->
-    <item android:gravity="center_horizontal|bottom"
-          android:bottom="100dp">
-        <shape android:shape="rectangle">
-            <solid android:color="@android:color/transparent" />
-        </shape>
-    </item>
-</layer-list> 
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/forksure_background_light" />
+</shape> 
