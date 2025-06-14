@@ -20,10 +20,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
+
 import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -224,9 +222,9 @@ private fun CameraPreview(
                     }
                 }
         ) {
-            Icon(
-                imageVector = Icons.Default.Add,
-                contentDescription = "", // Handled by FAB
+            Text(
+                text = "📷",
+                style = MaterialTheme.typography.headlineMedium,
                 modifier = Modifier.semantics {
                     contentDescription = "" // Handled by parent
                 }
