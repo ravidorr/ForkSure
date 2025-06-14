@@ -63,6 +63,7 @@ import com.ravidor.forksure.R
 import com.ravidor.forksure.SampleDataConstants
 import com.ravidor.forksure.SecurityStatusIndicator
 import com.ravidor.forksure.StatelessContentReportDialog
+import com.ravidor.forksure.ShareButton
 import com.ravidor.forksure.UiState
 import com.ravidor.forksure.state.MainScreenState
 import com.ravidor.forksure.state.MainScreenActions
@@ -698,6 +699,16 @@ private fun RecipeResultsSection(
             ) {
                 Text(stringResource(R.string.action_print))
             }
+            
+            // Share button
+            ShareButton(
+                outputText = outputText,
+                onShareComplete = { success ->
+                    if (success) {
+                        AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.SUCCESS)
+                    }
+                }
+            )
             
             // Report button
             Button(
