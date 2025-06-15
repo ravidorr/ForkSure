@@ -13,8 +13,7 @@ jobs:
     
     steps:
     - name: 🎉 PR Merged - Building AAB
-      run: |
-        echo "🎉 PR #${{ github.event.pull_request.number }} merged! Building Android App Bundle..."
+      run: echo "🎉 PR #${{ github.event.pull_request.number }} merged! Building Android App Bundle..."
       
     - name: Checkout merged code
       uses: actions/checkout@v4
