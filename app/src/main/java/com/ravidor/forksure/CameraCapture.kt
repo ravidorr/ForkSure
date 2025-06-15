@@ -67,11 +67,13 @@ fun CameraCapture(
         }
     }
 
+    val cameraScreenDescription = stringResource(R.string.accessibility_camera_screen)
+    
     Column(
         modifier = Modifier
             .fillMaxSize()
             .semantics {
-                contentDescription = stringResource(R.string.accessibility_camera_screen)
+                contentDescription = cameraScreenDescription
             }
     ) {
         if (cameraPermissionState.status.isGranted) {
@@ -88,7 +90,7 @@ fun CameraCapture(
                     .fillMaxSize()
                     .padding(16.dp)
                     .semantics {
-                        contentDescription = stringResource(R.string.accessibility_camera_screen)
+                        contentDescription = cameraScreenDescription
                     },
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -124,6 +126,8 @@ private fun CameraPreview(
     onImageCaptured: (Bitmap) -> Unit,
     onError: (String) -> Unit
 ) {
+    val cameraViewfinderDescription = stringResource(R.string.accessibility_camera_viewfinder)
+    val captureButtonDescription = stringResource(R.string.accessibility_capture_button_ready)
     val cameraProviderFuture = remember { ProcessCameraProvider.getInstance(context) }
     val executor = remember { Executors.newSingleThreadExecutor() }
     val previewView = remember { PreviewView(context) }
@@ -157,7 +161,7 @@ private fun CameraPreview(
         modifier = Modifier
             .fillMaxSize()
             .semantics {
-                contentDescription = stringResource(R.string.accessibility_camera_viewfinder)
+                contentDescription = cameraViewfinderDescription
             }
     ) {
         AndroidView(
@@ -210,7 +214,7 @@ private fun CameraPreview(
                 .padding(16.dp)
                 .size(64.dp)
                 .semantics {
-                    contentDescription = stringResource(R.string.accessibility_capture_button_ready)
+                    contentDescription = captureButtonDescription
                 }
         ) {
             Text(

@@ -205,6 +205,7 @@ private fun MainScreenContent(
     showMessage: suspend (UserMessage) -> Unit
 ) {
     val context = LocalContext.current
+    val mainScreenDescription = stringResource(R.string.accessibility_main_screen)
     
     // Announce image selection changes for accessibility and show user feedback
     LaunchedEffect(state.selectedImageIndex) {
@@ -278,7 +279,7 @@ private fun MainScreenContent(
         modifier = Modifier
             .fillMaxSize()
             .semantics { 
-                contentDescription = stringResource(R.string.accessibility_main_screen)
+                contentDescription = mainScreenDescription
             }
     ) {
         // Main heading
@@ -363,6 +364,7 @@ private fun MainScreenHeader() {
 @Composable
 private fun InstructionalTextSection() {
     val welcomeText = stringResource(R.string.results_placeholder)
+    val welcomeMessageDescription = stringResource(R.string.accessibility_welcome_message, welcomeText)
     Text(
         text = welcomeText,
         textAlign = TextAlign.Center,
@@ -372,7 +374,7 @@ private fun InstructionalTextSection() {
             .fillMaxWidth()
             .padding(horizontal = Dimensions.PADDING_STANDARD, vertical = Dimensions.PADDING_MEDIUM)
             .semantics {
-                contentDescription = stringResource(R.string.accessibility_welcome_message, welcomeText)
+                contentDescription = welcomeMessageDescription
             }
     )
 }
@@ -411,7 +413,7 @@ private fun MainResultsSection(
                 is UiState.Error -> {
                     AccessibilityHelper.announceForAccessibility(
                         context, 
-                        "Analysis failed. Error: ${uiState.message}"
+                        "Analysis failed. Error: ${uiState.errorMessage}"
                     )
                 }
                 else -> { /* No announcement needed for initial state */ }
@@ -499,6 +501,8 @@ private fun CameraSection(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
+    val takePhotoDescription = stringResource(R.string.accessibility_take_photo_description)
+    val takePhotoText = stringResource(R.string.take_photo)
     
     Row(
         modifier = modifier
@@ -516,11 +520,11 @@ private fun CameraSection(
                 .height(64.dp)
                 .padding(bottom = Dimensions.PADDING_SMALL)
                 .semantics {
-                    contentDescription = stringResource(R.string.accessibility_take_photo_description)
+                    contentDescription = takePhotoDescription
                 }
         ) {
             Text(
-                text = stringResource(R.string.take_photo),
+                text = takePhotoText,
                 style = MaterialTheme.typography.headlineSmall
             )
         }
@@ -535,6 +539,8 @@ private fun CapturedImageCard(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
+    val selectedDescription = stringResource(R.string.accessibility_sample_image_selected, "Captured")
+    val notSelectedDescription = stringResource(R.string.accessibility_sample_image_not_selected, "Captured")
     
     Card(
         modifier = modifier
@@ -552,9 +558,9 @@ private fun CapturedImageCard(
             )
             .semantics {
                 contentDescription = if (isSelected) {
-                    stringResource(R.string.accessibility_sample_image_selected, "Captured")
+                    selectedDescription
                 } else {
-                    stringResource(R.string.accessibility_sample_image_not_selected, "Captured")
+                    notSelectedDescription
                 }
             }
     ) {
@@ -601,6 +607,8 @@ private fun SampleImageItem(
     onImageClick: () -> Unit
 ) {
     val context = LocalContext.current
+    val selectedDescription = stringResource(R.string.accessibility_sample_image_selected, imageDescription)
+    val notSelectedDescription = stringResource(R.string.accessibility_sample_image_not_selected, imageDescription)
     
     var imageModifier = Modifier
         .padding(start = Dimensions.PADDING_SMALL, end = Dimensions.PADDING_SMALL)
@@ -611,9 +619,9 @@ private fun SampleImageItem(
         }
         .semantics {
             contentDescription = if (isSelected) {
-                stringResource(R.string.accessibility_sample_image_selected, imageDescription)
+                selectedDescription
             } else {
-                stringResource(R.string.accessibility_sample_image_not_selected, imageDescription)
+                notSelectedDescription
             }
         }
         
@@ -635,6 +643,9 @@ private fun AnalyzeButtonSection(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
+    val enabledDescription = stringResource(R.string.accessibility_analyze_button_enabled)
+    val disabledDescription = stringResource(R.string.accessibility_analyze_button_disabled)
+    val actionGoText = stringResource(R.string.action_go)
     
     Row(
         modifier = modifier
@@ -653,14 +664,14 @@ private fun AnalyzeButtonSection(
                 .height(64.dp)
                 .semantics {
                     contentDescription = if (isAnalyzeEnabled) {
-                        stringResource(R.string.accessibility_analyze_button_enabled)
+                        enabledDescription
                     } else {
-                        stringResource(R.string.accessibility_analyze_button_disabled)
+                        disabledDescription
                     }
                 }
         ) {
             Text(
-                text = stringResource(R.string.action_go),
+                text = actionGoText,
                 style = MaterialTheme.typography.headlineSmall
             )
         }
@@ -671,16 +682,19 @@ private fun AnalyzeButtonSection(
 private fun LoadingSection(
     modifier: Modifier = Modifier
 ) {
+    val loadingDescription = stringResource(R.string.accessibility_loading_analysis)
+    val analyzingText = stringResource(R.string.analyzing_baked_goods)
+    
     Column(
         modifier = modifier
             .semantics {
-                contentDescription = stringResource(R.string.accessibility_loading_analysis)
+                contentDescription = loadingDescription
             },
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         CircularProgressIndicator()
         Text(
-            text = stringResource(R.string.analyzing_baked_goods),
+            text = analyzingText,
             modifier = Modifier.padding(top = Dimensions.PADDING_SMALL),
             style = MaterialTheme.typography.bodyMedium
         )
@@ -695,12 +709,13 @@ private fun ErrorSection(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
+    val errorDescription = stringResource(R.string.accessibility_error_occurred)
     
     Column(
         modifier = modifier
             .padding(Dimensions.PADDING_STANDARD)
             .semantics {
-                contentDescription = stringResource(R.string.accessibility_error_occurred)
+                contentDescription = errorDescription
             }
     ) {
         val errorIcon = when (errorState.errorType) {
@@ -768,6 +783,10 @@ private fun ErrorActionButtons(
     onDismiss: () -> Unit
 ) {
     val context = LocalContext.current
+    val retryButtonDescription = stringResource(R.string.accessibility_retry_button)
+    val dismissButtonDescription = stringResource(R.string.accessibility_dismiss_error_button)
+    val retryText = stringResource(R.string.action_retry)
+    val dismissText = stringResource(R.string.action_dismiss)
     
     Row(horizontalArrangement = Arrangement.spacedBy(Dimensions.PADDING_SMALL)) {
         if (canRetry) {
@@ -777,10 +796,10 @@ private fun ErrorActionButtons(
                     AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.CLICK)
                 },
                 modifier = Modifier.semantics {
-                    contentDescription = stringResource(R.string.accessibility_retry_button)
+                    contentDescription = retryButtonDescription
                 }
             ) {
-                Text(stringResource(R.string.action_retry))
+                Text(retryText)
             }
         }
         
@@ -790,10 +809,10 @@ private fun ErrorActionButtons(
                 AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.CLICK)
             },
             modifier = Modifier.semantics {
-                contentDescription = stringResource(R.string.accessibility_dismiss_error_button)
+                contentDescription = dismissButtonDescription
             }
         ) {
-            Text(stringResource(R.string.action_dismiss))
+            Text(dismissText)
         }
     }
 }
@@ -808,12 +827,17 @@ private fun RecipeResultsSection(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
+    val resultsSectionDescription = stringResource(R.string.accessibility_results_section)
+    val aiContentDescription = stringResource(R.string.accessibility_ai_content, outputText)
+    val actionPrintText = stringResource(R.string.action_print)
+    val actionReportText = stringResource(R.string.action_report)
+    val takeAnotherPhotoText = stringResource(R.string.take_another_photo)
     
     Column(
         modifier = modifier
             .padding(Dimensions.PADDING_STANDARD)
             .semantics {
-                contentDescription = stringResource(R.string.accessibility_results_section)
+                contentDescription = resultsSectionDescription
             }
     ) {
 
@@ -824,7 +848,7 @@ private fun RecipeResultsSection(
                 .weight(1f)
                 .verticalScroll(rememberScrollState())
                 .semantics {
-                    contentDescription = stringResource(R.string.accessibility_ai_content, outputText)
+                    contentDescription = aiContentDescription
                 }
         )
         
@@ -845,7 +869,7 @@ private fun RecipeResultsSection(
                     contentDescription = "Print recipe button. Print the AI-generated recipe"
                 }
             ) {
-                Text(stringResource(R.string.action_print))
+                Text(actionPrintText)
             }
             
             // Share button
@@ -882,7 +906,7 @@ private fun RecipeResultsSection(
                     contentDescription = "Report content button. Report inappropriate AI-generated content"
                 }
             ) {
-                Text(stringResource(R.string.action_report))
+                Text(actionReportText)
             }
         }
         
@@ -906,7 +930,7 @@ private fun RecipeResultsSection(
                     }
             ) {
                 Text(
-                    text = stringResource(R.string.take_another_photo),
+                    text = takeAnotherPhotoText,
                     style = MaterialTheme.typography.titleMedium
                 )
             }
