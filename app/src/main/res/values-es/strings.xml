@@ -62,4 +62,28 @@
     <string name="accessibility_camera_viewfinder">Visor de cámara. Apunta tu cámara a productos horneados para capturar</string>
     <string name="accessibility_capture_button_ready">Botón de capturar foto. Toca para tomar una foto de tus productos horneados</string>
     <string name="accessibility_welcome_message">Mensaje de bienvenida: %1$s</string>
+    
+    <!-- Success Messages -->
+    <string name="success_recipe_generated">¡Receta generada exitosamente! 🎉</string>
+    <string name="success_photo_captured">¡Foto capturada exitosamente!</string>
+    <string name="success_share_completed">Receta compartida exitosamente</string>
+    <string name="success_print_started">Receta enviada a impresora</string>
+    <string name="success_report_submitted">Gracias por tu reporte. Revisaremos el contenido.</string>
+    <string name="success_image_selected">Imagen seleccionada para análisis</string>
+    
+    <!-- Error Messages -->
+    <string name="error_analysis_failed">Análisis falló. Por favor, inténtalo de nuevo.</string>
+    <string name="error_photo_capture_failed">Error al capturar foto. Por favor, inténtalo de nuevo.</string>
+    <string name="error_share_failed">No se pudo compartir la receta. Por favor, inténtalo de nuevo.</string>
+    <string name="error_print_failed">No se pudo imprimir la receta. Por favor, inténtalo de nuevo.</string>
+    <string name="error_print_not_available">La impresión no está disponible en este dispositivo</string>
+    <string name="error_report_submission_failed">Error al enviar el reporte. Por favor, inténtalo de nuevo.</string>
+    <string name="error_network_unavailable">Sin conexión a internet. Por favor verifica tu red e inténtalo de nuevo.</string>
+    <string name="error_camera_permission_denied">Se requiere permiso de cámara para tomar fotos</string>
+    <string name="error_image_too_large">La imagen es muy grande. Por favor intenta con una imagen más pequeña.</string>
+    <string name="error_invalid_image_format">Formato de imagen inválido. Por favor intenta con una imagen diferente.</string>
+    <string name="error_server_unavailable">Servicio temporalmente no disponible. Por favor inténtalo más tarde.</string>
+    <string name="error_rate_limit_exceeded">Demasiadas solicitudes. Por favor espera un momento antes de intentar de nuevo.</string>
+    <string name="error_content_blocked">El contenido fue bloqueado por filtros de seguridad. Por favor intenta con una imagen diferente.</string>
+    <string name="error_unexpected">Ocurrió un error inesperado. Por favor, inténtalo de nuevo.</string>
 </resources>
