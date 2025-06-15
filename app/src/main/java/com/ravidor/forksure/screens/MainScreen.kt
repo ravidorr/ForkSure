@@ -71,6 +71,9 @@ import com.ravidor.forksure.state.MainScreenState
 import com.ravidor.forksure.state.MainScreenActions
 import com.ravidor.forksure.state.DefaultMainScreenActions
 import com.ravidor.forksure.state.rememberMainScreenState
+import com.ravidor.forksure.MessageContainer
+import com.ravidor.forksure.UserMessage
+import com.ravidor.forksure.MessageType
 
 
 /**
@@ -115,29 +118,8 @@ fun MainScreen(
         }
     }
     
-    // Actions implementation
-    val actions = remember(mainScreenState, bakingViewModel) {
-        DefaultMainScreenActions(
-            state = mainScreenState,
-            navigateToCamera = onNavigateToCamera,
-            onAnalyze = { bitmap, prompt ->
-                bakingViewModel.sendPrompt(bitmap, prompt)
-            },
-            onSubmitReport = { report ->
-                coroutineScope.launch {
-                    try {
-                        ContentReportingHelper.submitReport(context, report)
-                        AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.SUCCESS)
-                    } catch (e: Exception) {
-                        // Handle error gracefully
-                        AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.ERROR)
-                    }
-                }
-            },
-            onRetry = { bakingViewModel.retryLastRequest() },
-            onDismissError = { bakingViewModel.clearError() }
-        )
-    }
+    // Actions implementation will be created inside MessageContainer with showMessage
+    // This is moved inside MessageContainer to have access to showMessage
     
     // Update external state when internal state changes - prevent circular updates
     LaunchedEffect(mainScreenState.selectedImageIndex) {
@@ -152,12 +134,62 @@ fun MainScreen(
         }
     }
 
-    MainScreenContent(
-        state = mainScreenState,
-        actions = actions,
-        uiState = uiState,
-        bakingViewModel = bakingViewModel
-    )
+    // Wrap the entire screen in MessageContainer for user feedback
+    MessageContainer { snackbarHostState, showMessage ->
+        
+        // Create actions with message display support
+        val actions = remember(mainScreenState, bakingViewModel, showMessage) {
+            DefaultMainScreenActions(
+                state = mainScreenState,
+                navigateToCamera = onNavigateToCamera,
+                onAnalyze = { bitmap, prompt ->
+                    bakingViewModel.sendPrompt(bitmap, prompt)
+                },
+                onSubmitReport = { report ->
+                    coroutineScope.launch {
+                        try {
+                            ContentReportingHelper.submitReport(context, report)
+                            showMessage(
+                                UserMessage(
+                                    text = context.getString(R.string.success_report_submitted),
+                                    type = MessageType.SUCCESS
+                                )
+                            )
+                        } catch (e: Exception) {
+                            showMessage(
+                                UserMessage(
+                                    text = context.getString(R.string.error_report_submission_failed),
+                                    type = MessageType.ERROR
+                                )
+                            )
+                        }
+                    }
+                },
+                onRetry = { bakingViewModel.retryLastRequest() },
+                onDismissError = { bakingViewModel.clearError() }
+            )
+        }
+        
+        // Show success message when analysis completes
+        LaunchedEffect(uiState) {
+            if (uiState is UiState.Success) {
+                showMessage(
+                    UserMessage(
+                        text = context.getString(R.string.success_recipe_generated),
+                        type = MessageType.SUCCESS
+                    )
+                )
+            }
+        }
+        
+        MainScreenContent(
+            state = mainScreenState,
+            actions = actions,
+            uiState = uiState,
+            bakingViewModel = bakingViewModel,
+            showMessage = showMessage
+        )
+    }
 }
 
 /**
@@ -169,21 +201,36 @@ private fun MainScreenContent(
     state: MainScreenState,
     actions: MainScreenActions,
     uiState: UiState,
-    bakingViewModel: BakingViewModel
+    bakingViewModel: BakingViewModel,
+    showMessage: suspend (UserMessage) -> Unit
 ) {
     val context = LocalContext.current
     
-    // Announce image selection changes for accessibility
+    // Announce image selection changes for accessibility and show user feedback
     LaunchedEffect(state.selectedImageIndex) {
-        if (AccessibilityHelper.isScreenReaderEnabled(context)) {
-            when {
-                state.hasSelectedCapturedImage -> {
+        when {
+            state.hasSelectedCapturedImage -> {
+                showMessage(
+                    UserMessage(
+                        text = context.getString(R.string.success_image_selected),
+                        type = MessageType.INFO
+                    )
+                )
+                if (AccessibilityHelper.isScreenReaderEnabled(context)) {
                     AccessibilityHelper.announceForAccessibility(
                         context, 
                         "Captured image selected for analysis"
                     )
                 }
-                state.hasSelectedSampleImage -> {
+            }
+            state.hasSelectedSampleImage -> {
+                showMessage(
+                    UserMessage(
+                        text = context.getString(R.string.success_image_selected),
+                        type = MessageType.INFO
+                    )
+                )
+                if (AccessibilityHelper.isScreenReaderEnabled(context)) {
                     val imageDescriptions = SampleDataConstants.IMAGE_DESCRIPTIONS
                     if (state.selectedImageIndex < imageDescriptions.size) {
                         val description = context.getString(imageDescriptions[state.selectedImageIndex])
@@ -193,9 +240,9 @@ private fun MainScreenContent(
                         )
                     }
                 }
-                else -> {
-                    // No selection - don't announce
-                }
+            }
+            else -> {
+                // No selection - don't announce or show message
             }
         }
     }
@@ -294,7 +341,8 @@ private fun MainScreenContent(
             onReportSubmitted = actions::onReportSubmitted,
             onRetry = actions::onRetryAnalysis,
             onDismiss = actions::onDismissError,
-            onTakeAnotherPhoto = actions::onNavigateToCamera
+            onTakeAnotherPhoto = actions::onNavigateToCamera,
+            showMessage = showMessage
         )
     }
 }
@@ -339,7 +387,8 @@ private fun MainResultsSection(
     onReportSubmitted: (ContentReportingHelper.ContentReport) -> Unit,
     onRetry: () -> Unit,
     onDismiss: () -> Unit,
-    onTakeAnotherPhoto: () -> Unit
+    onTakeAnotherPhoto: () -> Unit,
+    showMessage: suspend (UserMessage) -> Unit
 ) {
     val context = LocalContext.current
     
@@ -392,13 +441,37 @@ private fun MainResultsSection(
                 onPrintRecipe = { 
                     // Extract recipe title and print
                     val recipeTitle = PrintHelper.extractRecipeTitle(uiState.outputText)
-                    PrintHelper.printRecipe(
+                    val printJob = PrintHelper.printRecipe(
                         context = context,
                         recipeContent = uiState.outputText,
                         recipeName = recipeTitle
                     )
+                    
+                    // Show feedback based on print result
+                    kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.Main).launch {
+                        if (printJob != null) {
+                            showMessage(
+                                UserMessage(
+                                    text = context.getString(R.string.success_print_started),
+                                    type = MessageType.SUCCESS
+                                )
+                            )
+                        } else {
+                            showMessage(
+                                UserMessage(
+                                    text = if (PrintHelper.isPrintingAvailable(context)) {
+                                        context.getString(R.string.error_print_failed)
+                                    } else {
+                                        context.getString(R.string.error_print_not_available)
+                                    },
+                                    type = MessageType.ERROR
+                                )
+                            )
+                        }
+                    }
                 },
                 onTakeAnotherPhoto = onTakeAnotherPhoto,
+                showMessage = showMessage,
                 modifier = Modifier.fillMaxSize()
             )
             
@@ -731,6 +804,7 @@ private fun RecipeResultsSection(
     onReportContent: () -> Unit,
     onPrintRecipe: () -> Unit,
     onTakeAnotherPhoto: () -> Unit,
+    showMessage: suspend (UserMessage) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -778,8 +852,22 @@ private fun RecipeResultsSection(
             ShareButton(
                 outputText = outputText,
                 onShareComplete = { success ->
-                    if (success) {
-                        AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.SUCCESS)
+                    kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.Main).launch {
+                        if (success) {
+                            showMessage(
+                                UserMessage(
+                                    text = context.getString(R.string.success_share_completed),
+                                    type = MessageType.SUCCESS
+                                )
+                            )
+                        } else {
+                            showMessage(
+                                UserMessage(
+                                    text = context.getString(R.string.error_share_failed),
+                                    type = MessageType.ERROR
+                                )
+                            )
+                        }
                     }
                 }
             )
