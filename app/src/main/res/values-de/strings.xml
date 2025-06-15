@@ -1,24 +1,36 @@
 <resources>
+    <!-- Core app strings -->
     <string name="app_name">ForkSure</string>
-    <string name="action_go">🔍 Analysieren</string>
     <string name="baking_title">Backen mit ForkSure</string>
-    <string name="label_prompt">Anfrage</string>
+    
+    <!-- Main UI strings -->
     <string name="prompt_placeholder">Geben Sie ein Rezept für die Backwaren im Bild</string>
+    <string name="results_placeholder">🧁 Bereit, Ihre Backwaren zu analysieren?\nMachen Sie ein Foto oder wählen Sie ein Beispielbild zum Starten.</string>
+    <string name="analyzing_baked_goods">Analysiere Ihre Backwaren...</string>
+    
+    <!-- Button strings -->
+    <string name="action_go">🔍 Analysieren</string>
+    <string name="take_photo">📷 Foto Aufnehmen</string>
+    <string name="take_another_photo">📷 Weiteres Foto Aufnehmen</string>
+    <string name="action_retry">🔄 Wiederholen</string>
+    <string name="action_dismiss">✕ Schließen</string>
+    <string name="action_print">🖨️ Drucken</string>
+    <string name="action_report">🚩 Melden</string>
+    
+    <!-- Image descriptions -->
     <string name="image1_description">Cupcake</string>
     <string name="image2_description">Kekse</string>
     <string name="image3_description">Kuchen</string>
-    <string name="results_placeholder">🧁 Bereit, Ihre Backwaren zu analysieren?\nMachen Sie ein Foto oder wählen Sie ein Beispielbild zum Starten.</string>
-    <string name="results_heading">Ergebnisse</string>
     
-    <!-- Error handling strings -->
-    <string name="action_retry">🔄 Wiederholen</string>
-    <string name="action_dismiss">✕ Schließen</string>
-    <string name="take_photo">📷 Foto Aufnehmen</string>
-    <string name="take_another_photo">📷 Weiteres Foto Aufnehmen</string>
+    <!-- Share functionality -->
+    <string name="action_share">📤 Teilen</string>
+    <string name="action_share_to_keep">📤 In Keep Speichern</string>
+    <string name="share_google_keep">📝 In Google Keep Speichern</string>
+    <string name="share_email_recipe">✉️ Rezept per E-Mail Senden</string>
+    <string name="share_google_docs">📄 In Google Docs Speichern</string>
+    <string name="share_other_apps">📤 Mit anderen Apps teilen...</string>
     
-    <!-- Content reporting strings -->
-    <string name="action_report_content">🚩 Inhalt Melden</string>
-    <string name="action_report">🚩 Melden</string>
+    <!-- Content reporting -->
     <string name="report_dialog_title">Inhalt Melden</string>
     <string name="report_dialog_message">Helfen Sie uns zu verbessern, indem Sie unangemessene, beleidigende oder schädliche Inhalte melden. Ihr Bericht hilft uns, KI-generierte Inhalte besser zu moderieren.</string>
     <string name="report_reason_inappropriate">Unangemessener Inhalt</string>
@@ -28,113 +40,8 @@
     <string name="report_additional_details">Zusätzliche Details (optional)</string>
     <string name="action_submit_report">Bericht Senden</string>
     <string name="action_cancel">Abbrechen</string>
-    <string name="action_ok">OK</string>
-    <string name="report_success_message">Vielen Dank für Ihren Bericht. Wir werden den Inhalt überprüfen.</string>
-    <string name="report_error_message">Bericht konnte nicht gesendet werden. Bitte versuchen Sie es erneut.</string>
     
-    <!-- Accessibility strings -->
-    <string name="accessibility_main_screen_description">ForkSure Backassistent Hauptbildschirm</string>
-    <string name="accessibility_app_title_description">ForkSure - Backen mit KI</string>
-    <string name="accessibility_camera_section_description">Kamera-Bereich. Machen Sie ein Foto Ihrer Backwaren</string>
-    <string name="accessibility_take_photo_description">Foto aufnehmen Schaltfläche. Öffnet die Kamera zur Aufnahme von Backwaren</string>
-    <string name="accessibility_captured_image_selected">Aufgenommenes Bild, derzeit für Analyse ausgewählt</string>
-    <string name="accessibility_captured_image_not_selected">Aufgenommenes Bild, tippen zum Auswählen für Analyse</string>
-    <string name="accessibility_sample_images_heading">Beispielbilder-Bereich</string>
-    <string name="accessibility_sample_images_list">Horizontale Liste von Beispiel-Backbildern</string>
-    <string name="accessibility_sample_image_selected">%1$s Beispielbild, derzeit für Analyse ausgewählt</string>
-    <string name="accessibility_sample_image_not_selected">%1$s Beispielbild, tippen zum Auswählen für Analyse</string>
-    <string name="accessibility_input_section">Analyse-Eingabebereich</string>
-    <string name="accessibility_prompt_field">Anfrage-Eingabefeld. Geben Sie Ihre Frage zu den Backwaren ein. Aktueller Text: %1$s</string>
-    <string name="accessibility_analyze_button_enabled">Analysieren-Schaltfläche. KI-Analyse des ausgewählten Bildes mit Ihrer Anfrage starten</string>
-    <string name="accessibility_analyze_button_disabled">Analysieren-Schaltfläche. Deaktiviert. Wählen Sie ein Bild aus und geben Sie eine Anfrage ein, um zu aktivieren</string>
-    <string name="accessibility_loading_analysis">KI-Analyseergebnisse werden geladen</string>
-    <string name="accessibility_analyzing_status">Analysiere Ihre Backwaren...</string>
-    <string name="accessibility_error_occurred">Fehler während der Analyse aufgetreten</string>
-    <string name="accessibility_error_icon">Fehlersymbol: %1$s</string>
-    <string name="accessibility_error_message">Fehlermeldung: %1$s</string>
-    <string name="accessibility_retry_button">Analyse wiederholen Schaltfläche. KI-Analyse erneut versuchen</string>
-    <string name="accessibility_dismiss_error_button">Fehler schließen Schaltfläche. Fehlermeldung löschen</string>
-    <string name="accessibility_results_section">KI-Analyseergebnisse</string>
-    <string name="accessibility_results_heading">KI-Analyseergebnisse-Bereich</string>
-    <string name="accessibility_report_button">Inhalt melden Schaltfläche. Unangemessene KI-generierte Inhalte melden</string>
-    <string name="accessibility_ai_content">KI-generiertes Rezept und Analyse: %1$s</string>
-    <string name="accessibility_welcome_message">Willkommensnachricht: %1$s</string>
-    
-    <!-- Camera accessibility strings -->
-    <string name="accessibility_camera_screen">Kamera-Aufnahmebildschirm</string>
-    <string name="accessibility_camera_permission_required">Kameraberechtigung erforderlich</string>
-    <string name="accessibility_camera_icon">Kamerasymbol</string>
-    <string name="accessibility_camera_permission_explanation">Kameraberechtigung-Erklärung: Kameraberechtigung ist erforderlich, um Fotos Ihrer Backwaren zu machen.</string>
-    <string name="accessibility_camera_permission_instruction">Berechtigungsanweisung: Bitte gewähren Sie die Kameraberechtigung in Ihren Geräteeinstellungen, falls der Berechtigungsdialog nicht erschienen ist.</string>
-    <string name="accessibility_camera_viewfinder">Kamera-Sucher. Richten Sie Ihre Kamera auf Backwaren zum Aufnehmen</string>
-    <string name="accessibility_camera_preview">Kamera-Vorschau zeigt Live-Ansicht von der Kamera</string>
-    <string name="accessibility_camera_initializing">Kamerastatus: Kamera wird initialisiert</string>
-    <string name="accessibility_capture_button_ready">Foto aufnehmen Schaltfläche. Tippen, um ein Foto Ihrer Backwaren zu machen</string>
-    <string name="accessibility_capture_button_initializing">Foto aufnehmen Schaltfläche. Kamera wird initialisiert, bitte warten</string>
-    <string name="accessibility_capture_button_capturing">Foto aufnehmen Schaltfläche. Foto wird derzeit aufgenommen, bitte warten</string>
-    <string name="accessibility_capture_status">Status: Foto wird aufgenommen</string>
-    
-    <!-- Report dialog accessibility strings -->
-    <string name="accessibility_report_dialog">Inhaltsmeldung-Dialog. Unangemessene KI-generierte Inhalte melden</string>
-    <string name="accessibility_report_dialog_title">Inhalt melden Dialog. %1$s</string>
-    <string name="accessibility_report_form">Inhaltsmeldungsformular</string>
-    <string name="accessibility_report_instructions">Meldungsanweisungen: %1$s</string>
-    <string name="accessibility_report_reason_heading">Grund für Meldung auswählen Bereich</string>
-    <string name="accessibility_report_reason_options">Meldungsgrund-Optionen. Wählen Sie einen Grund für die Meldung dieses Inhalts</string>
-    <string name="accessibility_report_reason_selected">%1$s, ausgewählt</string>
-    <string name="accessibility_report_reason_not_selected">%1$s, nicht ausgewählt</string>
-    <string name="accessibility_report_details_field">Zusätzliche Details Textfeld. Optional. Geben Sie weitere Informationen darüber an, warum Sie diesen Inhalt melden. Aktueller Text: %1$s</string>
-    <string name="accessibility_submit_report_button">Bericht senden Schaltfläche. Inhaltsbericht an Entwickler senden</string>
-    <string name="accessibility_cancel_report_button">Abbrechen Schaltfläche. Meldungsdialog schließen ohne zu senden</string>
-    
-    <!-- State descriptions -->
-    <string name="accessibility_state_selected">Ausgewählt</string>
-    <string name="accessibility_state_not_selected">Nicht ausgewählt</string>
-    <string name="accessibility_state_enabled">Aktiviert</string>
-    <string name="accessibility_state_disabled">Deaktiviert</string>
-    <string name="accessibility_state_camera_not_ready">Kamera nicht bereit</string>
-    <string name="accessibility_state_capturing">Aufnehmen</string>
-    <string name="accessibility_state_ready_to_capture">Bereit zur Aufnahme</string>
-    <string name="accessibility_state_empty">leer</string>
-    
-    <!-- Custom actions -->
-    <string name="accessibility_action_select_for_analysis">Für Analyse auswählen</string>
-    <string name="accessibility_action_select_image_for_analysis">%1$s für Analyse auswählen</string>
-    
-    <!-- Security strings -->
-    <string name="security_status_secure">Sicher</string>
-    <string name="security_status_warning">Warnung</string>
-    <string name="security_status_checking">Überprüfen...</string>
-    <string name="rate_limit_requests_remaining">%1$d Anfragen verbleibend</string>
-    <string name="rate_limit_blocked">Ratenlimit überschritten</string>
-    <string name="rate_limit_checking">Limits überprüfen...</string>
-    <string name="security_warning_title">Sicherheitswarnung</string>
-    <string name="security_warning_message">Sicherheitsprobleme erkannt. Einige Funktionen können eingeschränkt sein.</string>
-    <string name="input_validation_failed">Ungültige Eingabe erkannt. Bitte überprüfen Sie Ihre Anfrage.</string>
-    <string name="response_validation_failed">KI-Antwort-Validierung fehlgeschlagen.</string>
-    <string name="food_safety_warning">⚠️ Lebensmittelsicherheitshinweis: Bitte überprüfen Sie Kochanweisungen und Temperaturen.</string>
-    
-    <!-- Print strings -->
-    <string name="action_print">🖨️ Drucken</string>
-    <string name="print_recipe_success">Rezept an Drucker gesendet</string>
-    <string name="print_recipe_error">Rezept konnte nicht gedruckt werden. Bitte versuchen Sie es erneut.</string>
-    <string name="print_not_available">Drucken ist auf diesem Gerät nicht verfügbar</string>
-    <string name="accessibility_print_button">Rezept drucken Schaltfläche. Das KI-generierte Rezept drucken</string>
-    
-    <!-- Share strings -->
-    <string name="action_share">📤 Teilen</string>
-    <string name="action_share_to_keep">📤 In Keep Speichern</string>
-    <string name="share_google_keep">📝 In Google Keep Speichern</string>
-    <string name="share_email_recipe">✉️ Rezept per E-Mail Senden</string>
-    <string name="share_google_docs">📄 In Google Docs Speichern</string>
-    <string name="share_other_apps">📤 Mit anderen Apps teilen...</string>
-    
-    <!-- Loading strings -->
-    <string name="analyzing_baked_goods">Analysiere Ihre Backwaren...</string>
-    <string name="share_recipe_success">Rezept erfolgreich geteilt</string>
-    <string name="share_recipe_error">Rezept konnte nicht geteilt werden. Bitte versuchen Sie es erneut.</string>
-    <string name="share_chooser_title">Rezept speichern in...</string>
-    <string name="share_with_photo_chooser_title">Rezept mit Foto teilen...</string>
+    <!-- Accessibility strings (minimal set for share functionality) -->
     <string name="accessibility_share_button">Rezept teilen Schaltfläche. Das KI-generierte Rezept mit anderen Apps teilen</string>
     <string name="accessibility_share_to_keep_button">In Google Keep speichern Schaltfläche. Das Rezept in Google Keep Notizen speichern</string>
 </resources>
