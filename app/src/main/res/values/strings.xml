@@ -62,4 +62,28 @@
     <string name="accessibility_camera_viewfinder">Camera viewfinder. Point your camera at baked goods to capture</string>
     <string name="accessibility_capture_button_ready">Capture photo button. Tap to take a photo of your baked goods</string>
     <string name="accessibility_welcome_message">Welcome message: %1$s</string>
+    
+    <!-- Success Messages -->
+    <string name="success_recipe_generated">Recipe generated successfully! 🎉</string>
+    <string name="success_photo_captured">Photo captured successfully!</string>
+    <string name="success_share_completed">Recipe shared successfully</string>
+    <string name="success_print_started">Recipe sent to printer</string>
+    <string name="success_report_submitted">Thank you for your report. We will review the content.</string>
+    <string name="success_image_selected">Image selected for analysis</string>
+    
+    <!-- Error Messages -->
+    <string name="error_analysis_failed">Analysis failed. Please try again.</string>
+    <string name="error_photo_capture_failed">Failed to capture photo. Please try again.</string>
+    <string name="error_share_failed">Unable to share recipe. Please try again.</string>
+    <string name="error_print_failed">Unable to print recipe. Please try again.</string>
+    <string name="error_print_not_available">Printing is not available on this device</string>
+    <string name="error_report_submission_failed">Failed to submit report. Please try again.</string>
+    <string name="error_network_unavailable">No internet connection. Please check your network and try again.</string>
+    <string name="error_camera_permission_denied">Camera permission is required to take photos</string>
+    <string name="error_image_too_large">Image is too large. Please try a smaller image.</string>
+    <string name="error_invalid_image_format">Invalid image format. Please try a different image.</string>
+    <string name="error_server_unavailable">Service temporarily unavailable. Please try again later.</string>
+    <string name="error_rate_limit_exceeded">Too many requests. Please wait a moment before trying again.</string>
+    <string name="error_content_blocked">Content was blocked by safety filters. Please try a different image.</string>
+    <string name="error_unexpected">An unexpected error occurred. Please try again.</string>
 </resources>

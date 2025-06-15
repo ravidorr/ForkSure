@@ -62,4 +62,28 @@
     <string name="accessibility_camera_viewfinder">Viseur de caméra. Pointez votre caméra vers les produits de boulangerie pour capturer</string>
     <string name="accessibility_capture_button_ready">Bouton capturer une photo. Touchez pour prendre une photo de vos produits de boulangerie</string>
     <string name="accessibility_welcome_message">Message de bienvenue : %1$s</string>
+    
+    <!-- Success Messages -->
+    <string name="success_recipe_generated">Recette générée avec succès ! 🎉</string>
+    <string name="success_photo_captured">Photo capturée avec succès !</string>
+    <string name="success_share_completed">Recette partagée avec succès</string>
+    <string name="success_print_started">Recette envoyée à l\'imprimante</string>
+    <string name="success_report_submitted">Merci pour votre signalement. Nous examinerons le contenu.</string>
+    <string name="success_image_selected">Image sélectionnée pour l\'analyse</string>
+    
+    <!-- Error Messages -->
+    <string name="error_analysis_failed">Analyse échouée. Veuillez réessayer.</string>
+    <string name="error_photo_capture_failed">Échec de la capture de photo. Veuillez réessayer.</string>
+    <string name="error_share_failed">Impossible de partager la recette. Veuillez réessayer.</string>
+    <string name="error_print_failed">Impossible d\'imprimer la recette. Veuillez réessayer.</string>
+    <string name="error_print_not_available">L\'impression n\'est pas disponible sur cet appareil</string>
+    <string name="error_report_submission_failed">Échec de l\'envoi du signalement. Veuillez réessayer.</string>
+    <string name="error_network_unavailable">Pas de connexion internet. Veuillez vérifier votre réseau et réessayer.</string>
+    <string name="error_camera_permission_denied">La permission de caméra est requise pour prendre des photos</string>
+    <string name="error_image_too_large">L\'image est trop grande. Veuillez essayer avec une image plus petite.</string>
+    <string name="error_invalid_image_format">Format d\'image invalide. Veuillez essayer avec une image différente.</string>
+    <string name="error_server_unavailable">Service temporairement indisponible. Veuillez réessayer plus tard.</string>
+    <string name="error_rate_limit_exceeded">Trop de demandes. Veuillez attendre un moment avant de réessayer.</string>
+    <string name="error_content_blocked">Le contenu a été bloqué par les filtres de sécurité. Veuillez essayer avec une image différente.</string>
+    <string name="error_unexpected">Une erreur inattendue s\'est produite. Veuillez réessayer.</string>
 </resources>

@@ -62,4 +62,28 @@
     <string name="accessibility_camera_viewfinder">Kamera-Sucher. Richten Sie Ihre Kamera auf Backwaren zum Aufnehmen</string>
     <string name="accessibility_capture_button_ready">Foto aufnehmen Schaltfläche. Tippen, um ein Foto Ihrer Backwaren zu machen</string>
     <string name="accessibility_welcome_message">Willkommensnachricht: %1$s</string>
+    
+    <!-- Success Messages -->
+    <string name="success_recipe_generated">Rezept erfolgreich generiert! 🎉</string>
+    <string name="success_photo_captured">Foto erfolgreich aufgenommen!</string>
+    <string name="success_share_completed">Rezept erfolgreich geteilt</string>
+    <string name="success_print_started">Rezept an Drucker gesendet</string>
+    <string name="success_report_submitted">Vielen Dank für Ihren Bericht. Wir werden den Inhalt überprüfen.</string>
+    <string name="success_image_selected">Bild für Analyse ausgewählt</string>
+    
+    <!-- Error Messages -->
+    <string name="error_analysis_failed">Analyse fehlgeschlagen. Bitte versuchen Sie es erneut.</string>
+    <string name="error_photo_capture_failed">Foto-Aufnahme fehlgeschlagen. Bitte versuchen Sie es erneut.</string>
+    <string name="error_share_failed">Rezept konnte nicht geteilt werden. Bitte versuchen Sie es erneut.</string>
+    <string name="error_print_failed">Rezept konnte nicht gedruckt werden. Bitte versuchen Sie es erneut.</string>
+    <string name="error_print_not_available">Drucken ist auf diesem Gerät nicht verfügbar</string>
+    <string name="error_report_submission_failed">Bericht konnte nicht gesendet werden. Bitte versuchen Sie es erneut.</string>
+    <string name="error_network_unavailable">Keine Internetverbindung. Bitte überprüfen Sie Ihr Netzwerk und versuchen Sie es erneut.</string>
+    <string name="error_camera_permission_denied">Kameraberechtigung ist erforderlich, um Fotos zu machen</string>
+    <string name="error_image_too_large">Bild ist zu groß. Bitte versuchen Sie es mit einem kleineren Bild.</string>
+    <string name="error_invalid_image_format">Ungültiges Bildformat. Bitte versuchen Sie es mit einem anderen Bild.</string>
+    <string name="error_server_unavailable">Service vorübergehend nicht verfügbar. Bitte versuchen Sie es später erneut.</string>
+    <string name="error_rate_limit_exceeded">Zu viele Anfragen. Bitte warten Sie einen Moment, bevor Sie es erneut versuchen.</string>
+    <string name="error_content_blocked">Inhalt wurde durch Sicherheitsfilter blockiert. Bitte versuchen Sie es mit einem anderen Bild.</string>
+    <string name="error_unexpected">Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut.</string>
 </resources>
