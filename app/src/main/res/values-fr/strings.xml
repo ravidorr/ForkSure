@@ -1,0 +1,140 @@
+<resources>
+    <string name="app_name">ForkSure</string>
+    <string name="action_go">🔍 Analyser</string>
+    <string name="baking_title">Pâtisser avec ForkSure</string>
+    <string name="label_prompt">Demande</string>
+    <string name="prompt_placeholder">Fournissez une recette pour les produits de boulangerie dans l\'image</string>
+    <string name="image1_description">Cupcake</string>
+    <string name="image2_description">Biscuits</string>
+    <string name="image3_description">Gâteau</string>
+    <string name="results_placeholder">🧁 Prêt à analyser vos produits de boulangerie ?\nPrenez une photo ou choisissez un échantillon pour commencer.</string>
+    <string name="results_heading">Résultats</string>
+    
+    <!-- Error handling strings -->
+    <string name="action_retry">🔄 Réessayer</string>
+    <string name="action_dismiss">✕ Ignorer</string>
+    <string name="take_photo">📷 Prendre une Photo</string>
+    <string name="take_another_photo">📷 Prendre une Autre Photo</string>
+    
+    <!-- Content reporting strings -->
+    <string name="action_report_content">🚩 Signaler le Contenu</string>
+    <string name="action_report">🚩 Signaler</string>
+    <string name="report_dialog_title">Signaler le Contenu</string>
+    <string name="report_dialog_message">Aidez-nous à améliorer en signalant du contenu inapproprié, offensant ou nuisible. Votre signalement nous aidera à mieux modérer le contenu généré par l\'IA.</string>
+    <string name="report_reason_inappropriate">Contenu inapproprié</string>
+    <string name="report_reason_offensive">Langage offensant</string>
+    <string name="report_reason_harmful">Instructions potentiellement nuisibles</string>
+    <string name="report_reason_other">Autre</string>
+    <string name="report_additional_details">Détails supplémentaires (optionnel)</string>
+    <string name="action_submit_report">Envoyer le Signalement</string>
+    <string name="action_cancel">Annuler</string>
+    <string name="action_ok">OK</string>
+    <string name="report_success_message">Merci pour votre signalement. Nous examinerons le contenu.</string>
+    <string name="report_error_message">Échec de l\'envoi du signalement. Veuillez réessayer.</string>
+    
+    <!-- Accessibility strings -->
+    <string name="accessibility_main_screen_description">Écran principal de l\'assistant de pâtisserie ForkSure</string>
+    <string name="accessibility_app_title_description">ForkSure - Pâtisserie avec IA</string>
+    <string name="accessibility_camera_section_description">Section caméra. Prenez une photo de vos produits de boulangerie</string>
+    <string name="accessibility_take_photo_description">Bouton prendre une photo. Ouvre la caméra pour capturer des produits de boulangerie</string>
+    <string name="accessibility_captured_image_selected">Image capturée, actuellement sélectionnée pour l\'analyse</string>
+    <string name="accessibility_captured_image_not_selected">Image capturée, touchez pour sélectionner pour l\'analyse</string>
+    <string name="accessibility_sample_images_heading">Section d\'images d\'échantillon</string>
+    <string name="accessibility_sample_images_list">Liste horizontale d\'images de pâtisserie d\'échantillon</string>
+    <string name="accessibility_sample_image_selected">%1$s image d\'échantillon, actuellement sélectionnée pour l\'analyse</string>
+    <string name="accessibility_sample_image_not_selected">%1$s image d\'échantillon, touchez pour sélectionner pour l\'analyse</string>
+    <string name="accessibility_input_section">Section d\'entrée d\'analyse</string>
+    <string name="accessibility_prompt_field">Champ d\'entrée de demande. Entrez votre question sur les produits de boulangerie. Texte actuel : %1$s</string>
+    <string name="accessibility_analyze_button_enabled">Bouton analyser. Démarrer l\'analyse IA de l\'image sélectionnée avec votre demande</string>
+    <string name="accessibility_analyze_button_disabled">Bouton analyser. Désactivé. Sélectionnez une image et entrez une demande pour activer</string>
+    <string name="accessibility_loading_analysis">Chargement des résultats d\'analyse IA</string>
+    <string name="accessibility_analyzing_status">Analyse de vos produits de boulangerie...</string>
+    <string name="accessibility_error_occurred">Une erreur s\'est produite pendant l\'analyse</string>
+    <string name="accessibility_error_icon">Icône d\'erreur : %1$s</string>
+    <string name="accessibility_error_message">Message d\'erreur : %1$s</string>
+    <string name="accessibility_retry_button">Bouton réessayer l\'analyse. Essayez à nouveau l\'analyse IA</string>
+    <string name="accessibility_dismiss_error_button">Bouton ignorer l\'erreur. Effacer le message d\'erreur</string>
+    <string name="accessibility_results_section">Résultats d\'analyse IA</string>
+    <string name="accessibility_results_heading">Section des résultats d\'analyse IA</string>
+    <string name="accessibility_report_button">Bouton signaler le contenu. Signaler du contenu inapproprié généré par IA</string>
+    <string name="accessibility_ai_content">Recette et analyse générées par IA : %1$s</string>
+    <string name="accessibility_welcome_message">Message de bienvenue : %1$s</string>
+    
+    <!-- Camera accessibility strings -->
+    <string name="accessibility_camera_screen">Écran de capture de caméra</string>
+    <string name="accessibility_camera_permission_required">Permission de caméra requise</string>
+    <string name="accessibility_camera_icon">Icône de caméra</string>
+    <string name="accessibility_camera_permission_explanation">Explication de la permission de caméra : La permission de caméra est requise pour prendre des photos de vos produits de boulangerie.</string>
+    <string name="accessibility_camera_permission_instruction">Instruction de permission : Veuillez accorder la permission de caméra dans les paramètres de votre appareil si la boîte de dialogue de permission n\'est pas apparue.</string>
+    <string name="accessibility_camera_viewfinder">Viseur de caméra. Pointez votre caméra vers les produits de boulangerie pour capturer</string>
+    <string name="accessibility_camera_preview">Aperçu de caméra montrant la vue en direct de la caméra</string>
+    <string name="accessibility_camera_initializing">État de la caméra : Initialisation de la caméra</string>
+    <string name="accessibility_capture_button_ready">Bouton capturer une photo. Touchez pour prendre une photo de vos produits de boulangerie</string>
+    <string name="accessibility_capture_button_initializing">Bouton capturer une photo. La caméra s\'initialise, veuillez patienter</string>
+    <string name="accessibility_capture_button_capturing">Bouton capturer une photo. Capture de photo en cours, veuillez patienter</string>
+    <string name="accessibility_capture_status">État : Capture de photo</string>
+    
+    <!-- Report dialog accessibility strings -->
+    <string name="accessibility_report_dialog">Boîte de dialogue de signalement de contenu. Signaler du contenu inapproprié généré par IA</string>
+    <string name="accessibility_report_dialog_title">Boîte de dialogue signaler le contenu. %1$s</string>
+    <string name="accessibility_report_form">Formulaire de signalement de contenu</string>
+    <string name="accessibility_report_instructions">Instructions de signalement : %1$s</string>
+    <string name="accessibility_report_reason_heading">Section sélectionner la raison du signalement</string>
+    <string name="accessibility_report_reason_options">Options de raison de signalement. Sélectionnez une raison pour signaler ce contenu</string>
+    <string name="accessibility_report_reason_selected">%1$s, sélectionné</string>
+    <string name="accessibility_report_reason_not_selected">%1$s, non sélectionné</string>
+    <string name="accessibility_report_details_field">Champ de texte détails supplémentaires. Optionnel. Fournissez plus d\'informations sur pourquoi vous signalez ce contenu. Texte actuel : %1$s</string>
+    <string name="accessibility_submit_report_button">Bouton envoyer le signalement. Envoyer le signalement de contenu au développeur</string>
+    <string name="accessibility_cancel_report_button">Bouton annuler. Fermer la boîte de dialogue de signalement sans envoyer</string>
+    
+    <!-- State descriptions -->
+    <string name="accessibility_state_selected">Sélectionné</string>
+    <string name="accessibility_state_not_selected">Non sélectionné</string>
+    <string name="accessibility_state_enabled">Activé</string>
+    <string name="accessibility_state_disabled">Désactivé</string>
+    <string name="accessibility_state_camera_not_ready">Caméra pas prête</string>
+    <string name="accessibility_state_capturing">Capture</string>
+    <string name="accessibility_state_ready_to_capture">Prêt à capturer</string>
+    <string name="accessibility_state_empty">vide</string>
+    
+    <!-- Custom actions -->
+    <string name="accessibility_action_select_for_analysis">Sélectionner pour l\'analyse</string>
+    <string name="accessibility_action_select_image_for_analysis">Sélectionner %1$s pour l\'analyse</string>
+    
+    <!-- Security strings -->
+    <string name="security_status_secure">Sécurisé</string>
+    <string name="security_status_warning">Avertissement</string>
+    <string name="security_status_checking">Vérification...</string>
+    <string name="rate_limit_requests_remaining">%1$d demandes restantes</string>
+    <string name="rate_limit_blocked">Limite de taux dépassée</string>
+    <string name="rate_limit_checking">Vérification des limites...</string>
+    <string name="security_warning_title">Avertissement de Sécurité</string>
+    <string name="security_warning_message">Problèmes de sécurité détectés. Certaines fonctionnalités peuvent être limitées.</string>
+    <string name="input_validation_failed">Entrée invalide détectée. Veuillez vérifier votre demande.</string>
+    <string name="response_validation_failed">La validation de la réponse IA a échoué.</string>
+    <string name="food_safety_warning">⚠️ Avis de Sécurité Alimentaire : Veuillez vérifier les instructions de cuisson et les températures.</string>
+    
+    <!-- Print strings -->
+    <string name="action_print">🖨️ Imprimer</string>
+    <string name="print_recipe_success">Recette envoyée à l\'imprimante</string>
+    <string name="print_recipe_error">Impossible d\'imprimer la recette. Veuillez réessayer.</string>
+    <string name="print_not_available">L\'impression n\'est pas disponible sur cet appareil</string>
+    <string name="accessibility_print_button">Bouton imprimer la recette. Imprimer la recette générée par IA</string>
+    
+    <!-- Share strings -->
+    <string name="action_share">📤 Partager</string>
+    <string name="action_share_to_keep">📤 Sauvegarder dans Keep</string>
+    <string name="share_google_keep">📝 Sauvegarder dans Google Keep</string>
+    <string name="share_email_recipe">✉️ Envoyer la Recette par Email</string>
+    <string name="share_google_docs">📄 Sauvegarder dans Google Docs</string>
+    <string name="share_other_apps">📤 Partager avec d\'autres applications...</string>
+    
+    <!-- Loading strings -->
+    <string name="analyzing_baked_goods">Analyse de vos produits de boulangerie...</string>
+    <string name="share_recipe_success">Recette partagée avec succès</string>
+    <string name="share_recipe_error">Impossible de partager la recette. Veuillez réessayer.</string>
+    <string name="share_chooser_title">Sauvegarder la recette dans...</string>
+    <string name="share_with_photo_chooser_title">Partager la recette avec photo...</string>
+    <string name="accessibility_share_button">Bouton partager la recette. Partager la recette générée par IA avec d\'autres applications</string>
+    <string name="accessibility_share_to_keep_button">Bouton sauvegarder dans Google Keep. Sauvegarder la recette dans les notes Google Keep</string>
+</resources>
