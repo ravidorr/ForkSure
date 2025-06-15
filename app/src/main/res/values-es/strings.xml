@@ -44,4 +44,22 @@
     <!-- Accessibility strings (minimal set for share functionality) -->
     <string name="accessibility_share_button">Botón de compartir receta. Compartir la receta generada por IA a otras aplicaciones</string>
     <string name="accessibility_share_to_keep_button">Botón de guardar en Google Keep. Guardar la receta en notas de Google Keep</string>
+    
+    <!-- Essential accessibility strings for main features -->
+    <string name="accessibility_main_screen">Pantalla principal del asistente de horneado ForkSure</string>
+    <string name="accessibility_take_photo_description">Botón de tomar foto. Abre la cámara para capturar productos horneados</string>
+    <string name="accessibility_sample_image_selected">%1$s imagen de muestra, actualmente seleccionada para análisis</string>
+    <string name="accessibility_sample_image_not_selected">%1$s imagen de muestra, toca para seleccionar para análisis</string>
+    <string name="accessibility_analyze_button_enabled">Botón de analizar. Iniciar análisis de IA de la imagen seleccionada</string>
+    <string name="accessibility_analyze_button_disabled">Botón de analizar. Deshabilitado. Selecciona una imagen para habilitar</string>
+    <string name="accessibility_loading_analysis">Cargando resultados del análisis de IA</string>
+    <string name="accessibility_error_occurred">Ocurrió un error durante el análisis</string>
+    <string name="accessibility_retry_button">Botón de reintentar análisis. Intenta el análisis de IA de nuevo</string>
+    <string name="accessibility_dismiss_error_button">Botón de descartar error. Limpiar el mensaje de error</string>
+    <string name="accessibility_results_section">Resultados del análisis de IA</string>
+    <string name="accessibility_ai_content">Receta y análisis generado por IA: %1$s</string>
+    <string name="accessibility_camera_screen">Pantalla de captura de cámara</string>
+    <string name="accessibility_camera_viewfinder">Visor de cámara. Apunta tu cámara a productos horneados para capturar</string>
+    <string name="accessibility_capture_button_ready">Botón de capturar foto. Toca para tomar una foto de tus productos horneados</string>
+    <string name="accessibility_welcome_message">Mensaje de bienvenida: %1$s</string>
 </resources>

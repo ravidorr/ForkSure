@@ -44,4 +44,22 @@
     <!-- Accessibility strings (minimal set for share functionality) -->
     <string name="accessibility_share_button">Share recipe button. Share the AI-generated recipe to other apps</string>
     <string name="accessibility_share_to_keep_button">Save to Google Keep button. Save the recipe to Google Keep notes</string>
+    
+    <!-- Essential accessibility strings for main features -->
+    <string name="accessibility_main_screen">ForkSure baking assistant main screen</string>
+    <string name="accessibility_take_photo_description">Take photo button. Opens camera to capture baked goods</string>
+    <string name="accessibility_sample_image_selected">%1$s sample image, currently selected for analysis</string>
+    <string name="accessibility_sample_image_not_selected">%1$s sample image, tap to select for analysis</string>
+    <string name="accessibility_analyze_button_enabled">Analyze button. Start AI analysis of selected image</string>
+    <string name="accessibility_analyze_button_disabled">Analyze button. Disabled. Select an image to enable</string>
+    <string name="accessibility_loading_analysis">Loading AI analysis results</string>
+    <string name="accessibility_error_occurred">Error occurred during analysis</string>
+    <string name="accessibility_retry_button">Retry analysis button. Try the AI analysis again</string>
+    <string name="accessibility_dismiss_error_button">Dismiss error button. Clear the error message</string>
+    <string name="accessibility_results_section">AI analysis results</string>
+    <string name="accessibility_ai_content">AI-generated recipe and analysis: %1$s</string>
+    <string name="accessibility_camera_screen">Camera capture screen</string>
+    <string name="accessibility_camera_viewfinder">Camera viewfinder. Point your camera at baked goods to capture</string>
+    <string name="accessibility_capture_button_ready">Capture photo button. Tap to take a photo of your baked goods</string>
+    <string name="accessibility_welcome_message">Welcome message: %1$s</string>
 </resources>

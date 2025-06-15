@@ -44,4 +44,22 @@
     <!-- Accessibility strings (minimal set for share functionality) -->
     <string name="accessibility_share_button">Rezept teilen Schaltfläche. Das KI-generierte Rezept mit anderen Apps teilen</string>
     <string name="accessibility_share_to_keep_button">In Google Keep speichern Schaltfläche. Das Rezept in Google Keep Notizen speichern</string>
+    
+    <!-- Essential accessibility strings for main features -->
+    <string name="accessibility_main_screen">ForkSure Backassistent Hauptbildschirm</string>
+    <string name="accessibility_take_photo_description">Foto aufnehmen Schaltfläche. Öffnet die Kamera zur Aufnahme von Backwaren</string>
+    <string name="accessibility_sample_image_selected">%1$s Beispielbild, derzeit für Analyse ausgewählt</string>
+    <string name="accessibility_sample_image_not_selected">%1$s Beispielbild, tippen zum Auswählen für Analyse</string>
+    <string name="accessibility_analyze_button_enabled">Analysieren-Schaltfläche. KI-Analyse des ausgewählten Bildes starten</string>
+    <string name="accessibility_analyze_button_disabled">Analysieren-Schaltfläche. Deaktiviert. Wählen Sie ein Bild aus, um zu aktivieren</string>
+    <string name="accessibility_loading_analysis">KI-Analyseergebnisse werden geladen</string>
+    <string name="accessibility_error_occurred">Fehler während der Analyse aufgetreten</string>
+    <string name="accessibility_retry_button">Analyse wiederholen Schaltfläche. KI-Analyse erneut versuchen</string>
+    <string name="accessibility_dismiss_error_button">Fehler schließen Schaltfläche. Fehlermeldung löschen</string>
+    <string name="accessibility_results_section">KI-Analyseergebnisse</string>
+    <string name="accessibility_ai_content">KI-generiertes Rezept und Analyse: %1$s</string>
+    <string name="accessibility_camera_screen">Kamera-Aufnahmebildschirm</string>
+    <string name="accessibility_camera_viewfinder">Kamera-Sucher. Richten Sie Ihre Kamera auf Backwaren zum Aufnehmen</string>
+    <string name="accessibility_capture_button_ready">Foto aufnehmen Schaltfläche. Tippen, um ein Foto Ihrer Backwaren zu machen</string>
+    <string name="accessibility_welcome_message">Willkommensnachricht: %1$s</string>
 </resources>

@@ -44,4 +44,22 @@
     <!-- Accessibility strings (minimal set for share functionality) -->
     <string name="accessibility_share_button">Bouton partager la recette. Partager la recette générée par IA avec d\'autres applications</string>
     <string name="accessibility_share_to_keep_button">Bouton sauvegarder dans Google Keep. Sauvegarder la recette dans les notes Google Keep</string>
+    
+    <!-- Essential accessibility strings for main features -->
+    <string name="accessibility_main_screen">Écran principal de l\'assistant de pâtisserie ForkSure</string>
+    <string name="accessibility_take_photo_description">Bouton prendre une photo. Ouvre la caméra pour capturer des produits de boulangerie</string>
+    <string name="accessibility_sample_image_selected">%1$s image d\'échantillon, actuellement sélectionnée pour l\'analyse</string>
+    <string name="accessibility_sample_image_not_selected">%1$s image d\'échantillon, touchez pour sélectionner pour l\'analyse</string>
+    <string name="accessibility_analyze_button_enabled">Bouton analyser. Démarrer l\'analyse IA de l\'image sélectionnée</string>
+    <string name="accessibility_analyze_button_disabled">Bouton analyser. Désactivé. Sélectionnez une image pour activer</string>
+    <string name="accessibility_loading_analysis">Chargement des résultats d\'analyse IA</string>
+    <string name="accessibility_error_occurred">Une erreur s\'est produite pendant l\'analyse</string>
+    <string name="accessibility_retry_button">Bouton réessayer l\'analyse. Essayez à nouveau l\'analyse IA</string>
+    <string name="accessibility_dismiss_error_button">Bouton ignorer l\'erreur. Effacer le message d\'erreur</string>
+    <string name="accessibility_results_section">Résultats d\'analyse IA</string>
+    <string name="accessibility_ai_content">Recette et analyse générées par IA : %1$s</string>
+    <string name="accessibility_camera_screen">Écran de capture de caméra</string>
+    <string name="accessibility_camera_viewfinder">Viseur de caméra. Pointez votre caméra vers les produits de boulangerie pour capturer</string>
+    <string name="accessibility_capture_button_ready">Bouton capturer une photo. Touchez pour prendre une photo de vos produits de boulangerie</string>
+    <string name="accessibility_welcome_message">Message de bienvenue : %1$s</string>
 </resources>

@@ -33,6 +33,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
@@ -46,6 +47,7 @@ import com.google.accompanist.permissions.rememberPermissionState
 import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
 import java.util.concurrent.Executors
+import com.ravidor.forksure.R
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
@@ -69,7 +71,7 @@ fun CameraCapture(
         modifier = Modifier
             .fillMaxSize()
             .semantics {
-                contentDescription = "Camera capture screen"
+                contentDescription = stringResource(R.string.accessibility_camera_screen)
             }
     ) {
         if (cameraPermissionState.status.isGranted) {
@@ -86,7 +88,7 @@ fun CameraCapture(
                     .fillMaxSize()
                     .padding(16.dp)
                     .semantics {
-                        contentDescription = "Camera permission required"
+                        contentDescription = stringResource(R.string.accessibility_camera_screen)
                     },
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -101,20 +103,13 @@ fun CameraCapture(
                 )
                 Text(
                     text = "Camera permission is required to take photos of your baked goods.",
-                    style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier.semantics {
-                        contentDescription = "Camera permission explanation"
-                    }
+                    style = MaterialTheme.typography.bodyLarge
                 )
                 if (permissionRequested) {
                     Text(
                         text = "Please grant camera permission in your device settings if the permission dialog didn't appear.",
                         style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier
-                            .padding(top = 8.dp)
-                            .semantics {
-                                contentDescription = "Permission instruction"
-                            }
+                        modifier = Modifier.padding(top = 8.dp)
                     )
                 }
             }
@@ -162,7 +157,7 @@ private fun CameraPreview(
         modifier = Modifier
             .fillMaxSize()
             .semantics {
-                contentDescription = "Camera viewfinder"
+                contentDescription = stringResource(R.string.accessibility_camera_viewfinder)
             }
     ) {
         AndroidView(
@@ -215,11 +210,7 @@ private fun CameraPreview(
                 .padding(16.dp)
                 .size(64.dp)
                 .semantics {
-                    contentDescription = when {
-                        !isCameraReady -> "Capture photo button. Camera is initializing, please wait"
-                        isCapturing -> "Capture photo button. Currently capturing photo, please wait"
-                        else -> "Capture photo button. Tap to take a photo of your baked goods"
-                    }
+                    contentDescription = stringResource(R.string.accessibility_capture_button_ready)
                 }
         ) {
             Text(
@@ -236,12 +227,13 @@ private fun CameraPreview(
             Text(
                 text = "Capturing photo...",
                 modifier = Modifier
-                    .align(Alignment.Center)
+                    .align(Alignment.TopCenter)
+                    .padding(16.dp)
                     .semantics {
                         contentDescription = "Status: Capturing photo"
                     },
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.primary
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurface
             )
         }
     }
