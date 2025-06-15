@@ -28,6 +28,8 @@ import com.ravidor.forksure.NavigationConstants.ROUTE_MAIN
 import com.ravidor.forksure.screens.MainScreen
 import com.ravidor.forksure.state.NavigationState
 import com.ravidor.forksure.state.rememberNavigationState
+import com.ravidor.forksure.ToastHelper
+import com.ravidor.forksure.R
 
 /**
  * Main navigation composable for the ForkSure app with proper state hoisting
@@ -82,14 +84,14 @@ fun ForkSureNavigation(
                     coroutineScope.launch(Dispatchers.Main) {
                         navigationState.updateCapturedImage(bitmap)
                         navigationState.selectCapturedImage()
-                        AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.SUCCESS)
+                        ToastHelper.showSuccess(context, context.getString(R.string.success_photo_captured))
                         navController.popBackStack()
                     }
                 },
                 onError = { error ->
                     // Camera callbacks run on background threads, need to dispatch to main
                     coroutineScope.launch(Dispatchers.Main) {
-                        AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.ERROR)
+                        ToastHelper.showError(context, context.getString(R.string.error_photo_capture_failed))
                         // Navigate back to main screen with error
                         navController.popBackStack()
                     }
