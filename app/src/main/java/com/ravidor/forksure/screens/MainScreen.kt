@@ -12,8 +12,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
@@ -93,19 +95,21 @@ fun MainScreen(
     val mainScreenState = rememberMainScreenState(
         initialPrompt = placeholderPrompt,
         initialResult = placeholderResult,
-        initialSelectedImageIndex = selectedImage.value
+        initialSelectedImageIndex = -2 // -2 means no selection initially (-1 is for captured image)
     )
     
-    // Sync external state with internal state
+    // Sync external state with internal state - prevent circular updates
     LaunchedEffect(capturedImage) {
-        mainScreenState.updateCapturedImage(capturedImage)
+        if (capturedImage != mainScreenState.capturedImage) {
+            mainScreenState.updateCapturedImage(capturedImage)
+        }
     }
     
     LaunchedEffect(selectedImage.value) {
         if (selectedImage.value != mainScreenState.selectedImageIndex) {
             if (selectedImage.value == -1) {
                 mainScreenState.selectCapturedImage()
-            } else {
+            } else if (selectedImage.value >= 0) {
                 mainScreenState.selectSampleImage(selectedImage.value)
             }
         }
@@ -115,14 +119,19 @@ fun MainScreen(
     val actions = remember(mainScreenState, bakingViewModel) {
         DefaultMainScreenActions(
             state = mainScreenState,
-            onNavigateToCamera = onNavigateToCamera,
+            navigateToCamera = onNavigateToCamera,
             onAnalyze = { bitmap, prompt ->
                 bakingViewModel.sendPrompt(bitmap, prompt)
             },
             onSubmitReport = { report ->
                 coroutineScope.launch {
-                    ContentReportingHelper.submitReport(context, report)
-                    AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.SUCCESS)
+                    try {
+                        ContentReportingHelper.submitReport(context, report)
+                        AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.SUCCESS)
+                    } catch (e: Exception) {
+                        // Handle error gracefully
+                        AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.ERROR)
+                    }
                 }
             },
             onRetry = { bakingViewModel.retryLastRequest() },
@@ -130,13 +139,17 @@ fun MainScreen(
         )
     }
     
-    // Update external state when internal state changes
+    // Update external state when internal state changes - prevent circular updates
     LaunchedEffect(mainScreenState.selectedImageIndex) {
-        selectedImage.intValue = mainScreenState.selectedImageIndex
+        if (selectedImage.intValue != mainScreenState.selectedImageIndex) {
+            selectedImage.intValue = mainScreenState.selectedImageIndex
+        }
     }
     
     LaunchedEffect(mainScreenState.capturedImage) {
-        onCapturedImageUpdated(mainScreenState.capturedImage)
+        if (capturedImage != mainScreenState.capturedImage) {
+            onCapturedImageUpdated(mainScreenState.capturedImage)
+        }
     }
 
     MainScreenContent(
@@ -160,18 +173,30 @@ private fun MainScreenContent(
 ) {
     val context = LocalContext.current
     
-    // Create analyze action that handles bitmap creation
+    // Use the hardcoded prompt internally - users cannot see or edit it
+    val internalPrompt = stringResource(R.string.prompt_placeholder)
+    
+    // Create analyze action that handles bitmap creation safely
     val handleAnalyzeClick: () -> Unit = {
-        if (state.hasSelectedCapturedImage) {
-            state.capturedImage?.let { bitmap ->
-                bakingViewModel.sendPrompt(bitmap, state.prompt)
+        try {
+            if (state.hasSelectedCapturedImage) {
+                state.capturedImage?.let { bitmap ->
+                    if (!bitmap.isRecycled) {
+                        bakingViewModel.sendPrompt(bitmap, internalPrompt)
+                    }
+                }
+            } else if (state.hasSelectedSampleImage && state.selectedImageIndex >= 0 && state.selectedImageIndex < SampleDataConstants.SAMPLE_IMAGES.size) {
+                val bitmap = BitmapFactory.decodeResource(
+                    context.resources,
+                    SampleDataConstants.SAMPLE_IMAGES[state.selectedImageIndex]
+                )
+                bitmap?.let {
+                    bakingViewModel.sendPrompt(it, internalPrompt)
+                }
             }
-        } else if (state.hasSelectedSampleImage) {
-            val bitmap = BitmapFactory.decodeResource(
-                context.resources,
-                SampleDataConstants.SAMPLE_IMAGES[state.selectedImageIndex]
-            )
-            bakingViewModel.sendPrompt(bitmap, state.prompt)
+        } catch (e: Exception) {
+            // Handle bitmap loading errors gracefully
+            AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.ERROR)
         }
     }
     
@@ -191,35 +216,46 @@ private fun MainScreenContent(
             modifier = Modifier.padding(bottom = Dimensions.PADDING_SMALL)
         )
 
-        // Camera section
-        CameraSection(
-            onTakePhoto = actions::onNavigateToCamera
-        )
+        // Only show input controls when not displaying results
+        if (uiState !is UiState.Success) {
+            // Instructional text - only show when not loading/processing and no image selected
+            if (uiState !is UiState.Loading) {
+                if (!state.hasSelectedCapturedImage && !state.hasSelectedSampleImage) {
+                    InstructionalTextSection()
+                }
+            }
 
-        // Show captured image if available
-        state.capturedImage?.let { bitmap ->
-            CapturedImageCard(
-                bitmap = bitmap,
-                isSelected = state.hasSelectedCapturedImage,
-                onImageClick = actions::onCapturedImageSelected
+            // Camera section
+            CameraSection(
+                onTakePhoto = actions::onNavigateToCamera
             )
+
+            // Show captured image if available
+            state.capturedImage?.let { bitmap ->
+                CapturedImageCard(
+                    bitmap = bitmap,
+                    isSelected = state.hasSelectedCapturedImage,
+                    onImageClick = actions::onCapturedImageSelected
+                )
+            }
+
+            // Sample images section
+            SampleImagesSection(
+                images = SampleDataConstants.SAMPLE_IMAGES,
+                imageDescriptions = SampleDataConstants.IMAGE_DESCRIPTIONS,
+                selectedImageIndex = if (state.hasSelectedSampleImage) state.selectedImageIndex else -1,
+                onImageSelected = actions::onSampleImageSelected
+            )
+
+            // Analyze button section (only show when image is selected)
+            val shouldShowAnalyzeButton = state.hasSelectedCapturedImage || state.hasSelectedSampleImage
+            if (shouldShowAnalyzeButton) {
+                AnalyzeButtonSection(
+                    isAnalyzeEnabled = true, // Always enabled when visible since we check the condition above
+                    onAnalyzeClick = handleAnalyzeClick
+                )
+            }
         }
-
-        // Sample images section
-        SampleImagesSection(
-            images = SampleDataConstants.SAMPLE_IMAGES,
-            imageDescriptions = SampleDataConstants.IMAGE_DESCRIPTIONS,
-            selectedImageIndex = if (state.hasSelectedSampleImage) state.selectedImageIndex else -1,
-            onImageSelected = actions::onSampleImageSelected
-        )
-
-        // Input section
-        PromptInputSection(
-            prompt = state.prompt,
-            onPromptChange = actions::onPromptChange,
-            isAnalyzeEnabled = state.isAnalyzeEnabled,
-            onAnalyzeClick = handleAnalyzeClick
-        )
 
         // Results section
         MainResultsSection(
@@ -230,7 +266,8 @@ private fun MainScreenContent(
             onHideReportDialog = actions::onHideReportDialog,
             onReportSubmitted = actions::onReportSubmitted,
             onRetry = actions::onRetryAnalysis,
-            onDismiss = actions::onDismissError
+            onDismiss = actions::onDismissError,
+            onTakeAnotherPhoto = actions::onNavigateToCamera
         )
     }
 }
@@ -249,6 +286,22 @@ private fun MainScreenHeader() {
 }
 
 @Composable
+private fun InstructionalTextSection() {
+    Text(
+        text = stringResource(R.string.results_placeholder),
+        textAlign = TextAlign.Center,
+        color = MaterialTheme.colorScheme.onSurface,
+        style = MaterialTheme.typography.bodyLarge,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = Dimensions.PADDING_STANDARD, vertical = Dimensions.PADDING_MEDIUM)
+            .semantics {
+                contentDescription = "Instructions for using the app"
+            }
+    )
+}
+
+@Composable
 private fun MainResultsSection(
     uiState: UiState,
     result: String,
@@ -257,7 +310,8 @@ private fun MainResultsSection(
     onHideReportDialog: () -> Unit,
     onReportSubmitted: (ContentReportingHelper.ContentReport) -> Unit,
     onRetry: () -> Unit,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    onTakeAnotherPhoto: () -> Unit
 ) {
     when (uiState) {
         is UiState.Loading -> {
@@ -287,6 +341,7 @@ private fun MainResultsSection(
                         recipeName = recipeTitle
                     )
                 },
+                onTakeAnotherPhoto = onTakeAnotherPhoto,
                 modifier = Modifier.fillMaxSize()
             )
             
@@ -300,29 +355,13 @@ private fun MainResultsSection(
             }
         }
         else -> {
-            // Initial state - show placeholder
-            InitialStateSection(result = result)
+            // Initial state - no content to show, instructions are above
+            Spacer(modifier = Modifier.fillMaxSize())
         }
     }
 }
 
-@Composable
-private fun InitialStateSection(
-    result: String
-) {
-    Text(
-        text = result,
-        textAlign = TextAlign.Start,
-        color = MaterialTheme.colorScheme.onSurface,
-        modifier = Modifier
-            .padding(Dimensions.PADDING_STANDARD)
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .semantics {
-                contentDescription = "Welcome message"
-            }
-    )
-}
+
 
 @Composable
 private fun CameraSection(
@@ -343,6 +382,8 @@ private fun CameraSection(
                 AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.CLICK)
             },
             modifier = Modifier
+                .fillMaxWidth(0.8f)
+                .height(64.dp)
                 .padding(bottom = Dimensions.PADDING_SMALL)
                 .semantics {
                     contentDescription = "Take photo button. Opens camera to capture baked goods"
@@ -350,10 +391,13 @@ private fun CameraSection(
         ) {
             Text(
                 text = "📷",
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(end = Dimensions.PADDING_SMALL)
+                style = MaterialTheme.typography.headlineMedium,
+                modifier = Modifier.padding(end = Dimensions.PADDING_MEDIUM)
             )
-            Text(stringResource(R.string.take_photo))
+            Text(
+                text = stringResource(R.string.take_photo),
+                style = MaterialTheme.typography.headlineSmall
+            )
         }
     }
 }
@@ -405,32 +449,21 @@ private fun SampleImagesSection(
     onImageSelected: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(modifier = modifier) {
-        Text(
-            text = stringResource(R.string.or_choose_sample),
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier
-                .padding(horizontal = Dimensions.PADDING_STANDARD, vertical = Dimensions.PADDING_SMALL)
-                .semantics {
-                    contentDescription = "Sample images section heading"
-                }
-        )
-
-        LazyRow(
-            modifier = Modifier
-                .fillMaxWidth()
-                .semantics {
-                    contentDescription = "Horizontal list of sample baking images"
-                }
-        ) {
-            itemsIndexed(images) { index, image ->
-                SampleImageItem(
-                    imageRes = image,
-                    imageDescription = stringResource(imageDescriptions[index]),
-                    isSelected = index == selectedImageIndex,
-                    onImageClick = { onImageSelected(index) }
-                )
+    LazyRow(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = Dimensions.PADDING_STANDARD)
+            .semantics {
+                contentDescription = "Horizontal list of sample baking images"
             }
+    ) {
+        itemsIndexed(images) { index, image ->
+            SampleImageItem(
+                imageRes = image,
+                imageDescription = stringResource(imageDescriptions[index]),
+                isSelected = index == selectedImageIndex,
+                onImageClick = { onImageSelected(index) }
+            )
         }
     }
 }
@@ -471,9 +504,7 @@ private fun SampleImageItem(
 }
 
 @Composable
-private fun PromptInputSection(
-    prompt: String,
-    onPromptChange: (String) -> Unit,
+private fun AnalyzeButtonSection(
     isAnalyzeEnabled: Boolean,
     onAnalyzeClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -482,24 +513,10 @@ private fun PromptInputSection(
     
     Row(
         modifier = modifier
-            .padding(all = Dimensions.PADDING_STANDARD)
-            .semantics {
-                contentDescription = "Analysis input section"
-            }
+            .fillMaxWidth()
+            .padding(all = Dimensions.PADDING_STANDARD),
+        horizontalArrangement = Arrangement.Center
     ) {
-        TextField(
-            value = prompt,
-            label = { Text(stringResource(R.string.label_prompt)) },
-            onValueChange = onPromptChange,
-            modifier = Modifier
-                .weight(0.8f)
-                .padding(end = Dimensions.PADDING_STANDARD)
-                .align(Alignment.CenterVertically)
-                .semantics {
-                    contentDescription = "Prompt input field. Enter your question about the baked goods"
-                }
-        )
-
         Button(
             onClick = {
                 onAnalyzeClick()
@@ -507,16 +524,20 @@ private fun PromptInputSection(
             },
             enabled = isAnalyzeEnabled,
             modifier = Modifier
-                .align(Alignment.CenterVertically)
+                .fillMaxWidth(0.8f)
+                .height(64.dp)
                 .semantics {
                     contentDescription = if (isAnalyzeEnabled) {
-                        "Analyze button. Start AI analysis of selected image with your prompt"
+                        "Analyze button. Start AI analysis of selected image"
                     } else {
-                        "Analyze button. Disabled. Select an image and enter a prompt to enable"
+                        "Analyze button. Disabled. Select an image to enable"
                     }
                 }
         ) {
-            Text(text = stringResource(R.string.action_go))
+            Text(
+                text = stringResource(R.string.action_go),
+                style = MaterialTheme.typography.headlineSmall
+            )
         }
     }
 }
@@ -657,6 +678,7 @@ private fun RecipeResultsSection(
     outputText: String,
     onReportContent: () -> Unit,
     onPrintRecipe: () -> Unit,
+    onTakeAnotherPhoto: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -721,6 +743,37 @@ private fun RecipeResultsSection(
                 }
             ) {
                 Text(stringResource(R.string.action_report))
+            }
+        }
+        
+        // Take Another Photo button - prominent and separate
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = Dimensions.PADDING_MEDIUM),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Button(
+                onClick = {
+                    onTakeAnotherPhoto()
+                    AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.CLICK)
+                },
+                modifier = Modifier
+                    .fillMaxWidth(0.8f)
+                    .height(56.dp)
+                    .semantics {
+                        contentDescription = "Take another photo button. Start analyzing a new baked good"
+                    }
+            ) {
+                Text(
+                    text = "📷",
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier.padding(end = Dimensions.PADDING_MEDIUM)
+                )
+                Text(
+                    text = "Take Another Photo",
+                    style = MaterialTheme.typography.titleMedium
+                )
             }
         }
     }

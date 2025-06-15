@@ -19,7 +19,7 @@ import com.ravidor.forksure.ContentReportingHelper
 class MainScreenState(
     initialPrompt: String = "",
     initialResult: String = "",
-    initialSelectedImageIndex: Int = 0
+    initialSelectedImageIndex: Int = -2
 ) {
     // Prompt input state
     var prompt by mutableStateOf(initialPrompt)
@@ -81,8 +81,8 @@ class MainScreenState(
     fun clearCapturedImage() {
         capturedImage = null
         if (selectedImageIndex == -1) {
-            // Reset to first sample image if captured image was selected
-            selectedImageIndex = 0
+            // Reset to no selection if captured image was selected
+            selectedImageIndex = -2
         }
     }
     
@@ -97,7 +97,7 @@ class MainScreenState(
     fun resetToInitialState() {
         prompt = ""
         result = ""
-        selectedImageIndex = 0
+        selectedImageIndex = -2
         capturedImage = null
         showReportDialog = false
     }
@@ -110,7 +110,7 @@ class MainScreenState(
 fun rememberMainScreenState(
     initialPrompt: String = "",
     initialResult: String = "",
-    initialSelectedImageIndex: Int = 0
+    initialSelectedImageIndex: Int = -2
 ): MainScreenState {
     return remember {
         MainScreenState(
@@ -149,7 +149,7 @@ interface MainScreenActions {
 @Stable
 class DefaultMainScreenActions(
     private val state: MainScreenState,
-    private val onNavigateToCamera: () -> Unit,
+    private val navigateToCamera: () -> Unit,
     private val onAnalyze: (Bitmap, String) -> Unit,
     private val onSubmitReport: (ContentReportingHelper.ContentReport) -> Unit,
     private val onRetry: () -> Unit,
@@ -183,7 +183,7 @@ class DefaultMainScreenActions(
     }
     
     override fun onNavigateToCamera() {
-        onNavigateToCamera()
+        navigateToCamera()
     }
     
     override fun onShowReportDialog() {

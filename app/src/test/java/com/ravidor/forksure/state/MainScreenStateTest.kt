@@ -24,7 +24,7 @@ class MainScreenStateTest {
     fun `initial state should have correct default values`() {
         assertThat(state.prompt).isEmpty()
         assertThat(state.result).isEmpty()
-        assertThat(state.selectedImageIndex).isEqualTo(0)
+        assertThat(state.selectedImageIndex).isEqualTo(-2)
         assertThat(state.capturedImage).isNull()
         assertThat(state.showReportDialog).isFalse()
     }
@@ -90,7 +90,7 @@ class MainScreenStateTest {
         
         // Then
         assertThat(state.capturedImage).isNull()
-        assertThat(state.selectedImageIndex).isEqualTo(0)
+        assertThat(state.selectedImageIndex).isEqualTo(-2)
     }
 
     @Test
@@ -235,7 +235,7 @@ class MainScreenStateTest {
         // Then
         assertThat(state.prompt).isEmpty()
         assertThat(state.result).isEmpty()
-        assertThat(state.selectedImageIndex).isEqualTo(0)
+        assertThat(state.selectedImageIndex).isEqualTo(-2)
         assertThat(state.capturedImage).isNull()
         assertThat(state.showReportDialog).isFalse()
     }

@@ -16,7 +16,7 @@ import androidx.compose.runtime.setValue
  */
 @Stable
 class NavigationState(
-    initialSelectedImageIndex: Int = 0
+    initialSelectedImageIndex: Int = -2
 ) {
     // Image selection state - exposed as MutableIntState for compatibility
     private val _selectedImageState = mutableIntStateOf(initialSelectedImageIndex)
@@ -52,14 +52,14 @@ class NavigationState(
     fun clearCapturedImage() {
         capturedImage = null
         if (selectedImageIndex == -1) {
-            // Reset to first sample image if captured image was selected
-            selectedImageState.intValue = 0
+            // Reset to no selection if captured image was selected
+            selectedImageState.intValue = -2
         }
     }
     
     fun resetToInitialState() {
         capturedImage = null
-        selectedImageState.intValue = 0
+        selectedImageState.intValue = -2
     }
 }
 
@@ -68,7 +68,7 @@ class NavigationState(
  */
 @Composable
 fun rememberNavigationState(
-    initialSelectedImageIndex: Int = 0
+    initialSelectedImageIndex: Int = -2
 ): NavigationState {
     return remember {
         NavigationState(initialSelectedImageIndex)
