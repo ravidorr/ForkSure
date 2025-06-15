@@ -51,10 +51,9 @@ object SecurityManager {
     )
     
     private val dangerousInstructions = listOf(
-        Pattern.compile("(?i)\\b(poison|toxic|dangerous|harmful)\\b"),
-        Pattern.compile("(?i)\\b(raw|undercooked|unsafe|contaminated)\\b"),
-        Pattern.compile("(?i)\\b(allergy|allergen)\\s+(?!warning|information|note)"),
-        Pattern.compile("(?i)\\b(temperature|heat|burn|fire)\\s+(?!control|safety)")
+        Pattern.compile("(?i)\\b(poison|toxic|dangerous|harmful)\\s+(?!ingredients|free|warning)"),
+        Pattern.compile("(?i)\\b(unsafe|contaminated)\\s+(?!from|for|ingredients)"),
+        Pattern.compile("(?i)\\b(burn|fire)\\s+(?!proof|safe|resistant|place|oven|stove|until|slightly|golden)")
     )
 
     /**
