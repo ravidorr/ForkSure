@@ -34,6 +34,8 @@ android {
         ndk {
             // Enable 16KB page alignment for better performance on modern devices
             debugSymbolLevel = "SYMBOL_TABLE"
+            // Specify supported ABIs for optimal performance
+            abiFilters += listOf("arm64-v8a", "armeabi-v7a", "x86_64", "x86")
         }
     }
 
@@ -83,7 +85,20 @@ android {
     packaging {
         jniLibs {
             useLegacyPackaging = false
+            // Enable 16KB page alignment for better performance
+            keepDebugSymbols += "**/arm64-v8a/*.so"
+            keepDebugSymbols += "**/armeabi-v7a/*.so"
         }
+        resources {
+            // Ensure efficient packaging
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
+    }
+    
+    // Optimize dependencies info for better performance
+    dependenciesInfo {
+        includeInApk = false
+        includeInBundle = false
     }
     
     bundle {
@@ -92,6 +107,10 @@ android {
         }
         language {
             enableSplit = false
+        }
+        // Optimize for 16KB page alignment
+        density {
+            enableSplit = true
         }
     }
     
