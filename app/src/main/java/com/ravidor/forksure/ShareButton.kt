@@ -85,7 +85,7 @@ fun AdvancedShareButton(
             // Share to Google Keep
             if (RecipeSharingHelper.isAppAvailable(context, ShareTarget.GOOGLE_KEEP)) {
                 DropdownMenuItem(
-                    text = { Text("📝 Save to Google Keep") },
+                    text = { Text(stringResource(R.string.share_google_keep)) },
                     onClick = {
                         showShareMenu = false
                         val recipeTitle = PrintHelper.extractRecipeTitle(outputText)
@@ -104,7 +104,7 @@ fun AdvancedShareButton(
             // Share to Gmail
             if (RecipeSharingHelper.isAppAvailable(context, ShareTarget.GMAIL)) {
                 DropdownMenuItem(
-                    text = { Text("✉️ Email Recipe") },
+                    text = { Text(stringResource(R.string.share_email_recipe)) },
                     onClick = {
                         showShareMenu = false
                         val recipeTitle = PrintHelper.extractRecipeTitle(outputText)
@@ -123,7 +123,7 @@ fun AdvancedShareButton(
             // Share to Google Docs
             if (RecipeSharingHelper.isAppAvailable(context, ShareTarget.GOOGLE_DOCS)) {
                 DropdownMenuItem(
-                    text = { Text("📄 Save to Google Docs") },
+                    text = { Text(stringResource(R.string.share_google_docs)) },
                     onClick = {
                         showShareMenu = false
                         val recipeTitle = PrintHelper.extractRecipeTitle(outputText)
@@ -141,7 +141,7 @@ fun AdvancedShareButton(
             
             // General share option (always available)
             DropdownMenuItem(
-                text = { Text("📤 Share to other apps...") },
+                text = { Text(stringResource(R.string.share_other_apps)) },
                 onClick = {
                     showShareMenu = false
                     val recipeTitle = PrintHelper.extractRecipeTitle(outputText)
