@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Minimum touch target sizes for accessibility -->
+    <dimen name="accessibility_min_touch_target">48dp</dimen>
+    <dimen name="accessibility_recommended_touch_target">56dp</dimen>
+    
+    <!-- Text sizes for better readability -->
+    <dimen name="accessibility_min_text_size">14sp</dimen>
+    <dimen name="accessibility_large_text_size">18sp</dimen>
+    <dimen name="accessibility_extra_large_text_size">22sp</dimen>
+    
+    <!-- Spacing for better touch accessibility -->
+    <dimen name="accessibility_min_spacing">8dp</dimen>
+    <dimen name="accessibility_recommended_spacing">16dp</dimen>
+    
+    <!-- Focus indicators -->
+    <dimen name="accessibility_focus_border_width">2dp</dimen>
+    
+    <!-- Animation durations for accessibility -->
+    <integer name="accessibility_short_animation_duration">200</integer>
+    <integer name="accessibility_medium_animation_duration">300</integer>
+    <integer name="accessibility_long_animation_duration">500</integer>
+    
+    <!-- Accessibility service descriptions -->
+    <string name="accessibility_service_description">ForkSure Barrierefreiheitsdienst für verbesserte Kochunterstützung</string>
+    
+    <!-- Content descriptions for complex UI elements -->
+    <string name="accessibility_image_gallery_description">Bildergalerie mit %1$d Kochbildern. Wischen Sie nach links oder rechts zum Durchsuchen, doppeltippen Sie zum Auswählen.</string>
+    <string name="accessibility_camera_controls_description">Kamerasteuerung. Aufnahmetaste unten in der Mitte, Einstellungen oben rechts verfügbar.</string>
+    <string name="accessibility_results_container_description">KI-Analyseergebnis-Container. Scrollen Sie, um den vollständigen Inhalt zu lesen, verwenden Sie die Melden-Schaltfläche bei unangemessenem Inhalt.</string>
+    
+    <!-- Accessibility hints for complex interactions -->
+    <string name="accessibility_hint_double_tap_to_select">Doppeltippen, um dieses Bild für die Analyse auszuwählen</string>
+    <string name="accessibility_hint_swipe_to_browse">Nach links oder rechts wischen, um Bilder zu durchsuchen</string>
+    <string name="accessibility_hint_long_press_for_options">Lange drücken für zusätzliche Optionen</string>
+    <string name="accessibility_hint_scroll_for_more">Scrollen, um mehr Inhalt zu sehen</string>
+    
+    <!-- Error announcements for screen readers -->
+    <string name="accessibility_error_network">Netzwerkfehler aufgetreten. Überprüfen Sie Ihre Internetverbindung und versuchen Sie es erneut.</string>
+    <string name="accessibility_error_camera">Kamerafehler aufgetreten. Bitte überprüfen Sie die Kameraberechtigungen und versuchen Sie es erneut.</string>
+    <string name="accessibility_error_analysis">Analysefehler aufgetreten. Der KI-Dienst ist möglicherweise vorübergehend nicht verfügbar.</string>
+    
+    <!-- Success announcements -->
+    <string name="accessibility_success_image_captured">Foto erfolgreich aufgenommen. Bild für Analyse ausgewählt.</string>
+    <string name="accessibility_success_analysis_complete">Analyse abgeschlossen. Ergebnisse sind jetzt verfügbar.</string>
+    <string name="accessibility_success_report_submitted">Bericht erfolgreich übermittelt. Vielen Dank für die Hilfe bei der Verbesserung unseres Dienstes.</string>
+    
+    <!-- Navigation announcements -->
+    <string name="accessibility_navigation_main_screen">Zur Hauptansicht navigiert</string>
+    <string name="accessibility_navigation_camera_screen">Zur Kameraansicht navigiert</string>
+    <string name="accessibility_navigation_results_screen">Zur Ergebnisansicht navigiert</string>
+    
+    <!-- Progress announcements -->
+    <string name="accessibility_progress_initializing_camera">Kamera wird initialisiert, bitte warten</string>
+    <string name="accessibility_progress_analyzing_image">Bild wird mit KI analysiert, dies kann einen Moment dauern</string>
+    <string name="accessibility_progress_submitting_report">Bericht wird übermittelt, bitte warten</string>
+</resources> 

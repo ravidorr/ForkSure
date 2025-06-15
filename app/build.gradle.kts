@@ -134,12 +134,12 @@ tasks.register<JacocoReport>("jacocoTestReport") {
         "**/DaggerApplicationComponent*.*"
     )
     
-    val debugTree = fileTree("${project.buildDir}/tmp/kotlin-classes/debug")
+    val debugTree = fileTree("${project.layout.buildDirectory.get().asFile}/tmp/kotlin-classes/debug")
     val mainSrc = "${project.projectDir}/src/main/java"
     
     sourceDirectories.setFrom(files(mainSrc))
     classDirectories.setFrom(files(debugTree.exclude(fileFilter)))
-    executionData.setFrom(fileTree(project.buildDir).include("jacoco/testDebugUnitTest.exec"))
+    executionData.setFrom(fileTree(project.layout.buildDirectory.get().asFile).include("jacoco/testDebugUnitTest.exec"))
 }
 
 tasks.register<JacocoCoverageVerification>("jacocoCoverageVerification") {

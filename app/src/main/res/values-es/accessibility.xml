@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Minimum touch target sizes for accessibility -->
+    <dimen name="accessibility_min_touch_target">48dp</dimen>
+    <dimen name="accessibility_recommended_touch_target">56dp</dimen>
+    
+    <!-- Text sizes for better readability -->
+    <dimen name="accessibility_min_text_size">14sp</dimen>
+    <dimen name="accessibility_large_text_size">18sp</dimen>
+    <dimen name="accessibility_extra_large_text_size">22sp</dimen>
+    
+    <!-- Spacing for better touch accessibility -->
+    <dimen name="accessibility_min_spacing">8dp</dimen>
+    <dimen name="accessibility_recommended_spacing">16dp</dimen>
+    
+    <!-- Focus indicators -->
+    <dimen name="accessibility_focus_border_width">2dp</dimen>
+    
+    <!-- Animation durations for accessibility -->
+    <integer name="accessibility_short_animation_duration">200</integer>
+    <integer name="accessibility_medium_animation_duration">300</integer>
+    <integer name="accessibility_long_animation_duration">500</integer>
+    
+    <!-- Accessibility service descriptions -->
+    <string name="accessibility_service_description">Servicio de accesibilidad ForkSure para asistencia mejorada en cocina</string>
+    
+    <!-- Content descriptions for complex UI elements -->
+    <string name="accessibility_image_gallery_description">Galería de imágenes con %1$d imágenes de cocina. Desliza izquierda o derecha para navegar, toca dos veces para seleccionar.</string>
+    <string name="accessibility_camera_controls_description">Controles de cámara. Botón de captura en la parte inferior central, configuraciones disponibles en la esquina superior derecha.</string>
+    <string name="accessibility_results_container_description">Contenedor de resultados de análisis de IA. Desplaza para leer contenido completo, usa el botón de reportar si el contenido es inapropiado.</string>
+    
+    <!-- Accessibility hints for complex interactions -->
+    <string name="accessibility_hint_double_tap_to_select">Toca dos veces para seleccionar esta imagen para análisis</string>
+    <string name="accessibility_hint_swipe_to_browse">Desliza izquierda o derecha para navegar imágenes</string>
+    <string name="accessibility_hint_long_press_for_options">Mantén presionado para opciones adicionales</string>
+    <string name="accessibility_hint_scroll_for_more">Desplaza para ver más contenido</string>
+    
+    <!-- Error announcements for screen readers -->
+    <string name="accessibility_error_network">Error de red ocurrido. Verifica tu conexión a internet e intenta de nuevo.</string>
+    <string name="accessibility_error_camera">Error de cámara ocurrido. Por favor verifica los permisos de cámara e intenta de nuevo.</string>
+    <string name="accessibility_error_analysis">Error de análisis ocurrido. El servicio de IA puede estar temporalmente no disponible.</string>
+    
+    <!-- Success announcements -->
+    <string name="accessibility_success_image_captured">Foto capturada exitosamente. Imagen seleccionada para análisis.</string>
+    <string name="accessibility_success_analysis_complete">Análisis completado. Los resultados están ahora disponibles.</string>
+    <string name="accessibility_success_report_submitted">Reporte enviado exitosamente. Gracias por ayudar a mejorar nuestro servicio.</string>
+    
+    <!-- Navigation announcements -->
+    <string name="accessibility_navigation_main_screen">Navegado a pantalla principal</string>
+    <string name="accessibility_navigation_camera_screen">Navegado a pantalla de cámara</string>
+    <string name="accessibility_navigation_results_screen">Navegado a pantalla de resultados</string>
+    
+    <!-- Progress announcements -->
+    <string name="accessibility_progress_initializing_camera">Inicializando cámara, por favor espera</string>
+    <string name="accessibility_progress_analyzing_image">Analizando imagen con IA, esto puede tomar un momento</string>
+    <string name="accessibility_progress_submitting_report">Enviando reporte, por favor espera</string>
+</resources> 

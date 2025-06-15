@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Minimum touch target sizes for accessibility -->
+    <dimen name="accessibility_min_touch_target">48dp</dimen>
+    <dimen name="accessibility_recommended_touch_target">56dp</dimen>
+    
+    <!-- Text sizes for better readability -->
+    <dimen name="accessibility_min_text_size">14sp</dimen>
+    <dimen name="accessibility_large_text_size">18sp</dimen>
+    <dimen name="accessibility_extra_large_text_size">22sp</dimen>
+    
+    <!-- Spacing for better touch accessibility -->
+    <dimen name="accessibility_min_spacing">8dp</dimen>
+    <dimen name="accessibility_recommended_spacing">16dp</dimen>
+    
+    <!-- Focus indicators -->
+    <dimen name="accessibility_focus_border_width">2dp</dimen>
+    
+    <!-- Animation durations for accessibility -->
+    <integer name="accessibility_short_animation_duration">200</integer>
+    <integer name="accessibility_medium_animation_duration">300</integer>
+    <integer name="accessibility_long_animation_duration">500</integer>
+    
+    <!-- Accessibility service descriptions -->
+    <string name="accessibility_service_description">Service d\'accessibilité ForkSure pour une assistance culinaire améliorée</string>
+    
+    <!-- Content descriptions for complex UI elements -->
+    <string name="accessibility_image_gallery_description">Galerie d\'images avec %1$d images de cuisine. Balayez à gauche ou à droite pour naviguer, double-tapez pour sélectionner.</string>
+    <string name="accessibility_camera_controls_description">Commandes de l\'appareil photo. Bouton de capture en bas au centre, paramètres disponibles en haut à droite.</string>
+    <string name="accessibility_results_container_description">Conteneur de résultats d\'analyse IA. Faites défiler pour lire le contenu complet, utilisez le bouton de signalement si le contenu est inapproprié.</string>
+    
+    <!-- Accessibility hints for complex interactions -->
+    <string name="accessibility_hint_double_tap_to_select">Double-tapez pour sélectionner cette image pour l\'analyse</string>
+    <string name="accessibility_hint_swipe_to_browse">Balayez à gauche ou à droite pour parcourir les images</string>
+    <string name="accessibility_hint_long_press_for_options">Appui long pour des options supplémentaires</string>
+    <string name="accessibility_hint_scroll_for_more">Faites défiler pour voir plus de contenu</string>
+    
+    <!-- Error announcements for screen readers -->
+    <string name="accessibility_error_network">Erreur réseau survenue. Vérifiez votre connexion internet et réessayez.</string>
+    <string name="accessibility_error_camera">Erreur de caméra survenue. Veuillez vérifier les permissions de caméra et réessayer.</string>
+    <string name="accessibility_error_analysis">Erreur d\'analyse survenue. Le service IA peut être temporairement indisponible.</string>
+    
+    <!-- Success announcements -->
+    <string name="accessibility_success_image_captured">Photo capturée avec succès. Image sélectionnée pour l\'analyse.</string>
+    <string name="accessibility_success_analysis_complete">Analyse terminée. Les résultats sont maintenant disponibles.</string>
+    <string name="accessibility_success_report_submitted">Rapport soumis avec succès. Merci d\'aider à améliorer notre service.</string>
+    
+    <!-- Navigation announcements -->
+    <string name="accessibility_navigation_main_screen">Navigation vers l\'écran principal</string>
+    <string name="accessibility_navigation_camera_screen">Navigation vers l\'écran de la caméra</string>
+    <string name="accessibility_navigation_results_screen">Navigation vers l\'écran des résultats</string>
+    
+    <!-- Progress announcements -->
+    <string name="accessibility_progress_initializing_camera">Initialisation de la caméra, veuillez patienter</string>
+    <string name="accessibility_progress_analyzing_image">Analyse de l\'image avec IA, cela peut prendre un moment</string>
+    <string name="accessibility_progress_submitting_report">Soumission du rapport, veuillez patienter</string>
+</resources> 
