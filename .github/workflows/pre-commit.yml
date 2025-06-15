@@ -1,0 +1,90 @@
+name: Pre-commit Validation
+
+on:
+  push:
+    branches: [ main, develop, feature/*, bugfix/*, hotfix/* ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  quick-validation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        
+    - name: Cache Gradle packages
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
+          
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+      
+    - name: 🔍 Kotlin compilation check
+      run: ./gradlew compileDebugKotlin compileReleaseKotlin
+      
+    - name: 🧪 Fast unit tests
+      run: ./gradlew testDebugUnitTest --parallel
+      
+    - name: 📝 Quick lint check
+      run: ./gradlew lintDebug
+      
+    - name: ✅ Validation complete
+      run: echo "✅ All pre-commit validations passed!"
+
+  messaging-system-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        
+    - name: Cache Gradle packages
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
+          
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+      
+    - name: 📱 Test messaging system components
+      run: |
+        ./gradlew test --tests "*MessageDisplayHelper*" \
+                       --tests "*ToastHelper*" \
+                       --tests "*BakingViewModel*" \
+                       --tests "*MainScreen*" \
+                       --parallel
+      
+    - name: 🌐 Verify multilingual resources
+      run: |
+        echo "Checking string resources..."
+        find app/src/main/res/values* -name "strings.xml" -exec echo "Checking {}" \; -exec grep -c "string name=" {} \;
+        
+    - name: ✅ Messaging system validation complete
+      run: echo "✅ Messaging system tests passed!" 
