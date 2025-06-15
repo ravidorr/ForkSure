@@ -2,7 +2,7 @@ name: Pre-commit Validation
 
 on:
   push:
-    branches: [ main, develop, feature/*, bugfix/*, hotfix/*, test-ci-system ]
+    branches: [ main, develop, feature/*, bugfix/*, hotfix/* ]
   pull_request:
     branches: [ main, develop ]
 
