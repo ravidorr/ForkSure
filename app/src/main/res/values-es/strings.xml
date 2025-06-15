@@ -80,6 +80,10 @@
     <string name="error_report_submission_failed">Error al enviar el reporte. Por favor, inténtalo de nuevo.</string>
     <string name="error_network_unavailable">Sin conexión a internet. Por favor verifica tu red e inténtalo de nuevo.</string>
     <string name="error_camera_permission_denied">Se requiere permiso de cámara para tomar fotos</string>
+    <string name="camera_permission_required">Se requiere permiso de cámara para tomar fotos de tus productos horneados.</string>
+    <string name="camera_permission_settings_hint">Por favor concede permiso de cámara en la configuración de tu dispositivo si no apareció el diálogo de permisos.</string>
+    <string name="camera_initializing">Inicializando cámara...</string>
+    <string name="camera_capturing">Capturando foto...</string>
     <string name="error_image_too_large">La imagen es muy grande. Por favor intenta con una imagen más pequeña.</string>
     <string name="error_invalid_image_format">Formato de imagen inválido. Por favor intenta con una imagen diferente.</string>
     <string name="error_server_unavailable">Servicio temporalmente no disponible. Por favor inténtalo más tarde.</string>
