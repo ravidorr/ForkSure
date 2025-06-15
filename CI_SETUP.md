@@ -229,3 +229,30 @@ After setup, your repository will:
 - 📋 **Generate build artifacts** for releases
 
 Your ForkSure app will be protected from broken builds! 🛡️ 
+
+## Required GitHub Secrets
+
+For the CI/CD workflows to function properly, you need to configure the following secrets in your GitHub repository:
+
+### Setting up GitHub Secrets
+
+1. Go to your GitHub repository
+2. Navigate to **Settings** > **Secrets and variables** > **Actions**
+3. Click **New repository secret**
+4. Add the following secret:
+
+**GEMINI_API_KEY**: Your Google Gemini AI API key
+- Name: `GEMINI_API_KEY`
+- Value: `your_actual_gemini_api_key_here`
+
+This secret is used by the CI workflows to create the `local.properties` file that the Android build process requires.
+
+### Why This is Needed
+
+The Android build uses the Google Secrets Plugin to inject the API key from `local.properties` into `BuildConfig.apiKey`. In local development, this file exists on your machine, but in CI environments, we need to create it using GitHub secrets.
+
+The CI workflows automatically create `local.properties` with:
+```
+sdk.dir=$ANDROID_HOME
+apiKey=${{ secrets.GEMINI_API_KEY }}
+``` 
