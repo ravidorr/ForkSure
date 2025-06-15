@@ -61,7 +61,7 @@ class MainScreenIntegrationTest {
     fun mainScreen_initialState_displaysCorrectly() {
         composeTestRule.setContent {
             ForkSureTheme {
-                val selectedImage = remember { androidx.compose.runtime.mutableIntStateOf(0) }
+                val selectedImage = remember { androidx.compose.runtime.mutableIntStateOf(-2) }
                 MainScreen(
                     bakingViewModel = bakingViewModel,
                     capturedImage = null,
@@ -85,7 +85,7 @@ class MainScreenIntegrationTest {
     fun mainScreen_enterPromptAndSelectImage_enablesAnalyzeButton() {
         composeTestRule.setContent {
             ForkSureTheme {
-                val selectedImage = remember { androidx.compose.runtime.mutableIntStateOf(0) }
+                val selectedImage = remember { androidx.compose.runtime.mutableIntStateOf(-2) }
                 MainScreen(
                     bakingViewModel = bakingViewModel,
                     capturedImage = null,
@@ -113,7 +113,7 @@ class MainScreenIntegrationTest {
 
         composeTestRule.setContent {
             ForkSureTheme {
-                val selectedImage = remember { androidx.compose.runtime.mutableIntStateOf(0) }
+                val selectedImage = remember { androidx.compose.runtime.mutableIntStateOf(-2) }
                 MainScreen(
                     bakingViewModel = bakingViewModel,
                     capturedImage = null,
@@ -144,7 +144,7 @@ class MainScreenIntegrationTest {
 
         composeTestRule.setContent {
             ForkSureTheme {
-                val selectedImage = remember { androidx.compose.runtime.mutableIntStateOf(0) }
+                val selectedImage = remember { androidx.compose.runtime.mutableIntStateOf(-2) }
                 MainScreen(
                     bakingViewModel = bakingViewModel,
                     capturedImage = null,
@@ -177,7 +177,7 @@ class MainScreenIntegrationTest {
 
         composeTestRule.setContent {
             ForkSureTheme {
-                val selectedImage = remember { androidx.compose.runtime.mutableIntStateOf(0) }
+                val selectedImage = remember { androidx.compose.runtime.mutableIntStateOf(-2) }
                 MainScreen(
                     bakingViewModel = bakingViewModel,
                     capturedImage = null,
@@ -209,7 +209,7 @@ class MainScreenIntegrationTest {
 
         composeTestRule.setContent {
             ForkSureTheme {
-                val selectedImage = remember { androidx.compose.runtime.mutableIntStateOf(0) }
+                val selectedImage = remember { androidx.compose.runtime.mutableIntStateOf(-2) }
                 MainScreen(
                     bakingViewModel = bakingViewModel,
                     capturedImage = null,
@@ -242,7 +242,7 @@ class MainScreenIntegrationTest {
 
         composeTestRule.setContent {
             ForkSureTheme {
-                val selectedImage = remember { androidx.compose.runtime.mutableIntStateOf(0) }
+                val selectedImage = remember { androidx.compose.runtime.mutableIntStateOf(-2) }
                 MainScreen(
                     bakingViewModel = bakingViewModel,
                     capturedImage = null,
@@ -272,7 +272,7 @@ class MainScreenIntegrationTest {
 
         composeTestRule.setContent {
             ForkSureTheme {
-                val selectedImage = remember { androidx.compose.runtime.mutableIntStateOf(0) }
+                val selectedImage = remember { androidx.compose.runtime.mutableIntStateOf(-2) }
                 MainScreen(
                     bakingViewModel = bakingViewModel,
                     capturedImage = null,
@@ -311,7 +311,7 @@ class MainScreenIntegrationTest {
 
         composeTestRule.setContent {
             ForkSureTheme {
-                val selectedImage = remember { androidx.compose.runtime.mutableIntStateOf(0) }
+                val selectedImage = remember { androidx.compose.runtime.mutableIntStateOf(-2) }
                 MainScreen(
                     bakingViewModel = bakingViewModel,
                     capturedImage = null,
@@ -348,7 +348,7 @@ class MainScreenIntegrationTest {
 
         composeTestRule.setContent {
             ForkSureTheme {
-                val selectedImage = remember { androidx.compose.runtime.mutableIntStateOf(0) }
+                val selectedImage = remember { androidx.compose.runtime.mutableIntStateOf(-2) }
                 MainScreen(
                     bakingViewModel = bakingViewModel,
                     capturedImage = null,
@@ -379,7 +379,7 @@ class MainScreenIntegrationTest {
 
         composeTestRule.setContent {
             ForkSureTheme {
-                val selectedImage = remember { androidx.compose.runtime.mutableIntStateOf(0) }
+                val selectedImage = remember { androidx.compose.runtime.mutableIntStateOf(-2) }
                 MainScreen(
                     bakingViewModel = bakingViewModel,
                     capturedImage = null,
@@ -412,7 +412,7 @@ class MainScreenIntegrationTest {
 
         composeTestRule.setContent {
             ForkSureTheme {
-                val selectedImage = remember { androidx.compose.runtime.mutableIntStateOf(0) }
+                val selectedImage = remember { androidx.compose.runtime.mutableIntStateOf(-2) }
                 MainScreen(
                     bakingViewModel = bakingViewModel,
                     capturedImage = null,
@@ -441,7 +441,7 @@ class MainScreenIntegrationTest {
     fun mainScreen_noResults_noPrintButton() {
         composeTestRule.setContent {
             ForkSureTheme {
-                val selectedImage = remember { androidx.compose.runtime.mutableIntStateOf(0) }
+                val selectedImage = remember { androidx.compose.runtime.mutableIntStateOf(-2) }
                 MainScreen(
                     bakingViewModel = bakingViewModel,
                     capturedImage = null,
@@ -464,7 +464,7 @@ class MainScreenIntegrationTest {
 
         composeTestRule.setContent {
             ForkSureTheme {
-                val selectedImage = remember { androidx.compose.runtime.mutableIntStateOf(0) }
+                val selectedImage = remember { androidx.compose.runtime.mutableIntStateOf(-2) }
                 MainScreen(
                     bakingViewModel = bakingViewModel,
                     capturedImage = null,

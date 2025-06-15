@@ -7,8 +7,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -36,6 +39,7 @@ fun ForkSureNavigation(
     bakingViewModel: BakingViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
     
     // Centralized navigation state management
     val navigationState = rememberNavigationState()
@@ -74,15 +78,21 @@ fun ForkSureNavigation(
             
             CameraCapture(
                 onImageCaptured = { bitmap ->
-                    navigationState.updateCapturedImage(bitmap)
-                    navigationState.selectCapturedImage()
-                    AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.SUCCESS)
-                    navController.popBackStack()
+                    // Camera callbacks run on background threads, need to dispatch to main
+                    coroutineScope.launch(Dispatchers.Main) {
+                        navigationState.updateCapturedImage(bitmap)
+                        navigationState.selectCapturedImage()
+                        AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.SUCCESS)
+                        navController.popBackStack()
+                    }
                 },
                 onError = { error ->
-                    AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.ERROR)
-                    // Navigate back to main screen with error
-                    navController.popBackStack()
+                    // Camera callbacks run on background threads, need to dispatch to main
+                    coroutineScope.launch(Dispatchers.Main) {
+                        AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.ERROR)
+                        // Navigate back to main screen with error
+                        navController.popBackStack()
+                    }
                 }
             )
         }
