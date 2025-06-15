@@ -13,7 +13,8 @@
     <!-- Error handling strings -->
     <string name="action_retry">🔄 Retry</string>
     <string name="action_dismiss">✕ Dismiss</string>
-    <string name="take_photo">Take Photo</string>
+    <string name="take_photo">📷 Take Photo</string>
+    <string name="take_another_photo">📷 Take Another Photo</string>
     
     <!-- Content reporting strings -->
     <string name="action_report_content">🚩 Report Content</string>
@@ -123,6 +124,13 @@
     <!-- Share strings -->
     <string name="action_share">📤 Share</string>
     <string name="action_share_to_keep">📤 Save to Keep</string>
+    <string name="share_google_keep">📝 Save to Google Keep</string>
+    <string name="share_email_recipe">✉️ Email Recipe</string>
+    <string name="share_google_docs">📄 Save to Google Docs</string>
+    <string name="share_other_apps">📤 Share to other apps...</string>
+    
+    <!-- Loading strings -->
+    <string name="analyzing_baked_goods">Analyzing your baked goods...</string>
     <string name="share_recipe_success">Recipe shared successfully</string>
     <string name="share_recipe_error">Unable to share recipe. Please try again.</string>
     <string name="share_chooser_title">Save recipe to...</string>

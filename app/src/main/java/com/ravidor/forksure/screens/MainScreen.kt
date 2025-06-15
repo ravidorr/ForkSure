@@ -390,11 +390,6 @@ private fun CameraSection(
                 }
         ) {
             Text(
-                text = "📷",
-                style = MaterialTheme.typography.headlineMedium,
-                modifier = Modifier.padding(end = Dimensions.PADDING_MEDIUM)
-            )
-            Text(
                 text = stringResource(R.string.take_photo),
                 style = MaterialTheme.typography.headlineSmall
             )
@@ -555,7 +550,7 @@ private fun LoadingSection(
     ) {
         CircularProgressIndicator()
         Text(
-            text = "Analyzing your baked goods...",
+            text = stringResource(R.string.analyzing_baked_goods),
             modifier = Modifier.padding(top = Dimensions.PADDING_SMALL),
             style = MaterialTheme.typography.bodyMedium
         )
@@ -766,12 +761,7 @@ private fun RecipeResultsSection(
                     }
             ) {
                 Text(
-                    text = "📷",
-                    style = MaterialTheme.typography.titleLarge,
-                    modifier = Modifier.padding(end = Dimensions.PADDING_MEDIUM)
-                )
-                Text(
-                    text = "Take Another Photo",
+                    text = stringResource(R.string.take_another_photo),
                     style = MaterialTheme.typography.titleMedium
                 )
             }
