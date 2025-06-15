@@ -103,11 +103,11 @@ fun CameraCapture(
                         }
                 )
                 Text(
-                    text = "Camera permission is required to take photos of your baked goods.",
+                    text = stringResource(R.string.camera_permission_required),
                     style = MaterialTheme.typography.bodyLarge
                 )
                 Text(
-                    text = "Please grant camera permission in your device settings if the permission dialog didn't appear.",
+                    text = stringResource(R.string.camera_permission_settings_hint),
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(top = 8.dp)
                 )
@@ -172,13 +172,14 @@ private fun CameraPreview(
 
         // Camera status indicator
         if (!isCameraReady) {
+            val initializingText = stringResource(R.string.camera_initializing)
             Text(
-                text = "Initializing camera...",
+                text = initializingText,
                 modifier = Modifier
                     .align(Alignment.TopCenter)
                     .padding(16.dp)
                     .semantics {
-                        contentDescription = "Camera status: Initializing camera"
+                        contentDescription = "Camera status: $initializingText"
                     },
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurface
@@ -225,13 +226,14 @@ private fun CameraPreview(
 
         // Capture status
         if (isCapturing) {
+            val capturingText = stringResource(R.string.camera_capturing)
             Text(
-                text = "Capturing photo...",
+                text = capturingText,
                 modifier = Modifier
                     .align(Alignment.TopCenter)
                     .padding(16.dp)
                     .semantics {
-                        contentDescription = "Status: Capturing photo"
+                        contentDescription = "Status: $capturingText"
                     },
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurface

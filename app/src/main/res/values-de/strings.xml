@@ -80,6 +80,10 @@
     <string name="error_report_submission_failed">Bericht konnte nicht gesendet werden. Bitte versuchen Sie es erneut.</string>
     <string name="error_network_unavailable">Keine Internetverbindung. Bitte überprüfen Sie Ihr Netzwerk und versuchen Sie es erneut.</string>
     <string name="error_camera_permission_denied">Kameraberechtigung ist erforderlich, um Fotos zu machen</string>
+    <string name="camera_permission_required">Kameraberechtigung ist erforderlich, um Fotos Ihrer Backwaren zu machen.</string>
+    <string name="camera_permission_settings_hint">Bitte erteilen Sie die Kameraberechtigung in den Einstellungen Ihres Geräts, wenn das Berechtigungsdialog nicht erschienen ist.</string>
+    <string name="camera_initializing">Kamera wird initialisiert...</string>
+    <string name="camera_capturing">Foto wird aufgenommen...</string>
     <string name="error_image_too_large">Bild ist zu groß. Bitte versuchen Sie es mit einem kleineren Bild.</string>
     <string name="error_invalid_image_format">Ungültiges Bildformat. Bitte versuchen Sie es mit einem anderen Bild.</string>
     <string name="error_server_unavailable">Service vorübergehend nicht verfügbar. Bitte versuchen Sie es später erneut.</string>
