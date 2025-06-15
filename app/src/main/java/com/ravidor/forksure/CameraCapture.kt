@@ -58,11 +58,10 @@ fun CameraCapture(
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val cameraPermissionState = rememberPermissionState(Manifest.permission.CAMERA)
-    var permissionRequested by remember { mutableStateOf(false) }
-
+    
+    // Request permission only once when camera screen loads, if not already granted
     LaunchedEffect(Unit) {
-        if (!cameraPermissionState.status.isGranted && !permissionRequested) {
-            permissionRequested = true
+        if (!cameraPermissionState.status.isGranted) {
             cameraPermissionState.launchPermissionRequest()
         }
     }
@@ -107,13 +106,11 @@ fun CameraCapture(
                     text = "Camera permission is required to take photos of your baked goods.",
                     style = MaterialTheme.typography.bodyLarge
                 )
-                if (permissionRequested) {
-                    Text(
-                        text = "Please grant camera permission in your device settings if the permission dialog didn't appear.",
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.padding(top = 8.dp)
-                    )
-                }
+                Text(
+                    text = "Please grant camera permission in your device settings if the permission dialog didn't appear.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.padding(top = 8.dp)
+                )
             }
         }
     }
