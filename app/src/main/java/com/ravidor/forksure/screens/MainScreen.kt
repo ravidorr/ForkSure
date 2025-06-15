@@ -173,6 +173,33 @@ private fun MainScreenContent(
 ) {
     val context = LocalContext.current
     
+    // Announce image selection changes for accessibility
+    LaunchedEffect(state.selectedImageIndex) {
+        if (AccessibilityHelper.isScreenReaderEnabled(context)) {
+            when {
+                state.hasSelectedCapturedImage -> {
+                    AccessibilityHelper.announceForAccessibility(
+                        context, 
+                        "Captured image selected for analysis"
+                    )
+                }
+                state.hasSelectedSampleImage -> {
+                    val imageDescriptions = SampleDataConstants.IMAGE_DESCRIPTIONS
+                    if (state.selectedImageIndex < imageDescriptions.size) {
+                        val description = context.getString(imageDescriptions[state.selectedImageIndex])
+                        AccessibilityHelper.announceForAccessibility(
+                            context, 
+                            "$description sample image selected for analysis"
+                        )
+                    }
+                }
+                else -> {
+                    // No selection - don't announce
+                }
+            }
+        }
+    }
+    
     // Use the hardcoded prompt internally - users cannot see or edit it
     val internalPrompt = stringResource(R.string.prompt_placeholder)
     
@@ -204,7 +231,7 @@ private fun MainScreenContent(
         modifier = Modifier
             .fillMaxSize()
             .semantics { 
-                contentDescription = "ForkSure baking assistant main screen"
+                contentDescription = stringResource(R.string.accessibility_main_screen)
             }
     ) {
         // Main heading
@@ -287,8 +314,9 @@ private fun MainScreenHeader() {
 
 @Composable
 private fun InstructionalTextSection() {
+    val welcomeText = stringResource(R.string.results_placeholder)
     Text(
-        text = stringResource(R.string.results_placeholder),
+        text = welcomeText,
         textAlign = TextAlign.Center,
         color = MaterialTheme.colorScheme.onSurface,
         style = MaterialTheme.typography.bodyLarge,
@@ -296,7 +324,7 @@ private fun InstructionalTextSection() {
             .fillMaxWidth()
             .padding(horizontal = Dimensions.PADDING_STANDARD, vertical = Dimensions.PADDING_MEDIUM)
             .semantics {
-                contentDescription = "Instructions for using the app"
+                contentDescription = stringResource(R.string.accessibility_welcome_message, welcomeText)
             }
     )
 }
@@ -313,6 +341,35 @@ private fun MainResultsSection(
     onDismiss: () -> Unit,
     onTakeAnotherPhoto: () -> Unit
 ) {
+    val context = LocalContext.current
+    
+    // Announce state changes for accessibility
+    LaunchedEffect(uiState) {
+        if (AccessibilityHelper.isScreenReaderEnabled(context)) {
+            when (uiState) {
+                is UiState.Loading -> {
+                    AccessibilityHelper.announceForAccessibility(
+                        context, 
+                        context.getString(R.string.analyzing_baked_goods)
+                    )
+                }
+                is UiState.Success -> {
+                    AccessibilityHelper.announceForAccessibility(
+                        context, 
+                        "Analysis complete. Recipe results are ready."
+                    )
+                }
+                is UiState.Error -> {
+                    AccessibilityHelper.announceForAccessibility(
+                        context, 
+                        "Analysis failed. Error: ${uiState.message}"
+                    )
+                }
+                else -> { /* No announcement needed for initial state */ }
+            }
+        }
+    }
+    
     when (uiState) {
         is UiState.Loading -> {
             LoadingSection(
@@ -386,7 +443,7 @@ private fun CameraSection(
                 .height(64.dp)
                 .padding(bottom = Dimensions.PADDING_SMALL)
                 .semantics {
-                    contentDescription = "Take photo button. Opens camera to capture baked goods"
+                    contentDescription = stringResource(R.string.accessibility_take_photo_description)
                 }
         ) {
             Text(
@@ -422,9 +479,9 @@ private fun CapturedImageCard(
             )
             .semantics {
                 contentDescription = if (isSelected) {
-                    "Captured image, currently selected for analysis"
+                    stringResource(R.string.accessibility_sample_image_selected, "Captured")
                 } else {
-                    "Captured image, tap to select for analysis"
+                    stringResource(R.string.accessibility_sample_image_not_selected, "Captured")
                 }
             }
     ) {
@@ -481,9 +538,9 @@ private fun SampleImageItem(
         }
         .semantics {
             contentDescription = if (isSelected) {
-                "$imageDescription sample image, currently selected for analysis"
+                stringResource(R.string.accessibility_sample_image_selected, imageDescription)
             } else {
-                "$imageDescription sample image, tap to select for analysis"
+                stringResource(R.string.accessibility_sample_image_not_selected, imageDescription)
             }
         }
         
@@ -523,9 +580,9 @@ private fun AnalyzeButtonSection(
                 .height(64.dp)
                 .semantics {
                     contentDescription = if (isAnalyzeEnabled) {
-                        "Analyze button. Start AI analysis of selected image"
+                        stringResource(R.string.accessibility_analyze_button_enabled)
                     } else {
-                        "Analyze button. Disabled. Select an image to enable"
+                        stringResource(R.string.accessibility_analyze_button_disabled)
                     }
                 }
         ) {
@@ -544,7 +601,7 @@ private fun LoadingSection(
     Column(
         modifier = modifier
             .semantics {
-                contentDescription = "Loading AI analysis results"
+                contentDescription = stringResource(R.string.accessibility_loading_analysis)
             },
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -570,7 +627,7 @@ private fun ErrorSection(
         modifier = modifier
             .padding(Dimensions.PADDING_STANDARD)
             .semantics {
-                contentDescription = "Error occurred during analysis"
+                contentDescription = stringResource(R.string.accessibility_error_occurred)
             }
     ) {
         val errorIcon = when (errorState.errorType) {
@@ -647,7 +704,7 @@ private fun ErrorActionButtons(
                     AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.CLICK)
                 },
                 modifier = Modifier.semantics {
-                    contentDescription = "Retry analysis button. Try the AI analysis again"
+                    contentDescription = stringResource(R.string.accessibility_retry_button)
                 }
             ) {
                 Text(stringResource(R.string.action_retry))
@@ -660,7 +717,7 @@ private fun ErrorActionButtons(
                 AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.CLICK)
             },
             modifier = Modifier.semantics {
-                contentDescription = "Dismiss error button. Clear the error message"
+                contentDescription = stringResource(R.string.accessibility_dismiss_error_button)
             }
         ) {
             Text(stringResource(R.string.action_dismiss))
@@ -682,7 +739,7 @@ private fun RecipeResultsSection(
         modifier = modifier
             .padding(Dimensions.PADDING_STANDARD)
             .semantics {
-                contentDescription = "AI analysis results"
+                contentDescription = stringResource(R.string.accessibility_results_section)
             }
     ) {
 
@@ -693,7 +750,7 @@ private fun RecipeResultsSection(
                 .weight(1f)
                 .verticalScroll(rememberScrollState())
                 .semantics {
-                    contentDescription = "AI-generated recipe and analysis: $outputText"
+                    contentDescription = stringResource(R.string.accessibility_ai_content, outputText)
                 }
         )
         
