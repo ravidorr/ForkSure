@@ -1,0 +1,140 @@
+<resources>
+    <string name="app_name">ForkSure</string>
+    <string name="action_go">🔍 Analizar</string>
+    <string name="baking_title">Hornear con ForkSure</string>
+    <string name="label_prompt">Solicitud</string>
+    <string name="prompt_placeholder">Proporciona una receta para los productos horneados en la imagen</string>
+    <string name="image1_description">Cupcake</string>
+    <string name="image2_description">Galletas</string>
+    <string name="image3_description">Pastel</string>
+    <string name="results_placeholder">🧁 ¿Listo para analizar tus productos horneados?\nToma una foto o elige una imagen de muestra para comenzar.</string>
+    <string name="results_heading">Resultados</string>
+    
+    <!-- Error handling strings -->
+    <string name="action_retry">🔄 Reintentar</string>
+    <string name="action_dismiss">✕ Descartar</string>
+    <string name="take_photo">📷 Tomar Foto</string>
+    <string name="take_another_photo">📷 Tomar Otra Foto</string>
+    
+    <!-- Content reporting strings -->
+    <string name="action_report_content">🚩 Reportar Contenido</string>
+    <string name="action_report">🚩 Reportar</string>
+    <string name="report_dialog_title">Reportar Contenido</string>
+    <string name="report_dialog_message">Ayúdanos a mejorar reportando contenido inapropiado, ofensivo o dañino. Tu reporte nos ayudará a moderar mejor el contenido generado por IA.</string>
+    <string name="report_reason_inappropriate">Contenido inapropiado</string>
+    <string name="report_reason_offensive">Lenguaje ofensivo</string>
+    <string name="report_reason_harmful">Instrucciones potencialmente dañinas</string>
+    <string name="report_reason_other">Otro</string>
+    <string name="report_additional_details">Detalles adicionales (opcional)</string>
+    <string name="action_submit_report">Enviar Reporte</string>
+    <string name="action_cancel">Cancelar</string>
+    <string name="action_ok">OK</string>
+    <string name="report_success_message">Gracias por tu reporte. Revisaremos el contenido.</string>
+    <string name="report_error_message">Error al enviar el reporte. Por favor, inténtalo de nuevo.</string>
+    
+    <!-- Accessibility strings -->
+    <string name="accessibility_main_screen_description">Pantalla principal del asistente de horneado ForkSure</string>
+    <string name="accessibility_app_title_description">ForkSure - Horneado con IA</string>
+    <string name="accessibility_camera_section_description">Sección de cámara. Toma una foto de tus productos horneados</string>
+    <string name="accessibility_take_photo_description">Botón de tomar foto. Abre la cámara para capturar productos horneados</string>
+    <string name="accessibility_captured_image_selected">Imagen capturada, actualmente seleccionada para análisis</string>
+    <string name="accessibility_captured_image_not_selected">Imagen capturada, toca para seleccionar para análisis</string>
+    <string name="accessibility_sample_images_heading">Sección de imágenes de muestra</string>
+    <string name="accessibility_sample_images_list">Lista horizontal de imágenes de horneado de muestra</string>
+    <string name="accessibility_sample_image_selected">%1$s imagen de muestra, actualmente seleccionada para análisis</string>
+    <string name="accessibility_sample_image_not_selected">%1$s imagen de muestra, toca para seleccionar para análisis</string>
+    <string name="accessibility_input_section">Sección de entrada de análisis</string>
+    <string name="accessibility_prompt_field">Campo de entrada de solicitud. Ingresa tu pregunta sobre los productos horneados. Texto actual: %1$s</string>
+    <string name="accessibility_analyze_button_enabled">Botón de analizar. Iniciar análisis de IA de la imagen seleccionada con tu solicitud</string>
+    <string name="accessibility_analyze_button_disabled">Botón de analizar. Deshabilitado. Selecciona una imagen e ingresa una solicitud para habilitar</string>
+    <string name="accessibility_loading_analysis">Cargando resultados del análisis de IA</string>
+    <string name="accessibility_analyzing_status">Analizando tus productos horneados...</string>
+    <string name="accessibility_error_occurred">Ocurrió un error durante el análisis</string>
+    <string name="accessibility_error_icon">Icono de error: %1$s</string>
+    <string name="accessibility_error_message">Mensaje de error: %1$s</string>
+    <string name="accessibility_retry_button">Botón de reintentar análisis. Intenta el análisis de IA de nuevo</string>
+    <string name="accessibility_dismiss_error_button">Botón de descartar error. Limpiar el mensaje de error</string>
+    <string name="accessibility_results_section">Resultados del análisis de IA</string>
+    <string name="accessibility_results_heading">Sección de resultados del análisis de IA</string>
+    <string name="accessibility_report_button">Botón de reportar contenido. Reportar contenido inapropiado generado por IA</string>
+    <string name="accessibility_ai_content">Receta y análisis generado por IA: %1$s</string>
+    <string name="accessibility_welcome_message">Mensaje de bienvenida: %1$s</string>
+    
+    <!-- Camera accessibility strings -->
+    <string name="accessibility_camera_screen">Pantalla de captura de cámara</string>
+    <string name="accessibility_camera_permission_required">Permiso de cámara requerido</string>
+    <string name="accessibility_camera_icon">Icono de cámara</string>
+    <string name="accessibility_camera_permission_explanation">Explicación del permiso de cámara: Se requiere permiso de cámara para tomar fotos de tus productos horneados.</string>
+    <string name="accessibility_camera_permission_instruction">Instrucción de permiso: Por favor otorga permiso de cámara en la configuración de tu dispositivo si el diálogo de permiso no apareció.</string>
+    <string name="accessibility_camera_viewfinder">Visor de cámara. Apunta tu cámara a productos horneados para capturar</string>
+    <string name="accessibility_camera_preview">Vista previa de cámara mostrando vista en vivo desde la cámara</string>
+    <string name="accessibility_camera_initializing">Estado de cámara: Inicializando cámara</string>
+    <string name="accessibility_capture_button_ready">Botón de capturar foto. Toca para tomar una foto de tus productos horneados</string>
+    <string name="accessibility_capture_button_initializing">Botón de capturar foto. La cámara se está inicializando, por favor espera</string>
+    <string name="accessibility_capture_button_capturing">Botón de capturar foto. Actualmente capturando foto, por favor espera</string>
+    <string name="accessibility_capture_status">Estado: Capturando foto</string>
+    
+    <!-- Report dialog accessibility strings -->
+    <string name="accessibility_report_dialog">Diálogo de reporte de contenido. Reportar contenido inapropiado generado por IA</string>
+    <string name="accessibility_report_dialog_title">Diálogo de reportar contenido. %1$s</string>
+    <string name="accessibility_report_form">Formulario de reporte de contenido</string>
+    <string name="accessibility_report_instructions">Instrucciones de reporte: %1$s</string>
+    <string name="accessibility_report_reason_heading">Sección de seleccionar razón para reportar</string>
+    <string name="accessibility_report_reason_options">Opciones de razón de reporte. Selecciona una razón para reportar este contenido</string>
+    <string name="accessibility_report_reason_selected">%1$s, seleccionado</string>
+    <string name="accessibility_report_reason_not_selected">%1$s, no seleccionado</string>
+    <string name="accessibility_report_details_field">Campo de texto de detalles adicionales. Opcional. Proporciona más información sobre por qué estás reportando este contenido. Texto actual: %1$s</string>
+    <string name="accessibility_submit_report_button">Botón de enviar reporte. Enviar el reporte de contenido al desarrollador</string>
+    <string name="accessibility_cancel_report_button">Botón de cancelar. Cerrar el diálogo de reporte sin enviar</string>
+    
+    <!-- State descriptions -->
+    <string name="accessibility_state_selected">Seleccionado</string>
+    <string name="accessibility_state_not_selected">No seleccionado</string>
+    <string name="accessibility_state_enabled">Habilitado</string>
+    <string name="accessibility_state_disabled">Deshabilitado</string>
+    <string name="accessibility_state_camera_not_ready">Cámara no lista</string>
+    <string name="accessibility_state_capturing">Capturando</string>
+    <string name="accessibility_state_ready_to_capture">Listo para capturar</string>
+    <string name="accessibility_state_empty">vacío</string>
+    
+    <!-- Custom actions -->
+    <string name="accessibility_action_select_for_analysis">Seleccionar para análisis</string>
+    <string name="accessibility_action_select_image_for_analysis">Seleccionar %1$s para análisis</string>
+    
+    <!-- Security strings -->
+    <string name="security_status_secure">Seguro</string>
+    <string name="security_status_warning">Advertencia</string>
+    <string name="security_status_checking">Verificando...</string>
+    <string name="rate_limit_requests_remaining">%1$d solicitudes restantes</string>
+    <string name="rate_limit_blocked">Límite de velocidad excedido</string>
+    <string name="rate_limit_checking">Verificando límites...</string>
+    <string name="security_warning_title">Advertencia de Seguridad</string>
+    <string name="security_warning_message">Problemas de seguridad detectados. Algunas funciones pueden estar limitadas.</string>
+    <string name="input_validation_failed">Entrada inválida detectada. Por favor verifica tu solicitud.</string>
+    <string name="response_validation_failed">Validación de respuesta de IA falló.</string>
+    <string name="food_safety_warning">⚠️ Aviso de Seguridad Alimentaria: Por favor verifica las instrucciones de cocción y temperaturas.</string>
+    
+    <!-- Print strings -->
+    <string name="action_print">🖨️ Imprimir</string>
+    <string name="print_recipe_success">Receta enviada a impresora</string>
+    <string name="print_recipe_error">No se pudo imprimir la receta. Por favor, inténtalo de nuevo.</string>
+    <string name="print_not_available">La impresión no está disponible en este dispositivo</string>
+    <string name="accessibility_print_button">Botón de imprimir receta. Imprimir la receta generada por IA</string>
+    
+    <!-- Share strings -->
+    <string name="action_share">📤 Compartir</string>
+    <string name="action_share_to_keep">📤 Guardar en Keep</string>
+    <string name="share_google_keep">📝 Guardar en Google Keep</string>
+    <string name="share_email_recipe">✉️ Enviar Receta por Email</string>
+    <string name="share_google_docs">📄 Guardar en Google Docs</string>
+    <string name="share_other_apps">📤 Compartir con otras aplicaciones...</string>
+    
+    <!-- Loading strings -->
+    <string name="analyzing_baked_goods">Analizando tus productos horneados...</string>
+    <string name="share_recipe_success">Receta compartida exitosamente</string>
+    <string name="share_recipe_error">No se pudo compartir la receta. Por favor, inténtalo de nuevo.</string>
+    <string name="share_chooser_title">Guardar receta en...</string>
+    <string name="share_with_photo_chooser_title">Compartir receta con foto...</string>
+    <string name="accessibility_share_button">Botón de compartir receta. Compartir la receta generada por IA a otras aplicaciones</string>
+    <string name="accessibility_share_to_keep_button">Botón de guardar en Google Keep. Guardar la receta en notas de Google Keep</string>
+</resources>
