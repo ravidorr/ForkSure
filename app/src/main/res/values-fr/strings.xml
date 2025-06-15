@@ -80,6 +80,10 @@
     <string name="error_report_submission_failed">Échec de l\'envoi du signalement. Veuillez réessayer.</string>
     <string name="error_network_unavailable">Pas de connexion internet. Veuillez vérifier votre réseau et réessayer.</string>
     <string name="error_camera_permission_denied">La permission de caméra est requise pour prendre des photos</string>
+    <string name="camera_permission_required">La permission de caméra est requise pour prendre des photos de vos produits de boulangerie.</string>
+    <string name="camera_permission_settings_hint">Veuillez accorder la permission de caméra dans les paramètres de votre appareil si la boîte de dialogue de permission n\'est pas apparue.</string>
+    <string name="camera_initializing">Initialisation de la caméra...</string>
+    <string name="camera_capturing">Capture de photo...</string>
     <string name="error_image_too_large">L\'image est trop grande. Veuillez essayer avec une image plus petite.</string>
     <string name="error_invalid_image_format">Format d\'image invalide. Veuillez essayer avec une image différente.</string>
     <string name="error_server_unavailable">Service temporairement indisponible. Veuillez réessayer plus tard.</string>
