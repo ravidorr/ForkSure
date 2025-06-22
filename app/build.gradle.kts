@@ -26,8 +26,8 @@ android {
         applicationId = "com.ravidor.forksure"
         minSdk = 29
         targetSdk = 35
-        versionCode = 10
-        versionName = "1.3.0.rc1"
+        versionCode = 11
+        versionName = "1.3.0.rc2"
 
         testInstrumentationRunner = "com.ravidor.forksure.HiltTestRunner"
         
