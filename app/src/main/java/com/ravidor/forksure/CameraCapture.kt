@@ -270,8 +270,59 @@ private fun captureImage(
 }
 
 private fun imageProxyToBitmap(image: ImageProxy): Bitmap {
-    val buffer: ByteBuffer = image.planes[0].buffer
-    val bytes = ByteArray(buffer.remaining())
-    buffer.get(bytes)
-    return BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+    return when (image.format) {
+        ImageFormat.JPEG -> {
+            val buffer: ByteBuffer = image.planes[0].buffer
+            val bytes = ByteArray(buffer.remaining())
+            buffer.get(bytes)
+            BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+        }
+        ImageFormat.YUV_420_888 -> {
+            val yBuffer = image.planes[0].buffer
+            val uBuffer = image.planes[1].buffer
+            val vBuffer = image.planes[2].buffer
+            
+            val ySize = yBuffer.remaining()
+            val uSize = uBuffer.remaining()
+            val vSize = vBuffer.remaining()
+            
+            val nv21 = ByteArray(ySize + uSize + vSize)
+            
+            // Copy Y plane
+            yBuffer.get(nv21, 0, ySize)
+            // Copy U and V planes (interleaved for NV21)
+            val uvPixelStride = image.planes[1].pixelStride
+            if (uvPixelStride == 1) {
+                // Tightly packed UV data
+                uBuffer.get(nv21, ySize, uSize)
+                vBuffer.get(nv21, ySize + uSize, vSize)
+            } else {
+                // UV data is not tightly packed - need to extract manually
+                val uvBuffer = ByteArray(uSize)
+                uBuffer.get(uvBuffer)
+                var uvIndex = ySize
+                for (i in 0 until uSize step uvPixelStride) {
+                    nv21[uvIndex++] = uvBuffer[i]
+                }
+                
+                val vvBuffer = ByteArray(vSize)
+                vBuffer.get(vvBuffer)
+                for (i in 0 until vSize step uvPixelStride) {
+                    nv21[uvIndex++] = vvBuffer[i]
+                }
+            }
+            
+            val yuvImage = YuvImage(nv21, ImageFormat.NV21, image.width, image.height, null)
+            val out = ByteArrayOutputStream()
+            yuvImage.compressToJpeg(Rect(0, 0, image.width, image.height), 100, out)
+            val imageBytes = out.toByteArray()
+            BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+        }
+        else -> {
+            // Fallback for unsupported formats - create a placeholder bitmap
+            val width = image.width.coerceAtLeast(1)
+            val height = image.height.coerceAtLeast(1)
+            Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        }
+    }
 } 

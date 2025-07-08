@@ -65,6 +65,9 @@ object SecurityManager {
             val currentTime = System.currentTimeMillis()
             val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
             
+            // Load existing data from SharedPreferences on first access
+            loadRateLimitData(prefs, identifier)
+            
             // Clean old timestamps
             cleanOldTimestamps(identifier, currentTime)
             
@@ -99,11 +102,18 @@ object SecurityManager {
                     )
                 }
                 else -> {
-                    // Record this request
+                    // Record this request atomically
                     recordRequest(identifier, currentTime)
                     
-                    // Save to persistent storage
-                    saveRateLimitData(prefs, identifier, currentTime)
+                    // Save to persistent storage within the same lock
+                    try {
+                        saveRateLimitData(prefs, identifier, currentTime)
+                    } catch (e: Exception) {
+                        Log.e(TAG, "Failed to save rate limit data", e)
+                        // Rollback the in-memory change if persistence fails
+                        val timestamps = requestTimestamps[identifier]
+                        timestamps?.removeLastOrNull()
+                    }
                     
                     RateLimitResult.Allowed(
                         requestsRemaining = MAX_REQUESTS_PER_MINUTE - minuteCount - 1,
@@ -121,6 +131,10 @@ object SecurityManager {
     suspend fun getRateLimitStatus(context: Context, identifier: String = "default"): RateLimitResult {
         return rateLimitMutex.withLock {
             val currentTime = System.currentTimeMillis()
+            val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            
+            // Load existing data from SharedPreferences on first access
+            loadRateLimitData(prefs, identifier)
             
             // Clean old timestamps
             cleanOldTimestamps(identifier, currentTime)
@@ -340,6 +354,19 @@ object SecurityManager {
     
     private fun recordRequest(identifier: String, timestamp: Long) {
         requestTimestamps.computeIfAbsent(identifier) { mutableListOf() }.add(timestamp)
+    }
+    
+    private fun MutableList<Long>.removeLastOrNull(): Long? {
+        return if (isNotEmpty()) removeAt(size - 1) else null
+    }
+    
+    private fun loadRateLimitData(prefs: SharedPreferences, identifier: String) {
+        if (!requestTimestamps.containsKey(identifier)) {
+            val key = "timestamps_$identifier"
+            val existing = prefs.getStringSet(key, emptySet()) ?: emptySet()
+            val timestamps = existing.mapNotNull { it.toLongOrNull() }.toMutableList()
+            requestTimestamps[identifier] = timestamps
+        }
     }
     
     private fun saveRateLimitData(prefs: SharedPreferences, identifier: String, timestamp: Long) {
