@@ -19,7 +19,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 @Immutable
 object AppConstants {
     const val APP_NAME = "ForkSure"
-    const val DEVELOPER_EMAIL = "ravidor@gmail.com"
+    const val DEVELOPER_EMAIL = "support@forksure.app" // Use generic support email instead of personal
     
     // Logging tags
     const val TAG_APPLICATION = "ForkSureApplication"
