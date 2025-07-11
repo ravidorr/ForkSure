@@ -10,6 +10,7 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import androidx.compose.runtime.Stable
+import androidx.core.net.toUri
 import java.io.ByteArrayOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
@@ -249,7 +250,7 @@ object RecipeSharingHelper {
             
             if (path != null) {
                 Log.d(TAG, "Image saved successfully using legacy MediaStore API")
-                Uri.parse(path)
+                path.toUri()
             } else {
                 Log.w(TAG, "Legacy insertImage returned null")
                 null
