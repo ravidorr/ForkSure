@@ -279,3 +279,5 @@ dependencies {
 ksp {
     arg("dagger.hilt.android.internal.disableAndroidSuperclassValidation", "true")
 }
+
+// Java compilation tasks configured for production builds
