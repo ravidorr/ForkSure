@@ -24,23 +24,13 @@ object AccessibilityHelper {
             context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
         }
         
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val effect = when (type) {
-                HapticFeedbackType.CLICK -> VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE)
-                HapticFeedbackType.SUCCESS -> VibrationEffect.createWaveform(longArrayOf(0, 100, 50, 100), -1)
-                HapticFeedbackType.ERROR -> VibrationEffect.createWaveform(longArrayOf(0, 200, 100, 200, 100, 200), -1)
-                HapticFeedbackType.LONG_PRESS -> VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE)
-            }
-            vibrator.vibrate(effect)
-        } else {
-            @Suppress("DEPRECATION")
-            when (type) {
-                HapticFeedbackType.CLICK -> vibrator.vibrate(50)
-                HapticFeedbackType.SUCCESS -> vibrator.vibrate(longArrayOf(0, 100, 50, 100), -1)
-                HapticFeedbackType.ERROR -> vibrator.vibrate(longArrayOf(0, 200, 100, 200, 100, 200), -1)
-                HapticFeedbackType.LONG_PRESS -> vibrator.vibrate(100)
-            }
+        val effect = when (type) {
+            HapticFeedbackType.CLICK -> VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE)
+            HapticFeedbackType.SUCCESS -> VibrationEffect.createWaveform(longArrayOf(0, 100, 50, 100), -1)
+            HapticFeedbackType.ERROR -> VibrationEffect.createWaveform(longArrayOf(0, 200, 100, 200, 100, 200), -1)
+            HapticFeedbackType.LONG_PRESS -> VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE)
         }
+        vibrator.vibrate(effect)
     }
     
     /**
@@ -57,7 +47,7 @@ object AccessibilityHelper {
      */
     fun announceForAccessibility(context: Context, message: String) {
         val accessibilityManager = context.getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
-        if (accessibilityManager.isEnabled && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+        if (accessibilityManager.isEnabled) {
             // Use the modern View-based approach for accessibility announcements
             // This avoids all deprecated AccessibilityEvent APIs
             try {
