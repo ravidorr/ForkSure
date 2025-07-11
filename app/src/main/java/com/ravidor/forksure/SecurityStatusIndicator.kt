@@ -34,6 +34,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
@@ -227,21 +228,27 @@ private fun RateLimitStatusItem(
         Text(
             text = "Requests: ",
             style = MaterialTheme.typography.labelSmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
         )
 
         Text(
             text = text,
             style = MaterialTheme.typography.labelSmall,
             color = color,
-            fontWeight = FontWeight.Medium
+            fontWeight = FontWeight.Medium,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
         )
 
         if (requestCount > 0) {
             Text(
                 text = " ($requestCount used)",
                 style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
         }
     }
@@ -281,6 +288,8 @@ fun SecurityWarningBanner(
                     style = MaterialTheme.typography.titleMedium,
                     color = ThemeColors.errorColor(),
                     fontWeight = FontWeight.Bold,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.padding(start = Dimensions.PADDING_SMALL)
                 )
             }
@@ -288,6 +297,8 @@ fun SecurityWarningBanner(
             Text(
                 text = "The following security issues were detected:",
                 style = MaterialTheme.typography.bodyMedium,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.padding(top = Dimensions.PADDING_SMALL)
             )
 
@@ -295,6 +306,8 @@ fun SecurityWarningBanner(
                 Text(
                     text = "• $issue",
                     style = MaterialTheme.typography.bodySmall,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.padding(start = Dimensions.PADDING_STANDARD, top = Dimensions.PADDING_EXTRA_SMALL)
                 )
             }
@@ -303,6 +316,8 @@ fun SecurityWarningBanner(
                 text = "For your security, some features may be limited. Please use the app in a secure environment.",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
+                maxLines = 3,
+                overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.padding(top = Dimensions.PADDING_SMALL)
             )
         }
