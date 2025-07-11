@@ -27,6 +27,7 @@
     <!-- Content descriptions for complex UI elements -->
     <plurals name="accessibility_image_gallery_description">
         <item quantity="one">Galerie d\'images avec %1$d image de cuisine. Balayez à gauche ou à droite pour naviguer, double-tapez pour sélectionner.</item>
+        <item quantity="many">Galerie d\'images avec %1$d images de cuisine. Balayez à gauche ou à droite pour naviguer, double-tapez pour sélectionner.</item>
         <item quantity="other">Galerie d\'images avec %1$d images de cuisine. Balayez à gauche ou à droite pour naviguer, double-tapez pour sélectionner.</item>
     </plurals>
     <string name="accessibility_camera_controls_description">Commandes de l\'appareil photo. Bouton de capture en bas au centre, paramètres disponibles en haut à droite.</string>
