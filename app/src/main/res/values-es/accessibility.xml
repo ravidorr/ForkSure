@@ -27,6 +27,7 @@
     <!-- Content descriptions for complex UI elements -->
     <plurals name="accessibility_image_gallery_description">
         <item quantity="one">Galería de imágenes con %1$d imagen de cocina. Desliza izquierda o derecha para navegar, toca dos veces para seleccionar.</item>
+        <item quantity="many">Galería de imágenes con %1$d imágenes de cocina. Desliza izquierda o derecha para navegar, toca dos veces para seleccionar.</item>
         <item quantity="other">Galería de imágenes con %1$d imágenes de cocina. Desliza izquierda o derecha para navegar, toca dos veces para seleccionar.</item>
     </plurals>
     <string name="accessibility_camera_controls_description">Controles de cámara. Botón de captura en la parte inferior central, configuraciones disponibles en la esquina superior derecha.</string>
