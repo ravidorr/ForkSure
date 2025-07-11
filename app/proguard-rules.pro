@@ -44,4 +44,36 @@
 -keep class com.ravidor.forksure.** { *; }
 
 # Keep BuildConfig
--keep class com.ravidor.forksure.BuildConfig { *; }
+-keep class com.ravidor.forksure.BuildConfig { *; }# Add to proguard-rules.pro for additional obfuscation
+
+# Add more rules here as needed.
+
+# Add to proguard-rules.pro for additional obfuscation
+
+# Enhanced Security: Obfuscate BuildConfig to make API key extraction harder
+-keepclassmembers class **.BuildConfig {
+    public static final java.lang.String APPLICATION_ID;
+    public static final java.lang.String BUILD_TYPE;
+    public static final java.lang.String FLAVOR;
+    public static final boolean DEBUG;
+    public static final int VERSION_CODE;
+    public static final java.lang.String VERSION_NAME;
+}
+
+# Obfuscate API key field name (but keep the class accessible)
+-keepclassmembers class **.BuildConfig {
+    !static final java.lang.String apiKey;
+}
+
+# Additional string obfuscation
+-obfuscationdictionary obfuscation-dictionary.txt
+-classobfuscationdictionary obfuscation-dictionary.txt
+-packageobfuscationdictionary obfuscation-dictionary.txt
+
+# Make reverse engineering more difficult
+-repackageclasses ''
+-allowaccessmodification
+-overloadaggressively
+
+# Optimize string constants
+-optimizations !code/simplification/string
