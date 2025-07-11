@@ -1,6 +1,7 @@
 package com.ravidor.forksure.data.source.local
 
 import android.content.SharedPreferences
+import androidx.core.content.edit
 import com.ravidor.forksure.data.model.AppTheme
 import com.ravidor.forksure.data.model.AppUsageStats
 import com.ravidor.forksure.data.model.FontSize
@@ -110,7 +111,7 @@ class PreferencesDataSource @Inject constructor(
      * Save user preferences to SharedPreferences
      */
     suspend fun saveUserPreferences(preferences: UserPreferences) = withContext(Dispatchers.IO) {
-        sharedPreferences.edit().apply {
+        sharedPreferences.edit {
             putString(KEY_THEME, preferences.theme.name)
             putString(KEY_LANGUAGE, preferences.language)
             putBoolean(KEY_HAPTIC_FEEDBACK, preferences.enableHapticFeedback)
@@ -130,7 +131,6 @@ class PreferencesDataSource @Inject constructor(
             putLong(KEY_FIRST_LAUNCH_DATE, preferences.firstLaunchDate)
             putInt(KEY_TOTAL_ANALYSIS_COUNT, preferences.totalAnalysisCount)
             putStringSet(KEY_FAVORITE_RECIPE_IDS, preferences.favoriteRecipeIds)
-            apply()
         }
         _userPreferences.value = preferences
     }
@@ -139,14 +139,13 @@ class PreferencesDataSource @Inject constructor(
      * Save usage statistics to SharedPreferences
      */
     suspend fun saveUsageStats(stats: AppUsageStats) = withContext(Dispatchers.IO) {
-        sharedPreferences.edit().apply {
+        sharedPreferences.edit {
             putInt(KEY_TOTAL_LAUNCHES, stats.totalLaunches)
             putInt(KEY_TOTAL_ANALYSES, stats.totalAnalyses)
             putInt(KEY_TOTAL_PHOTOS_ANALYZED, stats.totalPhotosAnalyzed)
             putInt(KEY_TOTAL_SAMPLE_IMAGES_USED, stats.totalSampleImagesUsed)
             putLong(KEY_AVERAGE_SESSION_DURATION, stats.averageSessionDuration)
             putLong(KEY_LAST_USED_DATE, stats.lastUsedDate)
-            apply()
         }
         _usageStats.value = stats
     }
@@ -224,7 +223,7 @@ class PreferencesDataSource @Inject constructor(
      * Clear all preferences (for testing or reset)
      */
     suspend fun clearAllPreferences() = withContext(Dispatchers.IO) {
-        sharedPreferences.edit().clear().apply()
+        sharedPreferences.edit { clear() }
         _userPreferences.value = UserPreferences()
         _usageStats.value = AppUsageStats()
     }
