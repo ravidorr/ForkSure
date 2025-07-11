@@ -48,24 +48,46 @@ object AccessibilityHelper {
     fun announceForAccessibility(context: Context, message: String) {
         val accessibilityManager = context.getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
         if (accessibilityManager.isEnabled) {
+            // Truncate message if too long for accessibility
+            val truncatedMessage = if (message.length > 200) {
+                "${message.take(197)}..."
+            } else {
+                message
+            }
+            
             // Use the modern View-based approach for accessibility announcements
             // This avoids all deprecated AccessibilityEvent APIs
             try {
                 val view = View(context)
-                view.announceForAccessibility(message)
+                view.announceForAccessibility(truncatedMessage)
             } catch (e: Exception) {
                 // Fallback: If View creation fails, we can still use the deprecated API with suppression
                 // This ensures accessibility always works even in edge cases
                 @Suppress("DEPRECATION")
                 val event = android.view.accessibility.AccessibilityEvent.obtain().apply {
                     eventType = android.view.accessibility.AccessibilityEvent.TYPE_ANNOUNCEMENT
-                    text.add(message)
+                    text.add(truncatedMessage)
                 }
                 accessibilityManager.sendAccessibilityEvent(event)
                 @Suppress("DEPRECATION")
                 event.recycle()
             }
         }
+    }
+    
+    /**
+     * Gets the user's preferred font scale for accessibility
+     */
+    fun getFontScale(context: Context): Float {
+        val configuration = context.resources.configuration
+        return configuration.fontScale
+    }
+    
+    /**
+     * Checks if large text is enabled for accessibility
+     */
+    fun isLargeTextEnabled(context: Context): Boolean {
+        return getFontScale(context) > 1.0f
     }
 }
 

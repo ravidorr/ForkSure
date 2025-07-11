@@ -6,7 +6,7 @@
     <!-- Main UI strings -->
     <string name="prompt_placeholder">Fournissez une recette pour les produits de boulangerie dans l\'image</string>
     <string name="results_placeholder">🧁 Prêt à analyser vos produits de boulangerie ?\nPrenez une photo ou choisissez un échantillon pour commencer.</string>
-    <string name="analyzing_baked_goods">Analyse de vos produits de boulangerie...</string>
+    <string name="analyzing_baked_goods">Analyse de vos produits de boulangerie…</string>
     
     <!-- Button strings -->
     <string name="action_go">🔍 Analyser</string>
@@ -28,7 +28,7 @@
     <string name="share_google_keep">📝 Sauvegarder dans Google Keep</string>
     <string name="share_email_recipe">✉️ Envoyer la Recette par Email</string>
     <string name="share_google_docs">📄 Sauvegarder dans Google Docs</string>
-    <string name="share_other_apps">📤 Partager avec d\'autres applications...</string>
+    <string name="share_other_apps">📤 Partager avec d\'autres applications…</string>
     
     <!-- Content reporting -->
     <string name="report_dialog_title">Signaler le Contenu</string>
@@ -82,8 +82,8 @@
     <string name="error_camera_permission_denied">La permission de caméra est requise pour prendre des photos</string>
     <string name="camera_permission_required">La permission de caméra est requise pour prendre des photos de vos produits de boulangerie.</string>
     <string name="camera_permission_settings_hint">Veuillez accorder la permission de caméra dans les paramètres de votre appareil si la boîte de dialogue de permission n\'est pas apparue.</string>
-    <string name="camera_initializing">Initialisation de la caméra...</string>
-    <string name="camera_capturing">Capture de photo...</string>
+    <string name="camera_initializing">Initialisation de la caméra…</string>
+    <string name="camera_capturing">Capture de photo…</string>
     <string name="error_image_too_large">L\'image est trop grande. Veuillez essayer avec une image plus petite.</string>
     <string name="error_invalid_image_format">Format d\'image invalide. Veuillez essayer avec une image différente.</string>
     <string name="error_server_unavailable">Service temporairement indisponible. Veuillez réessayer plus tard.</string>

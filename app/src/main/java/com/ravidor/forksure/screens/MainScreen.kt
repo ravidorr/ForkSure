@@ -47,6 +47,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import dev.jeziellago.compose.markdowntext.MarkdownText
@@ -353,6 +354,8 @@ private fun MainScreenHeader() {
     Text(
         text = stringResource(R.string.baking_title),
         style = MaterialTheme.typography.titleLarge,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis,
         modifier = Modifier
             .padding(Dimensions.PADDING_STANDARD)
             .semantics {
@@ -369,7 +372,9 @@ private fun InstructionalTextSection() {
         text = welcomeText,
         textAlign = TextAlign.Center,
         color = MaterialTheme.colorScheme.onSurface,
-        style = MaterialTheme.typography.bodyLarge,
+        style = MaterialTheme.typography.bodyLarge.copy(
+            lineHeight = MaterialTheme.typography.bodyLarge.lineHeight * 1.2f
+        ),
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = Dimensions.PADDING_STANDARD, vertical = Dimensions.PADDING_MEDIUM)
@@ -749,6 +754,7 @@ private fun ErrorSection(
                 text = ErrorHandler.getErrorMessageWithSuggestion(errorState),
                 textAlign = TextAlign.Start,
                 color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier
                     .weight(1f)
                     .verticalScroll(rememberScrollState())
@@ -798,22 +804,30 @@ private fun ErrorActionButtons(
                 modifier = Modifier.semantics {
                     contentDescription = retryButtonDescription
                 }
+                            ) {
+                    Text(
+                        text = retryText,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+            }
+            
+            Button(
+                onClick = {
+                    onDismiss()
+                    AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.CLICK)
+                },
+                modifier = Modifier.semantics {
+                    contentDescription = dismissButtonDescription
+                }
             ) {
-                Text(retryText)
+                Text(
+                    text = dismissText,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
             }
-        }
-        
-        Button(
-            onClick = {
-                onDismiss()
-                AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.CLICK)
-            },
-            modifier = Modifier.semantics {
-                contentDescription = dismissButtonDescription
-            }
-        ) {
-            Text(dismissText)
-        }
     }
 }
 
@@ -869,7 +883,11 @@ private fun RecipeResultsSection(
                     contentDescription = "Print recipe button. Print the AI-generated recipe"
                 }
             ) {
-                Text(actionPrintText)
+                Text(
+                    text = actionPrintText,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
             }
             
             // Share button
@@ -906,7 +924,11 @@ private fun RecipeResultsSection(
                     contentDescription = "Report content button. Report inappropriate AI-generated content"
                 }
             ) {
-                Text(actionReportText)
+                Text(
+                    text = actionReportText,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
             }
         }
         
@@ -931,7 +953,9 @@ private fun RecipeResultsSection(
             ) {
                 Text(
                     text = takeAnotherPhotoText,
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.titleMedium,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
             }
         }

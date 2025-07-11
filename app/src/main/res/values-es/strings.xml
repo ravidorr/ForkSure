@@ -6,7 +6,7 @@
     <!-- Main UI strings -->
     <string name="prompt_placeholder">Proporciona una receta para los productos horneados en la imagen</string>
     <string name="results_placeholder">🧁 ¿Listo para analizar tus productos horneados?\nToma una foto o elige una imagen de muestra para comenzar.</string>
-    <string name="analyzing_baked_goods">Analizando tus productos horneados...</string>
+    <string name="analyzing_baked_goods">Analizando tus productos horneados…</string>
     
     <!-- Button strings -->
     <string name="action_go">🔍 Analizar</string>
@@ -28,7 +28,7 @@
     <string name="share_google_keep">📝 Guardar en Google Keep</string>
     <string name="share_email_recipe">✉️ Enviar Receta por Email</string>
     <string name="share_google_docs">📄 Guardar en Google Docs</string>
-    <string name="share_other_apps">📤 Compartir con otras aplicaciones...</string>
+    <string name="share_other_apps">📤 Compartir con otras aplicaciones…</string>
     
     <!-- Content reporting -->
     <string name="report_dialog_title">Reportar Contenido</string>
@@ -82,8 +82,8 @@
     <string name="error_camera_permission_denied">Se requiere permiso de cámara para tomar fotos</string>
     <string name="camera_permission_required">Se requiere permiso de cámara para tomar fotos de tus productos horneados.</string>
     <string name="camera_permission_settings_hint">Por favor concede permiso de cámara en la configuración de tu dispositivo si no apareció el diálogo de permisos.</string>
-    <string name="camera_initializing">Inicializando cámara...</string>
-    <string name="camera_capturing">Capturando foto...</string>
+    <string name="camera_initializing">Inicializando cámara…</string>
+    <string name="camera_capturing">Capturando foto…</string>
     <string name="error_image_too_large">La imagen es muy grande. Por favor intenta con una imagen más pequeña.</string>
     <string name="error_invalid_image_format">Formato de imagen inválido. Por favor intenta con una imagen diferente.</string>
     <string name="error_server_unavailable">Servicio temporalmente no disponible. Por favor inténtalo más tarde.</string>

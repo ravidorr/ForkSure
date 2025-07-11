@@ -6,7 +6,7 @@
     <!-- Main UI strings -->
     <string name="prompt_placeholder">Provide a recipe for the baked goods in the image</string>
     <string name="results_placeholder">🧁 Ready to analyze your baked goods?\nTake a photo or choose a sample image to get started.</string>
-    <string name="analyzing_baked_goods">Analyzing your baked goods...</string>
+    <string name="analyzing_baked_goods">Analyzing your baked goods…</string>
     
     <!-- Button strings -->
     <string name="action_go">🔍 Analyze</string>
@@ -28,7 +28,7 @@
     <string name="share_google_keep">📝 Save to Google Keep</string>
     <string name="share_email_recipe">✉️ Email Recipe</string>
     <string name="share_google_docs">📄 Save to Google Docs</string>
-    <string name="share_other_apps">📤 Share to other apps...</string>
+    <string name="share_other_apps">📤 Share to other apps…</string>
     
     <!-- Content reporting -->
     <string name="report_dialog_title">Report Content</string>
@@ -82,8 +82,8 @@
     <string name="error_camera_permission_denied">Camera permission is required to take photos</string>
     <string name="camera_permission_required">Camera permission is required to take photos of your baked goods.</string>
     <string name="camera_permission_settings_hint">Please grant camera permission in your device settings if the permission dialog didn\'t appear.</string>
-    <string name="camera_initializing">Initializing camera...</string>
-    <string name="camera_capturing">Capturing photo...</string>
+    <string name="camera_initializing">Initializing camera…</string>
+    <string name="camera_capturing">Capturing photo…</string>
     <string name="error_image_too_large">Image is too large. Please try a smaller image.</string>
     <string name="error_invalid_image_format">Invalid image format. Please try a different image.</string>
     <string name="error_server_unavailable">Service temporarily unavailable. Please try again later.</string>
