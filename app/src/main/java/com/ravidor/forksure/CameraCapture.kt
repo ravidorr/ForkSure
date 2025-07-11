@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory
 import android.graphics.ImageFormat
 import android.graphics.Rect
 import android.graphics.YuvImage
+import androidx.core.graphics.createBitmap
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageCapture
@@ -322,7 +323,7 @@ private fun imageProxyToBitmap(image: ImageProxy): Bitmap {
             // Fallback for unsupported formats - create a placeholder bitmap
             val width = image.width.coerceAtLeast(1)
             val height = image.height.coerceAtLeast(1)
-            Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+            createBitmap(width, height, Bitmap.Config.ARGB_8888)
         }
     }
 } 
