@@ -108,12 +108,12 @@ fun MainScreen(
         }
     }
     
-    LaunchedEffect(selectedImage.value) {
-        if (selectedImage.value != mainScreenState.selectedImageIndex) {
-            if (selectedImage.value == -1) {
+    LaunchedEffect(selectedImage.intValue) {
+        if (selectedImage.intValue != mainScreenState.selectedImageIndex) {
+            if (selectedImage.intValue == -1) {
                 mainScreenState.selectCapturedImage()
-            } else if (selectedImage.value >= 0) {
-                mainScreenState.selectSampleImage(selectedImage.value)
+            } else if (selectedImage.intValue >= 0) {
+                mainScreenState.selectSampleImage(selectedImage.intValue)
             }
         }
     }

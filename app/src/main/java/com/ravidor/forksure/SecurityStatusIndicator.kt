@@ -23,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -53,7 +54,7 @@ fun SecurityStatusIndicator(
     val context = LocalContext.current
     var securityStatus by remember { mutableStateOf<SecurityEnvironmentResult?>(null) }
     var rateLimitStatus by remember { mutableStateOf<RateLimitResult?>(null) }
-    var requestCount by remember { mutableStateOf(0) }
+    var requestCount by remember { mutableIntStateOf(0) }
 
     // Initial status check
     LaunchedEffect(viewModel) {
