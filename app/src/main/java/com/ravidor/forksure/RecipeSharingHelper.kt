@@ -1,9 +1,12 @@
 package com.ravidor.forksure
 
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Build
+import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import androidx.compose.runtime.Stable
@@ -162,7 +165,7 @@ object RecipeSharingHelper {
     }
     
     /**
-     * Save image to temporary URI for sharing
+     * Save image to temporary URI for sharing using modern MediaStore API
      */
     private fun saveImageToTempUri(
         context: Context,
@@ -170,19 +173,89 @@ object RecipeSharingHelper {
         recipeName: String
     ): Uri? {
         return try {
-            val bytes = ByteArrayOutputStream()
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 85, bytes)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                // Android 10+ - Use modern scoped storage API
+                saveImageToTempUriModern(context, bitmap, recipeName)
+            } else {
+                // Android 9 and below - Use legacy method with suppression
+                saveImageToTempUriLegacy(context, bitmap, recipeName)
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error saving image for sharing", e)
+            null
+        }
+    }
+    
+    /**
+     * Modern MediaStore API for Android 10+
+     */
+    private fun saveImageToTempUriModern(
+        context: Context,
+        bitmap: Bitmap,
+        recipeName: String
+    ): Uri? {
+        return try {
+            val resolver = context.contentResolver
+            val fileName = "ForkSure_${recipeName.replace(" ", "_")}_${System.currentTimeMillis()}"
+            
+            val contentValues = ContentValues().apply {
+                put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
+                put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
+                put(MediaStore.MediaColumns.RELATIVE_PATH, "${Environment.DIRECTORY_PICTURES}/ForkSure")
+                // Mark as pending while we write the file
+                put(MediaStore.Images.Media.IS_PENDING, 1)
+            }
+            
+            val imageUri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+            
+            imageUri?.let { uri ->
+                resolver.openOutputStream(uri)?.use { outputStream ->
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 85, outputStream)
+                }
+                
+                // Clear the pending flag to make the image visible
+                contentValues.clear()
+                contentValues.put(MediaStore.Images.Media.IS_PENDING, 0)
+                resolver.update(uri, contentValues, null, null)
+                
+                Log.d(TAG, "Image saved successfully using modern MediaStore API")
+                uri
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error saving image with modern API", e)
+            null
+        }
+    }
+    
+    /**
+     * Legacy MediaStore API for Android 9 and below
+     */
+    @Suppress("DEPRECATION")
+    private fun saveImageToTempUriLegacy(
+        context: Context,
+        bitmap: Bitmap,
+        recipeName: String
+    ): Uri? {
+        return try {
+            val fileName = "ForkSure_${recipeName.replace(" ", "_")}"
+            val description = "Recipe photo from ForkSure app"
             
             val path = MediaStore.Images.Media.insertImage(
                 context.contentResolver,
                 bitmap,
-                "ForkSure_${recipeName.replace(" ", "_")}",
-                "Recipe photo from ForkSure app"
+                fileName,
+                description
             )
             
-            Uri.parse(path)
+            if (path != null) {
+                Log.d(TAG, "Image saved successfully using legacy MediaStore API")
+                Uri.parse(path)
+            } else {
+                Log.w(TAG, "Legacy insertImage returned null")
+                null
+            }
         } catch (e: Exception) {
-            Log.e(TAG, "Error saving image for sharing", e)
+            Log.e(TAG, "Error saving image with legacy API", e)
             null
         }
     }
