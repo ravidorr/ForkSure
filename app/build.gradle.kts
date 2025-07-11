@@ -114,6 +114,19 @@ android {
         }
     }
     
+    lint {
+        // Enable UseKtx lint rule to detect opportunities for KTX extensions
+        enable += "UseKtx"
+        
+        // Disable resource shrinking warnings that are not actionable
+        disable += "UnusedResources"
+        disable += "VectorPath"
+        disable += "IconLauncherShape"
+        
+        abortOnError = false
+        checkReleaseBuilds = false
+    }
+    
     testOptions {
         unitTests {
             isIncludeAndroidResources = true

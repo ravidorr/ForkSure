@@ -8,6 +8,7 @@ import android.os.VibratorManager
 import android.view.View
 import android.view.accessibility.AccessibilityManager
 import androidx.compose.runtime.Stable
+import androidx.core.content.getSystemService
 
 @Stable
 object AccessibilityHelper {
@@ -17,11 +18,11 @@ object AccessibilityHelper {
      */
     fun provideHapticFeedback(context: Context, type: HapticFeedbackType = HapticFeedbackType.CLICK) {
         val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            val vibratorManager = context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+            val vibratorManager = context.getSystemService(VibratorManager::class.java)!!
             vibratorManager.defaultVibrator
         } else {
             @Suppress("DEPRECATION")
-            context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+            context.getSystemService(Vibrator::class.java)!!
         }
         
         val effect = when (type) {
@@ -37,7 +38,7 @@ object AccessibilityHelper {
      * Checks if screen reader (TalkBack) is enabled
      */
     fun isScreenReaderEnabled(context: Context): Boolean {
-        val accessibilityManager = context.getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
+        val accessibilityManager = context.getSystemService(AccessibilityManager::class.java)!!
         return accessibilityManager.isTouchExplorationEnabled
     }
     
@@ -46,7 +47,7 @@ object AccessibilityHelper {
      * This is the recommended way to make accessibility announcements
      */
     fun announceForAccessibility(context: Context, message: String) {
-        val accessibilityManager = context.getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
+        val accessibilityManager = context.getSystemService(AccessibilityManager::class.java)!!
         if (accessibilityManager.isEnabled) {
             // Truncate message if too long for accessibility
             val truncatedMessage = if (message.length > 200) {
