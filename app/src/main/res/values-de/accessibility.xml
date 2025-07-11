@@ -25,7 +25,10 @@
     <string name="accessibility_service_description">ForkSure Barrierefreiheitsdienst für verbesserte Kochunterstützung</string>
     
     <!-- Content descriptions for complex UI elements -->
-    <string name="accessibility_image_gallery_description">Bildergalerie mit %1$d Kochbildern. Wischen Sie nach links oder rechts zum Durchsuchen, doppeltippen Sie zum Auswählen.</string>
+    <plurals name="accessibility_image_gallery_description">
+        <item quantity="one">Bildergalerie mit %1$d Kochbild. Wischen Sie nach links oder rechts zum Durchsuchen, doppeltippen Sie zum Auswählen.</item>
+        <item quantity="other">Bildergalerie mit %1$d Kochbildern. Wischen Sie nach links oder rechts zum Durchsuchen, doppeltippen Sie zum Auswählen.</item>
+    </plurals>
     <string name="accessibility_camera_controls_description">Kamerasteuerung. Aufnahmetaste unten in der Mitte, Einstellungen oben rechts verfügbar.</string>
     <string name="accessibility_results_container_description">KI-Analyseergebnis-Container. Scrollen Sie, um den vollständigen Inhalt zu lesen, verwenden Sie die Melden-Schaltfläche bei unangemessenem Inhalt.</string>
     

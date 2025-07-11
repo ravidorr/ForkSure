@@ -61,14 +61,14 @@ object AccessibilityTestHelper {
      * Creates a modifier that ensures minimum touch target size
      */
     @Composable
-    fun ensureMinimumTouchTarget(
+    fun Modifier.ensureMinimumTouchTarget(
         currentSize: Dp = 0.dp
     ): Modifier {
         val minimumSize = getMinimumTouchTargetSize()
         return if (currentSize < minimumSize) {
-            Modifier.size(minimumSize)
+            this.size(minimumSize)
         } else {
-            Modifier
+            this
         }
     }
     

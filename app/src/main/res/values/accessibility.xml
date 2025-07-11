@@ -25,7 +25,10 @@
     <string name="accessibility_service_description">ForkSure accessibility service for enhanced baking assistance</string>
     
     <!-- Content descriptions for complex UI elements -->
-    <string name="accessibility_image_gallery_description">Image gallery with %1$d baking images. Swipe left or right to browse, double-tap to select.</string>
+    <plurals name="accessibility_image_gallery_description">
+        <item quantity="one">Image gallery with %1$d baking image. Swipe left or right to browse, double-tap to select.</item>
+        <item quantity="other">Image gallery with %1$d baking images. Swipe left or right to browse, double-tap to select.</item>
+    </plurals>
     <string name="accessibility_camera_controls_description">Camera controls. Capture button at bottom center, settings available in top right.</string>
     <string name="accessibility_results_container_description">AI analysis results container. Scroll to read full content, use report button if content is inappropriate.</string>
     

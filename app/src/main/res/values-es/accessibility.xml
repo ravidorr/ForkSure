@@ -25,7 +25,10 @@
     <string name="accessibility_service_description">Servicio de accesibilidad ForkSure para asistencia mejorada en cocina</string>
     
     <!-- Content descriptions for complex UI elements -->
-    <string name="accessibility_image_gallery_description">Galería de imágenes con %1$d imágenes de cocina. Desliza izquierda o derecha para navegar, toca dos veces para seleccionar.</string>
+    <plurals name="accessibility_image_gallery_description">
+        <item quantity="one">Galería de imágenes con %1$d imagen de cocina. Desliza izquierda o derecha para navegar, toca dos veces para seleccionar.</item>
+        <item quantity="other">Galería de imágenes con %1$d imágenes de cocina. Desliza izquierda o derecha para navegar, toca dos veces para seleccionar.</item>
+    </plurals>
     <string name="accessibility_camera_controls_description">Controles de cámara. Botón de captura en la parte inferior central, configuraciones disponibles en la esquina superior derecha.</string>
     <string name="accessibility_results_container_description">Contenedor de resultados de análisis de IA. Desplaza para leer contenido completo, usa el botón de reportar si el contenido es inapropiado.</string>
     

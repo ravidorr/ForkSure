@@ -174,13 +174,8 @@ object RecipeSharingHelper {
         recipeName: String
     ): Uri? {
         return try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                // Android 10+ - Use modern scoped storage API
-                saveImageToTempUriModern(context, bitmap, recipeName)
-            } else {
-                // Android 9 and below - Use legacy method with suppression
-                saveImageToTempUriLegacy(context, bitmap, recipeName)
-            }
+            // Use modern scoped storage API (minSdk is 29, so always Android 10+)
+            saveImageToTempUriModern(context, bitmap, recipeName)
         } catch (e: Exception) {
             Log.e(TAG, "Error saving image for sharing", e)
             null
@@ -228,38 +223,7 @@ object RecipeSharingHelper {
         }
     }
     
-    /**
-     * Legacy MediaStore API for Android 9 and below
-     */
-    @Suppress("DEPRECATION")
-    private fun saveImageToTempUriLegacy(
-        context: Context,
-        bitmap: Bitmap,
-        recipeName: String
-    ): Uri? {
-        return try {
-            val fileName = "ForkSure_${recipeName.replace(" ", "_")}"
-            val description = "Recipe photo from ForkSure app"
-            
-            val path = MediaStore.Images.Media.insertImage(
-                context.contentResolver,
-                bitmap,
-                fileName,
-                description
-            )
-            
-            if (path != null) {
-                Log.d(TAG, "Image saved successfully using legacy MediaStore API")
-                path.toUri()
-            } else {
-                Log.w(TAG, "Legacy insertImage returned null")
-                null
-            }
-        } catch (e: Exception) {
-            Log.e(TAG, "Error saving image with legacy API", e)
-            null
-        }
-    }
+
     
     /**
      * Check if specific sharing apps are available
