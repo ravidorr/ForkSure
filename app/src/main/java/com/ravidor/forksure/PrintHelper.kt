@@ -29,7 +29,7 @@ object PrintHelper {
         recipeName: String = "ForkSure Recipe"
     ): PrintJob? {
         return try {
-            val printManager = context.getSystemService(Context.PRINT_SERVICE) as PrintManager
+            val printManager = context.getSystemService(PrintManager::class.java)!!
             
             // Create a WebView for printing
             val webView = WebView(context)
@@ -211,7 +211,7 @@ object PrintHelper {
      */
     fun isPrintingAvailable(context: Context): Boolean {
         return try {
-            val printManager = context.getSystemService(Context.PRINT_SERVICE) as? PrintManager
+            val printManager = context.getSystemService(PrintManager::class.java)
             printManager != null
         } catch (e: Exception) {
             Log.w(TAG, "Error checking print availability", e)

@@ -3,6 +3,9 @@ package com.ravidor.forksure
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
+import androidx.core.content.edit
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import java.security.MessageDigest
@@ -10,8 +13,6 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.regex.Pattern
 import java.util.concurrent.TimeUnit
-import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.Stable
 
 // Centralized constants imports
 import com.ravidor.forksure.AppConstants
@@ -370,7 +371,6 @@ object SecurityManager {
     }
     
     private fun saveRateLimitData(prefs: SharedPreferences, identifier: String, timestamp: Long) {
-        val editor = prefs.edit()
         val key = "timestamps_$identifier"
         val existing = prefs.getStringSet(key, emptySet()) ?: emptySet()
         val updated = existing.toMutableSet()
@@ -380,8 +380,9 @@ object SecurityManager {
         val dayAgo = timestamp - (24 * 60 * 60 * 1000)
         updated.removeAll { it.toLongOrNull()?.let { time -> time < dayAgo } ?: true }
         
-        editor.putStringSet(key, updated)
-        editor.apply()
+        prefs.edit {
+            putStringSet(key, updated)
+        }
     }
 }
 

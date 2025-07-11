@@ -11,6 +11,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
+import androidx.core.content.getSystemService
 
 /**
  * Comprehensive accessibility testing helper for ForkSure app
@@ -23,7 +24,7 @@ object AccessibilityTestHelper {
      * Checks if accessibility services are enabled
      */
     fun isAccessibilityEnabled(context: Context): Boolean {
-        val accessibilityManager = context.getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
+        val accessibilityManager = context.getSystemService(AccessibilityManager::class.java)!!
         return accessibilityManager.isEnabled
     }
     
@@ -31,7 +32,7 @@ object AccessibilityTestHelper {
      * Checks if TalkBack or other screen readers are enabled
      */
     fun isScreenReaderEnabled(context: Context): Boolean {
-        val accessibilityManager = context.getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
+        val accessibilityManager = context.getSystemService(AccessibilityManager::class.java)!!
         return accessibilityManager.isTouchExplorationEnabled
     }
     
@@ -87,7 +88,7 @@ object AccessibilityTestHelper {
      * Generates accessibility report for debugging
      */
     fun generateAccessibilityReport(context: Context): AccessibilityReport {
-        val accessibilityManager = context.getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
+        val accessibilityManager = context.getSystemService(AccessibilityManager::class.java)!!
         
         return AccessibilityReport(
             isAccessibilityEnabled = accessibilityManager.isEnabled,
@@ -105,7 +106,7 @@ object AccessibilityTestHelper {
     
     private fun generateRecommendations(context: Context): List<String> {
         val recommendations = mutableListOf<String>()
-        val accessibilityManager = context.getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
+        val accessibilityManager = context.getSystemService(AccessibilityManager::class.java)!!
         
         if (!accessibilityManager.isEnabled) {
             recommendations.add("Consider testing with accessibility services enabled")
