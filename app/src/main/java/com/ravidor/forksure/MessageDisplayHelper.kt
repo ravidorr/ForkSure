@@ -98,8 +98,8 @@ data class UserMessage(
 @Composable
 fun ThemedSnackbar(
     snackbarData: SnackbarData,
-    messageType: MessageType = MessageType.INFO,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    messageType: MessageType = MessageType.INFO
 ) {
     val backgroundColor = when (messageType) {
         MessageType.SUCCESS -> ThemeColors.successColor()
@@ -142,8 +142,8 @@ fun ThemedSnackbar(
 @Composable
 fun ThemedSnackbarHost(
     hostState: SnackbarHostState,
-    currentMessageType: MessageType = MessageType.INFO,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    currentMessageType: MessageType = MessageType.INFO
 ) {
     SnackbarHost(
         hostState = hostState,
