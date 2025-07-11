@@ -25,6 +25,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 
 
@@ -177,6 +178,8 @@ fun StatelessContentReportDialog(
                     label = { 
                         Text(
                             additionalDetailsLabel,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
                             modifier = Modifier.semantics {
                                 contentDescription = "" // Handled by TextField
                             }
@@ -192,6 +195,8 @@ fun StatelessContentReportDialog(
                     placeholder = {
                         Text(
                             "Optional: Provide additional details about your report",
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
                             modifier = Modifier.semantics {
                                 contentDescription = "" // Handled by TextField
                             }

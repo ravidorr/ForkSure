@@ -6,7 +6,7 @@
     <!-- Main UI strings -->
     <string name="prompt_placeholder">Geben Sie ein Rezept für die Backwaren im Bild</string>
     <string name="results_placeholder">🧁 Bereit, Ihre Backwaren zu analysieren?\nMachen Sie ein Foto oder wählen Sie ein Beispielbild zum Starten.</string>
-    <string name="analyzing_baked_goods">Analysiere Ihre Backwaren...</string>
+    <string name="analyzing_baked_goods">Analysiere Ihre Backwaren…</string>
     
     <!-- Button strings -->
     <string name="action_go">🔍 Analysieren</string>
@@ -28,7 +28,7 @@
     <string name="share_google_keep">📝 In Google Keep Speichern</string>
     <string name="share_email_recipe">✉️ Rezept per E-Mail Senden</string>
     <string name="share_google_docs">📄 In Google Docs Speichern</string>
-    <string name="share_other_apps">📤 Mit anderen Apps teilen...</string>
+    <string name="share_other_apps">📤 Mit anderen Apps teilen…</string>
     
     <!-- Content reporting -->
     <string name="report_dialog_title">Inhalt Melden</string>
@@ -82,8 +82,8 @@
     <string name="error_camera_permission_denied">Kameraberechtigung ist erforderlich, um Fotos zu machen</string>
     <string name="camera_permission_required">Kameraberechtigung ist erforderlich, um Fotos Ihrer Backwaren zu machen.</string>
     <string name="camera_permission_settings_hint">Bitte erteilen Sie die Kameraberechtigung in den Einstellungen Ihres Geräts, wenn das Berechtigungsdialog nicht erschienen ist.</string>
-    <string name="camera_initializing">Kamera wird initialisiert...</string>
-    <string name="camera_capturing">Foto wird aufgenommen...</string>
+    <string name="camera_initializing">Kamera wird initialisiert…</string>
+    <string name="camera_capturing">Foto wird aufgenommen…</string>
     <string name="error_image_too_large">Bild ist zu groß. Bitte versuchen Sie es mit einem kleineren Bild.</string>
     <string name="error_invalid_image_format">Ungültiges Bildformat. Bitte versuchen Sie es mit einem anderen Bild.</string>
     <string name="error_server_unavailable">Service vorübergehend nicht verfügbar. Bitte versuchen Sie es später erneut.</string>
