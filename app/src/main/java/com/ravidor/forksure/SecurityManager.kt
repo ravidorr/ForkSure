@@ -251,21 +251,21 @@ object SecurityManager {
                 )
             }
         }
-        
+
         // Check for common AI hallucination patterns
         val hallucinationPatterns = listOf(
             Pattern.compile("(?i)\\b(as an ai|i am an ai|i cannot|i don't have)\\b"),
             Pattern.compile("(?i)\\b(sorry|apologize|unfortunately)\\b.*\\b(cannot|can't|unable)\\b"),
             Pattern.compile("(?i)\\b(fictional|imaginary|made up|invented)\\b")
         )
-        
+
         var hallucinationScore = 0
         for (pattern in hallucinationPatterns) {
             if (pattern.matcher(response).find()) {
                 hallucinationScore++
             }
         }
-        
+
         if (hallucinationScore >= 2) {
             Log.w(TAG, "Potential AI hallucination detected")
             return AIResponseValidationResult.Suspicious(
@@ -273,14 +273,14 @@ object SecurityManager {
                 "The response may not be entirely accurate. Please verify the information."
             )
         }
-        
+
         // Check for food safety keywords that should trigger warnings
         val foodSafetyPatterns = listOf(
             Pattern.compile("(?i)\\b(raw|undercooked)\\s+(meat|chicken|fish|egg)\\b"),
             Pattern.compile("(?i)\\b(room temperature)\\s+.*\\b(hours|overnight)\\b"),
             Pattern.compile("(?i)\\b(expired|spoiled|moldy)\\b")
         )
-        
+
         for (pattern in foodSafetyPatterns) {
             if (pattern.matcher(response).find()) {
                 return AIResponseValidationResult.RequiresWarning(
@@ -289,7 +289,7 @@ object SecurityManager {
                 )
             }
         }
-        
+
         return AIResponseValidationResult.Valid(response)
     }
     
@@ -307,12 +307,12 @@ object SecurityManager {
      */
     fun checkSecurityEnvironment(context: Context): SecurityEnvironmentResult {
         val issues = mutableListOf<String>()
-        
+
         // Check if debugging is enabled
         if (android.os.Build.TYPE == "eng" || android.os.Build.TYPE == "userdebug") {
             issues.add("Running on debug build")
         }
-        
+
         // Check for root access (basic check)
         val rootPaths = arrayOf(
             "/system/app/Superuser.apk",
@@ -325,18 +325,21 @@ object SecurityManager {
             "/system/bin/failsafe/su",
             "/data/local/su"
         )
-        
+
         for (path in rootPaths) {
             if (java.io.File(path).exists()) {
                 issues.add("Potential root access detected")
                 break
             }
         }
-        
+
         return if (issues.isEmpty()) {
             SecurityEnvironmentResult.Secure
         } else {
-            SecurityEnvironmentResult.Insecure(issues)
+            SecurityEnvironmentResult.Insecure(
+                reason = "Security concerns detected",
+                details = issues.joinToString(", ")
+            )
         }
     }
     
@@ -430,5 +433,5 @@ sealed class SecurityEnvironmentResult {
     @Immutable
     object Secure : SecurityEnvironmentResult()
     @Immutable
-    data class Insecure(val issues: List<String>) : SecurityEnvironmentResult()
+    data class Insecure(val reason: String, val details: String) : SecurityEnvironmentResult()
 } 

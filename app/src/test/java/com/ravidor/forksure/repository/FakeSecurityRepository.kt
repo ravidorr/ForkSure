@@ -42,7 +42,10 @@ class FakeSecurityRepository @Inject constructor() : SecurityRepository {
         return if (isSecureEnvironment) {
             SecurityEnvironmentResult.Secure
         } else {
-            SecurityEnvironmentResult.Insecure(securityIssues)
+            SecurityEnvironmentResult.Insecure(
+                reason = "Test security issues detected",
+                details = securityIssues.joinToString(", ")
+            )
         }
     }
 

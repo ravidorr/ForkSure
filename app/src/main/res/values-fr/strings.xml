@@ -11,6 +11,7 @@
     <!-- Button strings -->
     <string name="action_go">🔍 Analyser</string>
     <string name="take_photo">📷 Prendre une Photo</string>
+    <string name="upload_photo">📤 Télécharger une Photo</string>
     <string name="take_another_photo">📷 Prendre une Autre Photo</string>
     <string name="action_retry">🔄 Réessayer</string>
     <string name="action_dismiss">✕ Ignorer</string>
@@ -48,6 +49,7 @@
     <!-- Essential accessibility strings for main features -->
     <string name="accessibility_main_screen">Écran principal de l\'assistant de pâtisserie ForkSure</string>
     <string name="accessibility_take_photo_description">Bouton prendre une photo. Ouvre la caméra pour capturer des produits de boulangerie</string>
+    <string name="accessibility_upload_photo_description">Bouton télécharger une photo. Ouvre la galerie pour sélectionner une photo existante de produits de boulangerie</string>
     <string name="accessibility_sample_image_selected">%1$s image d\'échantillon, actuellement sélectionnée pour l\'analyse</string>
     <string name="accessibility_sample_image_not_selected">%1$s image d\'échantillon, touchez pour sélectionner pour l\'analyse</string>
     <string name="accessibility_analyze_button_enabled">Bouton analyser. Démarrer l\'analyse IA de l\'image sélectionnée</string>
@@ -90,4 +92,38 @@
     <string name="error_rate_limit_exceeded">Trop de demandes. Veuillez attendre un moment avant de réessayer.</string>
     <string name="error_content_blocked">Le contenu a été bloqué par les filtres de sécurité. Veuillez essayer avec une image différente.</string>
     <string name="error_unexpected">Une erreur inattendue s\'est produite. Veuillez réessayer.</string>
+    
+    <!-- Enhanced Error Handler strings -->
+    <!-- Error titles -->
+    <string name="error_title_security">Erreur de Sécurité</string>
+    <string name="error_title_network">Erreur de Réseau</string>
+    <string name="error_title_rate_limit">Limite de Débit Dépassée</string>
+    <string name="error_title_input">Erreur de Saisie</string>
+    <string name="error_title_ai_service">Erreur du Service IA</string>
+    <string name="error_title_system">Erreur Système</string>
+    <string name="error_title_unexpected">Erreur Inattendue</string>
+    
+    <!-- Error messages -->
+    <string name="error_security_detected">Un problème de sécurité a été détecté. Veuillez vous assurer que vous utilisez l\'application dans un environnement sécurisé.</string>
+    <string name="error_no_internet_connection">Pas de connexion internet. Veuillez vérifier votre réseau et réessayer.</string>
+    <string name="error_request_timeout">La demande a expiré. Veuillez vérifier votre connexion et réessayer.</string>
+    <string name="error_network_general">Erreur de réseau survenue. Veuillez vérifier votre connexion internet.</string>
+    <string name="error_rate_limit_message">Vous avez fait trop de demandes. Veuillez attendre avant de réessayer.</string>
+    <string name="error_input_too_long">Votre saisie est trop longue. Veuillez raccourcir votre demande et réessayer.</string>
+    <string name="error_input_invalid">Saisie invalide détectée. Veuillez vérifier votre demande et réessayer.</string>
+    <string name="error_ai_service_issue">Le service IA a rencontré un problème lors du traitement de votre demande.</string>
+    <string name="error_system_general">Une erreur système s\'est produite. L\'application peut avoir besoin d\'être redémarrée.</string>
+    <string name="error_unexpected_general">Une erreur inattendue s\'est produite. Veuillez réessayer.</string>
+    
+    <!-- Error suggestions -->
+    <string name="suggestion_restart_or_contact">Essayez de redémarrer l\'application ou contactez le support si le problème persiste.</string>
+    <string name="suggestion_check_connection_retry">Vérifiez votre connexion internet et réessayez.</string>
+    <string name="suggestion_wait_minutes">Attendez quelques minutes avant de faire une autre demande.</string>
+    <string name="suggestion_modify_input">Veuillez modifier votre saisie et réessayer.</string>
+    <string name="suggestion_try_different_prompt">Veuillez réessayer avec une demande différente ou contactez le support.</string>
+    <string name="suggestion_restart_app">Veuillez redémarrer l\'application. Si le problème persiste, contactez le support.</string>
+    <string name="suggestion_contact_support">Si le problème persiste, veuillez contacter le support.</string>
+    
+    <!-- AI Response validation -->
+    <string name="ai_response_warning">La réponse IA peut contenir des inexactitudes. Veuillez vérifier les informations avec des sources fiables.</string>
 </resources>

@@ -11,6 +11,7 @@
     <!-- Button strings -->
     <string name="action_go">🔍 Analysieren</string>
     <string name="take_photo">📷 Foto Aufnehmen</string>
+    <string name="upload_photo">📤 Foto Hochladen</string>
     <string name="take_another_photo">📷 Weiteres Foto Aufnehmen</string>
     <string name="action_retry">🔄 Wiederholen</string>
     <string name="action_dismiss">✕ Schließen</string>
@@ -46,9 +47,10 @@
     <string name="accessibility_share_to_keep_button">In Google Keep speichern Schaltfläche. Das Rezept in Google Keep Notizen speichern</string>
     
     <!-- Essential accessibility strings for main features -->
-    <string name="accessibility_main_screen">ForkSure Backassistent Hauptbildschirm</string>
-    <string name="accessibility_take_photo_description">Foto aufnehmen Schaltfläche. Öffnet die Kamera zur Aufnahme von Backwaren</string>
-    <string name="accessibility_sample_image_selected">%1$s Beispielbild, derzeit für Analyse ausgewählt</string>
+    <string name="accessibility_main_screen">Hauptbildschirm des ForkSure Backassistenten</string>
+    <string name="accessibility_take_photo_description">Foto aufnehmen Schaltfläche. Öffnet die Kamera zum Aufnehmen von Backwaren</string>
+    <string name="accessibility_upload_photo_description">Foto hochladen Schaltfläche. Öffnet die Galerie zum Auswählen vorhandener Fotos von Backwaren</string>
+    <string name="accessibility_sample_image_selected">%1$s Beispielbild, derzeit für die Analyse ausgewählt</string>
     <string name="accessibility_sample_image_not_selected">%1$s Beispielbild, tippen zum Auswählen für Analyse</string>
     <string name="accessibility_analyze_button_enabled">Analysieren-Schaltfläche. KI-Analyse des ausgewählten Bildes starten</string>
     <string name="accessibility_analyze_button_disabled">Analysieren-Schaltfläche. Deaktiviert. Wählen Sie ein Bild aus, um zu aktivieren</string>
@@ -90,4 +92,38 @@
     <string name="error_rate_limit_exceeded">Zu viele Anfragen. Bitte warten Sie einen Moment, bevor Sie es erneut versuchen.</string>
     <string name="error_content_blocked">Inhalt wurde durch Sicherheitsfilter blockiert. Bitte versuchen Sie es mit einem anderen Bild.</string>
     <string name="error_unexpected">Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut.</string>
+    
+    <!-- Enhanced Error Handler strings -->
+    <!-- Error titles -->
+    <string name="error_title_security">Sicherheitsfehler</string>
+    <string name="error_title_network">Netzwerkfehler</string>
+    <string name="error_title_rate_limit">Ratenlimit Überschritten</string>
+    <string name="error_title_input">Eingabefehler</string>
+    <string name="error_title_ai_service">KI-Service Fehler</string>
+    <string name="error_title_system">Systemfehler</string>
+    <string name="error_title_unexpected">Unerwarteter Fehler</string>
+    
+    <!-- Error messages -->
+    <string name="error_security_detected">Ein Sicherheitsproblem wurde erkannt. Bitte stellen Sie sicher, dass Sie die App in einer sicheren Umgebung verwenden.</string>
+    <string name="error_no_internet_connection">Keine Internetverbindung. Bitte überprüfen Sie Ihr Netzwerk und versuchen Sie es erneut.</string>
+    <string name="error_request_timeout">Anfrage-Timeout. Bitte überprüfen Sie Ihre Verbindung und versuchen Sie es erneut.</string>
+    <string name="error_network_general">Netzwerkfehler aufgetreten. Bitte überprüfen Sie Ihre Internetverbindung.</string>
+    <string name="error_rate_limit_message">Sie haben zu viele Anfragen gestellt. Bitte warten Sie, bevor Sie es erneut versuchen.</string>
+    <string name="error_input_too_long">Ihre Eingabe ist zu lang. Bitte kürzen Sie Ihre Anfrage und versuchen Sie es erneut.</string>
+    <string name="error_input_invalid">Ungültige Eingabe erkannt. Bitte überprüfen Sie Ihre Anfrage und versuchen Sie es erneut.</string>
+    <string name="error_ai_service_issue">Der KI-Service hat ein Problem bei der Bearbeitung Ihrer Anfrage festgestellt.</string>
+    <string name="error_system_general">Ein Systemfehler ist aufgetreten. Die App muss möglicherweise neu gestartet werden.</string>
+    <string name="error_unexpected_general">Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut.</string>
+    
+    <!-- Error suggestions -->
+    <string name="suggestion_restart_or_contact">Versuchen Sie die App neu zu starten oder kontaktieren Sie den Support, wenn das Problem weiterhin besteht.</string>
+    <string name="suggestion_check_connection_retry">Überprüfen Sie Ihre Internetverbindung und versuchen Sie es erneut.</string>
+    <string name="suggestion_wait_minutes">Warten Sie einige Minuten, bevor Sie eine weitere Anfrage stellen.</string>
+    <string name="suggestion_modify_input">Bitte ändern Sie Ihre Eingabe und versuchen Sie es erneut.</string>
+    <string name="suggestion_try_different_prompt">Bitte versuchen Sie es mit einer anderen Anfrage oder kontaktieren Sie den Support.</string>
+    <string name="suggestion_restart_app">Bitte starten Sie die App neu. Wenn das Problem weiterhin besteht, kontaktieren Sie den Support.</string>
+    <string name="suggestion_contact_support">Wenn das Problem weiterhin besteht, kontaktieren Sie bitte den Support.</string>
+    
+    <!-- AI Response validation -->
+    <string name="ai_response_warning">Die KI-Antwort kann Ungenauigkeiten enthalten. Bitte überprüfen Sie die Informationen mit zuverlässigen Quellen.</string>
 </resources>

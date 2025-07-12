@@ -36,6 +36,9 @@ import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 import java.util.Date
 
 /**
@@ -49,6 +52,8 @@ import java.util.Date
  * - User preference integration with app behavior
  * - Security and caching integration scenarios
  */
+@RunWith(RobolectricTestRunner::class)
+@Config(sdk = [34])
 @ExperimentalCoroutinesApi
 class IntegrationTestSuite {
 
@@ -80,7 +85,8 @@ class IntegrationTestSuite {
         val userPreferencesRepository = UserPreferencesRepositoryImpl(mockPreferencesDataSource)
         val mainScreenState = MainScreenState()
         val navigationState = NavigationState()
-        val testBitmap = Bitmap.createBitmap(800, 600, Bitmap.Config.ARGB_8888)
+        // Use a simple test double instead of real bitmap to avoid Robolectric issues
+        val testBitmap = createTestBitmap()
         val testCoroutineScheduler = TestCoroutineScheduler()
         
         localThis = TestFixtures(
@@ -647,5 +653,11 @@ class IntegrationTestSuite {
     private fun getMemoryUsage(): Long {
         val runtime = Runtime.getRuntime()
         return runtime.totalMemory() - runtime.freeMemory()
+    }
+    
+    private fun createTestBitmap(): Bitmap {
+        // Create a simple 1x1 bitmap for testing purposes
+        // This avoids the complex bitmap creation that can fail in Robolectric
+        return Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
     }
 } 

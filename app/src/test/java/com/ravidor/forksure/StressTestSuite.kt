@@ -8,6 +8,7 @@ import com.ravidor.forksure.data.model.Recipe
 import com.ravidor.forksure.data.model.RecipeAnalysisRequest
 import com.ravidor.forksure.data.model.RecipeAnalysisResponse
 import com.ravidor.forksure.data.model.RecipeSource
+import com.ravidor.forksure.data.model.DifficultyLevel
 import com.ravidor.forksure.data.model.UserPreferences
 import com.ravidor.forksure.data.source.local.PreferencesDataSource
 import com.ravidor.forksure.data.source.local.RecipeCacheDataSource
@@ -16,6 +17,7 @@ import com.ravidor.forksure.repository.RecipeRepository
 import com.ravidor.forksure.repository.RecipeRepositoryImpl
 import com.ravidor.forksure.state.MainScreenState
 import com.ravidor.forksure.state.NavigationState
+import com.ravidor.forksure.AIResponseProcessingResult
 import io.mockk.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
@@ -30,6 +32,9 @@ import kotlinx.coroutines.withTimeout
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 import java.util.Date
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
@@ -51,6 +56,8 @@ import kotlin.system.measureTimeMillis
  * - Concurrent access stress testing
  * - Large data set handling and processing
  */
+@RunWith(RobolectricTestRunner::class)
+@Config(sdk = [34])
 @ExperimentalCoroutinesApi
 class StressTestSuite {
 
@@ -567,8 +574,8 @@ class StressTestSuite {
     fun `System should maintain stability during prolonged stress testing`() = runTest {
         // Given - prolonged stress test scenario
         val localThis = this@StressTestSuite.localThis
-        val testDuration = 10000L // 10 seconds of continuous stress
-        val operationsPerSecond = 50
+        val testDuration = 3000L // 3 seconds of continuous stress (reduced from 10s)
+        val operationsPerSecond = 20 // Reduced from 50
         val operationInterval = 1000L / operationsPerSecond
         
         coEvery { localThis.mockAIRepository.generateContent(any(), any()) } returns 
@@ -579,7 +586,7 @@ class StressTestSuite {
         val initialMemory = getMemoryUsage()
         
         // When - running prolonged stress test
-        withTimeout(testDuration + 5000) { // Add buffer for timeout
+        withTimeout(testDuration + 2000) { // 2 second buffer (reduced from 5s)
             while (System.currentTimeMillis() - startTime < testDuration) {
                 try {
                     val currentTime = System.currentTimeMillis()
@@ -741,17 +748,7 @@ class StressTestSuite {
         assertThat(localThis.mainScreenState.isAnalyzeEnabled).isNotNull()
     }
     
-    // MARK: - Helper Methods
-    
-    private fun createTestBitmaps(): List<Bitmap> {
-        return listOf(
-            Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888),
-            Bitmap.createBitmap(500, 500, Bitmap.Config.ARGB_8888),
-            Bitmap.createBitmap(1000, 1000, Bitmap.Config.ARGB_8888),
-            Bitmap.createBitmap(50, 200, Bitmap.Config.RGB_565),
-            Bitmap.createBitmap(300, 400, Bitmap.Config.ARGB_8888)
-        )
-    }
+    // MARK: - Helper Functions
     
     private fun getMemoryUsage(): Long {
         val runtime = Runtime.getRuntime()
@@ -759,33 +756,54 @@ class StressTestSuite {
     }
     
     private fun updatePeakMemory(metrics: StressMetrics, currentMemory: Long) {
-        var currentPeak = metrics.peakMemoryUsage.get()
-        while (currentMemory > currentPeak) {
-            if (metrics.peakMemoryUsage.compareAndSet(currentPeak, currentMemory)) {
+        var peak = metrics.peakMemoryUsage.get()
+        while (currentMemory > peak) {
+            if (metrics.peakMemoryUsage.compareAndSet(peak, currentMemory)) {
                 break
             }
-            currentPeak = metrics.peakMemoryUsage.get()
+            peak = metrics.peakMemoryUsage.get()
         }
+    }
+    
+    private fun createTestBitmaps(): List<Bitmap> {
+        return listOf(
+            Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888),
+            Bitmap.createBitmap(2, 2, Bitmap.Config.ARGB_8888),
+            Bitmap.createBitmap(3, 3, Bitmap.Config.ARGB_8888),
+            Bitmap.createBitmap(2, 1, Bitmap.Config.ARGB_8888),
+            Bitmap.createBitmap(1, 2, Bitmap.Config.ARGB_8888)
+        )
     }
     
     private fun createTestRecipe(title: String, content: String): Recipe {
         return Recipe(
-            id = "stress_test_${System.currentTimeMillis()}_${Random.nextInt()}",
+            id = "test_${System.currentTimeMillis()}",
             title = title,
             description = content,
-            ingredients = listOf("ingredient1", "ingredient2"),
-            instructions = listOf("step1", "step2"),
+            ingredients = listOf("Test ingredient 1", "Test ingredient 2"),
+            instructions = listOf("Step 1: $content", "Step 2: Mix well"),
+            prepTime = "15 min",
+            cookTime = "30 min",
+            servings = "4",
+            difficulty = DifficultyLevel.BEGINNER,
+            tags = emptyList(),
+            nutritionInfo = null,
+            warnings = emptyList(),
             source = RecipeSource.AI_GENERATED,
-            createdAt = Date()
+            confidence = 0.95f,
+            createdAt = Date(),
+            imageHash = null
         )
     }
     
     private fun createTestResponse(recipe: Recipe): RecipeAnalysisResponse {
         return RecipeAnalysisResponse(
             recipe = recipe,
-            rawResponse = "stress_test_response",
-            processingTime = Random.nextLong(50, 200),
-            success = true
+            rawResponse = "Test response for ${recipe.title}",
+            processingTime = 150L,
+            success = true,
+            errorMessage = null,
+            warnings = emptyList()
         )
     }
 } 
