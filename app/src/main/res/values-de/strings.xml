@@ -13,8 +13,9 @@
     <string name="take_photo">📷 Foto Aufnehmen</string>
     <string name="upload_photo">📤 Foto Hochladen</string>
     <string name="take_another_photo">📷 Weiteres Foto Aufnehmen</string>
+    <string name="back_to_main_screen">⬅️ Zurück zum Hauptbildschirm</string>
     <string name="action_retry">🔄 Wiederholen</string>
-    <string name="action_dismiss">✕ Schließen</string>
+    <string name="action_dismiss">❌ Schließen</string>
     <string name="action_print">🖨️ Drucken</string>
     <string name="action_report">🚩 Melden</string>
     
@@ -39,8 +40,22 @@
     <string name="report_reason_harmful">Potenziell schädliche Anweisungen</string>
     <string name="report_reason_other">Andere</string>
     <string name="report_additional_details">Zusätzliche Details (optional)</string>
+    <string name="report_reason_label">Grund für die Meldung:</string>
+    <string name="report_additional_details_placeholder">Optional: Geben Sie zusätzliche Details zu Ihrem Bericht an</string>
     <string name="action_submit_report">Bericht Senden</string>
     <string name="action_cancel">Abbrechen</string>
+    
+    <!-- Security status -->
+    <string name="security_requests_label">Anfragen: </string>
+    <string name="security_requests_used"> (%d verwendet)</string>
+    <string name="security_warning_title">Sicherheitswarnung</string>
+    <string name="security_issues_detected">Die folgenden Sicherheitsprobleme wurden erkannt:</string>
+    <string name="security_disclaimer">Zu Ihrer Sicherheit können einige Funktionen eingeschränkt sein. Bitte verwenden Sie die App in einer sicheren Umgebung.</string>
+    
+    <!-- Camera error messages -->
+    <string name="camera_bind_error">Kamera konnte nicht gebunden werden: %s</string>
+    <string name="camera_process_error">Aufgenommenes Bild konnte nicht verarbeitet werden: %s</string>
+    <string name="camera_capture_error">Bildaufnahme fehlgeschlagen: %s</string>
     
     <!-- Accessibility strings (minimal set for share functionality) -->
     <string name="accessibility_share_button">Rezept teilen Schaltfläche. Das KI-generierte Rezept mit anderen Apps teilen</string>
@@ -50,6 +65,7 @@
     <string name="accessibility_main_screen">Hauptbildschirm des ForkSure Backassistenten</string>
     <string name="accessibility_take_photo_description">Foto aufnehmen Schaltfläche. Öffnet die Kamera zum Aufnehmen von Backwaren</string>
     <string name="accessibility_upload_photo_description">Foto hochladen Schaltfläche. Öffnet die Galerie zum Auswählen vorhandener Fotos von Backwaren</string>
+    <string name="accessibility_back_from_camera">Zurück von Kamera Schaltfläche. Zum Hauptbildschirm zurückkehren ohne Foto zu machen</string>
     <string name="accessibility_sample_image_selected">%1$s Beispielbild, derzeit für die Analyse ausgewählt</string>
     <string name="accessibility_sample_image_not_selected">%1$s Beispielbild, tippen zum Auswählen für Analyse</string>
     <string name="accessibility_analyze_button_enabled">Analysieren-Schaltfläche. KI-Analyse des ausgewählten Bildes starten</string>

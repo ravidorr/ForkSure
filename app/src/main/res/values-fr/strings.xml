@@ -13,8 +13,9 @@
     <string name="take_photo">📷 Prendre une Photo</string>
     <string name="upload_photo">📤 Télécharger une Photo</string>
     <string name="take_another_photo">📷 Prendre une Autre Photo</string>
+    <string name="back_to_main_screen">⬅️ Retour à l'Écran Principal</string>
     <string name="action_retry">🔄 Réessayer</string>
-    <string name="action_dismiss">✕ Ignorer</string>
+    <string name="action_dismiss">❌ Ignorer</string>
     <string name="action_print">🖨️ Imprimer</string>
     <string name="action_report">🚩 Signaler</string>
     
@@ -39,8 +40,22 @@
     <string name="report_reason_harmful">Instructions potentiellement nuisibles</string>
     <string name="report_reason_other">Autre</string>
     <string name="report_additional_details">Détails supplémentaires (optionnel)</string>
+    <string name="report_reason_label">Raison du signalement:</string>
+    <string name="report_additional_details_placeholder">Optionnel: Fournissez des détails supplémentaires sur votre rapport</string>
     <string name="action_submit_report">Envoyer le Signalement</string>
     <string name="action_cancel">Annuler</string>
+    
+    <!-- Security status -->
+    <string name="security_requests_label">Demandes: </string>
+    <string name="security_requests_used"> (%d utilisées)</string>
+    <string name="security_warning_title">Avertissement de Sécurité</string>
+    <string name="security_issues_detected">Les problèmes de sécurité suivants ont été détectés:</string>
+    <string name="security_disclaimer">Pour votre sécurité, certaines fonctionnalités peuvent être limitées. Veuillez utiliser l\'application dans un environnement sécurisé.</string>
+    
+    <!-- Camera error messages -->
+    <string name="camera_bind_error">Impossible de lier la caméra: %s</string>
+    <string name="camera_process_error">Impossible de traiter l\'image capturée: %s</string>
+    <string name="camera_capture_error">La capture d\'image a échoué: %s</string>
     
     <!-- Accessibility strings (minimal set for share functionality) -->
     <string name="accessibility_share_button">Bouton partager la recette. Partager la recette générée par IA avec d\'autres applications</string>
@@ -50,6 +65,7 @@
     <string name="accessibility_main_screen">Écran principal de l\'assistant de pâtisserie ForkSure</string>
     <string name="accessibility_take_photo_description">Bouton prendre une photo. Ouvre la caméra pour capturer des produits de boulangerie</string>
     <string name="accessibility_upload_photo_description">Bouton télécharger une photo. Ouvre la galerie pour sélectionner une photo existante de produits de boulangerie</string>
+    <string name="accessibility_back_from_camera">Bouton retour depuis la caméra. Retourner à l'écran principal sans prendre de photo</string>
     <string name="accessibility_sample_image_selected">%1$s image d\'échantillon, actuellement sélectionnée pour l\'analyse</string>
     <string name="accessibility_sample_image_not_selected">%1$s image d\'échantillon, touchez pour sélectionner pour l\'analyse</string>
     <string name="accessibility_analyze_button_enabled">Bouton analyser. Démarrer l\'analyse IA de l\'image sélectionnée</string>

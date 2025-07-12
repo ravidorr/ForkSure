@@ -95,6 +95,11 @@ fun ForkSureNavigation(
                         // Navigate back to main screen with error
                         navController.popBackStack()
                     }
+                },
+                onBackPressed = {
+                    // Navigate back to main screen
+                    AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.CLICK)
+                    navController.popBackStack()
                 }
             )
         }

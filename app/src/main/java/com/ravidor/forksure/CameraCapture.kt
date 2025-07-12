@@ -18,10 +18,12 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-
+import androidx.compose.material3.Button
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -37,6 +39,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
@@ -54,7 +57,8 @@ import com.ravidor.forksure.R
 @Composable
 fun CameraCapture(
     onImageCaptured: (Bitmap) -> Unit,
-    onError: (String) -> Unit
+    onError: (String) -> Unit,
+    onBackPressed: () -> Unit = {}
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -81,7 +85,8 @@ fun CameraCapture(
                 context = context,
                 lifecycleOwner = lifecycleOwner,
                 onImageCaptured = onImageCaptured,
-                onError = onError
+                onError = onError,
+                onBackPressed = onBackPressed
             )
         } else {
             // Permission not granted state
@@ -112,6 +117,27 @@ fun CameraCapture(
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(top = 8.dp)
                 )
+                
+                Spacer(modifier = Modifier.height(32.dp))
+                
+                // Back button
+                Button(
+                    onClick = {
+                        onBackPressed()
+                        AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.CLICK)
+                    },
+                    modifier = Modifier
+                        .semantics {
+                            contentDescription = "Go back to main screen button"
+                        }
+                ) {
+                    Text(
+                        text = stringResource(R.string.back_to_main_screen),
+                        style = MaterialTheme.typography.titleSmall,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
             }
         }
     }
@@ -122,7 +148,8 @@ private fun CameraPreview(
     context: Context,
     lifecycleOwner: LifecycleOwner,
     onImageCaptured: (Bitmap) -> Unit,
-    onError: (String) -> Unit
+    onError: (String) -> Unit,
+    onBackPressed: () -> Unit = {}
 ) {
     val cameraViewfinderDescription = stringResource(R.string.accessibility_camera_viewfinder)
     val captureButtonDescription = stringResource(R.string.accessibility_capture_button_ready)
@@ -151,7 +178,7 @@ private fun CameraPreview(
             )
             isCameraReady = true
         } catch (exc: Exception) {
-            onError("Failed to bind camera: ${exc.message}")
+            onError(context.getString(R.string.camera_bind_error, exc.message ?: "Unknown error"))
         }
     }
 
@@ -170,6 +197,27 @@ private fun CameraPreview(
                     contentDescription = "Camera preview showing live view from camera"
                 }
         )
+
+        // Back button in top-left corner
+        Button(
+            onClick = {
+                onBackPressed()
+                AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.CLICK)
+            },
+            modifier = Modifier
+                .align(Alignment.TopStart)
+                .padding(16.dp)
+                .semantics {
+                    contentDescription = stringResource(R.string.accessibility_back_from_camera)
+                }
+        ) {
+            Text(
+                text = stringResource(R.string.back_to_main_screen),
+                style = MaterialTheme.typography.titleSmall,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
 
         // Camera status indicator
         if (!isCameraReady) {
@@ -195,6 +243,7 @@ private fun CameraPreview(
                     captureImage(
                         imageCapture = imageCapture,
                         executor = executor,
+                        context = context,
                         onImageCaptured = { bitmap ->
                             isCapturing = false
                             AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.SUCCESS)
@@ -246,6 +295,7 @@ private fun CameraPreview(
 private fun captureImage(
     imageCapture: ImageCapture,
     executor: java.util.concurrent.Executor,
+    context: Context,
     onImageCaptured: (Bitmap) -> Unit,
     onError: (String) -> Unit
 ) {
@@ -257,14 +307,14 @@ private fun captureImage(
                     val bitmap = imageProxyToBitmap(image)
                     onImageCaptured(bitmap)
                 } catch (e: Exception) {
-                    onError("Failed to process captured image: ${e.message}")
+                    onError(context.getString(R.string.camera_process_error, e.message ?: "Unknown error"))
                 } finally {
                     image.close()
                 }
             }
 
             override fun onError(exception: ImageCaptureException) {
-                onError("Image capture failed: ${exception.message}")
+                onError(context.getString(R.string.camera_capture_error, exception.message ?: "Unknown error"))
             }
         }
     )
