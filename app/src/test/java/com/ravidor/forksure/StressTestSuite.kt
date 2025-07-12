@@ -67,8 +67,7 @@ class StressTestSuite {
         val navigationState: NavigationState,
         val testBitmaps: List<Bitmap>,
         val stressMetrics: StressMetrics,
-        val testCoroutineScheduler: TestCoroutineScheduler,
-        val testDispatcher: UnconfinedTestDispatcher
+        val testCoroutineScheduler: TestCoroutineScheduler
     )
     
     private data class StressMetrics(
@@ -92,7 +91,6 @@ class StressTestSuite {
         val testBitmaps = createTestBitmaps()
         val stressMetrics = StressMetrics()
         val testCoroutineScheduler = TestCoroutineScheduler()
-        val testDispatcher = UnconfinedTestDispatcher(testCoroutineScheduler)
         
         localThis = TestFixtures(
             context = context,
@@ -104,8 +102,7 @@ class StressTestSuite {
             navigationState = navigationState,
             testBitmaps = testBitmaps,
             stressMetrics = stressMetrics,
-            testCoroutineScheduler = testCoroutineScheduler,
-            testDispatcher = testDispatcher
+            testCoroutineScheduler = testCoroutineScheduler
         )
     }
     

@@ -54,8 +54,7 @@ class PersistenceTestSuite {
         val mockEditor: SharedPreferences.Editor,
         val preferencesDataSource: PreferencesDataSource,
         val recipeCacheDataSource: RecipeCacheDataSource,
-        val testCoroutineScheduler: TestCoroutineScheduler,
-        val testDispatcher: UnconfinedTestDispatcher
+        val testCoroutineScheduler: TestCoroutineScheduler
     )
     
     @Before
@@ -66,7 +65,6 @@ class PersistenceTestSuite {
         val preferencesDataSource = PreferencesDataSource(mockSharedPreferences)
         val recipeCacheDataSource = RecipeCacheDataSource()
         val testCoroutineScheduler = TestCoroutineScheduler()
-        val testDispatcher = UnconfinedTestDispatcher(testCoroutineScheduler)
         
         // Setup SharedPreferences mock behavior
         every { mockSharedPreferences.edit() } returns mockEditor
@@ -84,8 +82,7 @@ class PersistenceTestSuite {
             mockEditor = mockEditor,
             preferencesDataSource = preferencesDataSource,
             recipeCacheDataSource = recipeCacheDataSource,
-            testCoroutineScheduler = testCoroutineScheduler,
-            testDispatcher = testDispatcher
+            testCoroutineScheduler = testCoroutineScheduler
         )
     }
     
@@ -427,7 +424,7 @@ class PersistenceTestSuite {
         every { localThis.mockSharedPreferences.getStringSet("favorite_recipe_ids", any()) } returns null
         
         // When - loading preferences with corrupted data
-        val loadedPreferences = localThis.preferencesDataSource.loadUserPreferences()
+        val loadedPreferences = localThis.preferencesDataSource.userPreferences.first()
         
         // Then - should fall back to default values for corrupted data
         assertThat(loadedPreferences.theme).isEqualTo(AppTheme.SYSTEM) // Default fallback
@@ -463,7 +460,7 @@ class PersistenceTestSuite {
         }
         
         // When - simulating app restart (preferences survive, cache may not)
-        val restartedPrefs = localThis.preferencesDataSource.loadUserPreferences()
+        val restartedPrefs = localThis.preferencesDataSource.userPreferences.first()
         val cacheStatsAfterRestart = localThis.recipeCacheDataSource.cacheStats.first()
         
         // Then - preferences should persist, cache should be rebuilt as needed

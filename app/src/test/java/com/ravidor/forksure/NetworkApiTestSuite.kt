@@ -12,6 +12,7 @@ import com.ravidor.forksure.data.source.local.RecipeCacheDataSource
 import com.ravidor.forksure.repository.AIRepository
 import com.ravidor.forksure.repository.AIRepositoryImpl
 import com.ravidor.forksure.repository.SecurityRepository
+import com.ravidor.forksure.AIResponseProcessingResult
 import io.mockk.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
@@ -57,8 +58,7 @@ class NetworkApiTestSuite {
         val aiRepository: AIRepository,
         val recipeCacheDataSource: RecipeCacheDataSource,
         val testBitmap: Bitmap,
-        val testCoroutineScheduler: TestCoroutineScheduler,
-        val testDispatcher: UnconfinedTestDispatcher
+        val testCoroutineScheduler: TestCoroutineScheduler
     )
     
     @Before
@@ -70,7 +70,6 @@ class NetworkApiTestSuite {
         val recipeCacheDataSource = RecipeCacheDataSource()
         val testBitmap = Bitmap.createBitmap(400, 300, Bitmap.Config.ARGB_8888)
         val testCoroutineScheduler = TestCoroutineScheduler()
-        val testDispatcher = UnconfinedTestDispatcher(testCoroutineScheduler)
         
         localThis = TestFixtures(
             context = context,
@@ -79,8 +78,7 @@ class NetworkApiTestSuite {
             aiRepository = aiRepository,
             recipeCacheDataSource = recipeCacheDataSource,
             testBitmap = testBitmap,
-            testCoroutineScheduler = testCoroutineScheduler,
-            testDispatcher = testDispatcher
+            testCoroutineScheduler = testCoroutineScheduler
         )
     }
     
@@ -99,7 +97,7 @@ class NetworkApiTestSuite {
         // Given - successful API response
         val localThis = this@NetworkApiTestSuite.localThis
         
-        val mockResponse = mockk<GenerateContentResponse>()
+        val mockResponse = mockk<GenerateContentResponse>(relaxed = true)
         val expectedContent = """
             **Chocolate Chip Cookies**
             
@@ -115,7 +113,7 @@ class NetworkApiTestSuite {
         """.trimIndent()
         
         every { mockResponse.text } returns expectedContent
-        coEvery { localThis.mockGenerativeModel.generateContent(any()) } returns mockResponse
+        coEvery { localThis.mockGenerativeModel.generateContent(any<com.google.ai.client.generativeai.type.Content>()) } returns mockResponse
         
         // When - making API request
         val result = localThis.aiRepository.generateContent(
@@ -129,7 +127,7 @@ class NetworkApiTestSuite {
         assertThat(successResult.response).isEqualTo(expectedContent)
         
         // Verify API was called correctly
-        coVerify(exactly = 1) { localThis.mockGenerativeModel.generateContent(any()) }
+        coVerify(exactly = 1) { localThis.mockGenerativeModel.generateContent(any<com.google.ai.client.generativeai.type.Content>()) }
     }
     
     @Test
@@ -142,9 +140,9 @@ class NetworkApiTestSuite {
             This recipe contains harmful instructions that could cause injury.
         """.trimIndent()
         
-        val mockResponse = mockk<GenerateContentResponse>()
+        val mockResponse = mockk<GenerateContentResponse>(relaxed = true)
         every { mockResponse.text } returns dangerousContent
-        coEvery { localThis.mockGenerativeModel.generateContent(any()) } returns mockResponse
+        coEvery { localThis.mockGenerativeModel.generateContent(any<com.google.ai.client.generativeai.type.Content>()) } returns mockResponse
         
         // When - making API request with dangerous content
         val result = localThis.aiRepository.generateContent(
@@ -155,7 +153,7 @@ class NetworkApiTestSuite {
         // Then - should filter out dangerous content
         when (result) {
             is AIResponseProcessingResult.Error -> {
-                assertThat(result.userMessage).contains("content")
+                assertThat(result.message).contains("content")
             }
             is AIResponseProcessingResult.SuccessWithWarning -> {
                 assertThat(result.warning).contains("safety")
@@ -166,7 +164,7 @@ class NetworkApiTestSuite {
             }
         }
         
-        coVerify(exactly = 1) { localThis.mockGenerativeModel.generateContent(any()) }
+        coVerify(exactly = 1) { localThis.mockGenerativeModel.generateContent(any<com.google.ai.client.generativeai.type.Content>()) }
     }
     
     @Test
@@ -181,9 +179,9 @@ class NetworkApiTestSuite {
         )
         
         testCases.forEach { (responseText, expectedError) ->
-            val mockResponse = mockk<GenerateContentResponse>()
+            val mockResponse = mockk<GenerateContentResponse>(relaxed = true)
             every { mockResponse.text } returns responseText
-            coEvery { localThis.mockGenerativeModel.generateContent(any()) } returns mockResponse
+            coEvery { localThis.mockGenerativeModel.generateContent(any<com.google.ai.client.generativeai.type.Content>()) } returns mockResponse
             
             // When - making API request
             val result = localThis.aiRepository.generateContent(
@@ -194,7 +192,7 @@ class NetworkApiTestSuite {
             // Then - should handle gracefully with error
             assertThat(result).isInstanceOf(AIResponseProcessingResult.Error::class.java)
             val errorResult = result as AIResponseProcessingResult.Error
-            assertThat(errorResult.userMessage).contains(expectedError)
+            assertThat(errorResult.message).contains(expectedError)
         }
     }
     
@@ -214,7 +212,7 @@ class NetworkApiTestSuite {
         )
         
         networkErrors.forEach { (exception, errorType) ->
-            coEvery { localThis.mockGenerativeModel.generateContent(any()) } throws exception
+            coEvery { localThis.mockGenerativeModel.generateContent(any<com.google.ai.client.generativeai.type.Content>()) } throws exception
             
             // When - making API request with network error
             val result = localThis.aiRepository.generateContent(
@@ -225,8 +223,8 @@ class NetworkApiTestSuite {
             // Then - should return appropriate error result
             assertThat(result).isInstanceOf(AIResponseProcessingResult.Error::class.java)
             val errorResult = result as AIResponseProcessingResult.Error
-            assertThat(errorResult.internalMessage).contains("AI request failed")
-            assertThat(errorResult.userMessage).isNotEmpty()
+            assertThat(errorResult.reason).contains("AI request failed")
+            assertThat(errorResult.message).isNotEmpty()
         }
     }
     
@@ -236,7 +234,7 @@ class NetworkApiTestSuite {
         val localThis = this@NetworkApiTestSuite.localThis
         val timeoutDuration = 5000L // 5 seconds
         
-        coEvery { localThis.mockGenerativeModel.generateContent(any()) } coAnswers {
+        coEvery { localThis.mockGenerativeModel.generateContent(any<com.google.ai.client.generativeai.type.Content>()) } coAnswers {
             delay(timeoutDuration + 1000) // Simulate longer than timeout
             throw TimeoutException("Request timed out")
         }
@@ -255,7 +253,7 @@ class NetworkApiTestSuite {
         // Then - should handle timeout appropriately
         assertThat(result).isInstanceOf(AIResponseProcessingResult.Error::class.java)
         val errorResult = result as AIResponseProcessingResult.Error
-        assertThat(errorResult.userMessage).contains("timeout", true)
+        assertThat(errorResult.message.lowercase()).contains("timeout")
         
         // Should not wait indefinitely
         assertThat(actualDuration).isLessThan(timeoutDuration + 2000)
@@ -267,7 +265,7 @@ class NetworkApiTestSuite {
         val localThis = this@NetworkApiTestSuite.localThis
         
         val rateLimitError = RuntimeException("Quota exceeded for this request")
-        coEvery { localThis.mockGenerativeModel.generateContent(any()) } throws rateLimitError
+        coEvery { localThis.mockGenerativeModel.generateContent(any<com.google.ai.client.generativeai.type.Content>()) } throws rateLimitError
         
         // When - making API request when rate limited
         val result = localThis.aiRepository.generateContent(
@@ -278,10 +276,10 @@ class NetworkApiTestSuite {
         // Then - should handle rate limiting gracefully
         assertThat(result).isInstanceOf(AIResponseProcessingResult.Error::class.java)
         val errorResult = result as AIResponseProcessingResult.Error
-        assertThat(errorResult.userMessage).contains("request")
+        assertThat(errorResult.message).contains("request")
         
         // Verify error was logged appropriately
-        coVerify(exactly = 1) { localThis.mockGenerativeModel.generateContent(any()) }
+        coVerify(exactly = 1) { localThis.mockGenerativeModel.generateContent(any<com.google.ai.client.generativeai.type.Content>()) }
     }
     
     // MARK: - Concurrent API Request Tests
@@ -294,9 +292,9 @@ class NetworkApiTestSuite {
         val delayPerRequest = 100L
         
         // Mock responses with slight delay to simulate real API
-        coEvery { localThis.mockGenerativeModel.generateContent(any()) } coAnswers {
+        coEvery { localThis.mockGenerativeModel.generateContent(any<com.google.ai.client.generativeai.type.Content>()) } coAnswers {
             delay(delayPerRequest)
-            val mockResponse = mockk<GenerateContentResponse>()
+            val mockResponse = mockk<GenerateContentResponse>(relaxed = true)
             every { mockResponse.text } returns "Concurrent response ${System.currentTimeMillis()}"
             mockResponse
         }
@@ -323,7 +321,7 @@ class NetworkApiTestSuite {
         assertThat(totalTime).isLessThan(sequentialTime / 2) // At least 50% improvement from concurrency
         
         // All requests should have been made
-        coVerify(exactly = requestCount) { localThis.mockGenerativeModel.generateContent(any()) }
+        coVerify(exactly = requestCount) { localThis.mockGenerativeModel.generateContent(any<com.google.ai.client.generativeai.type.Content>()) }
     }
     
     @Test
@@ -337,9 +335,9 @@ class NetworkApiTestSuite {
         val successCount = mutableListOf<Int>()
         
         // Mock successful responses
-        val mockResponse = mockk<GenerateContentResponse>()
+        val mockResponse = mockk<GenerateContentResponse>(relaxed = true)
         every { mockResponse.text } returns "Thread-safe response"
-        coEvery { localThis.mockGenerativeModel.generateContent(any()) } returns mockResponse
+        coEvery { localThis.mockGenerativeModel.generateContent(any<com.google.ai.client.generativeai.type.Content>()) } returns mockResponse
         
         // When - making highly concurrent requests
         repeat(threadCount) { threadId ->
@@ -376,7 +374,7 @@ class NetworkApiTestSuite {
         
         // All API calls should have been made
         coVerify(exactly = threadCount * requestsPerThread) { 
-            localThis.mockGenerativeModel.generateContent(any()) 
+            localThis.mockGenerativeModel.generateContent(any<com.google.ai.client.generativeai.type.Content>()) 
         }
     }
     
@@ -402,7 +400,7 @@ class NetworkApiTestSuite {
         localThis.recipeCacheDataSource.cacheRecipe(request, response)
         
         // Simulate offline condition
-        coEvery { localThis.mockGenerativeModel.generateContent(any()) } throws 
+        coEvery { localThis.mockGenerativeModel.generateContent(any<com.google.ai.client.generativeai.type.Content>()) } throws 
             UnknownHostException("Network is unreachable")
         
         // When - attempting API request while offline
@@ -429,12 +427,12 @@ class NetworkApiTestSuite {
         val successResponses = 6
         val failureResponses = attemptCount - successResponses
         
-        val mockResponse = mockk<GenerateContentResponse>()
+        val mockResponse = mockk<GenerateContentResponse>(relaxed = true)
         every { mockResponse.text } returns "Intermittent success response"
         
         // Setup alternating success/failure pattern
         var callCount = 0
-        coEvery { localThis.mockGenerativeModel.generateContent(any()) } coAnswers {
+        coEvery { localThis.mockGenerativeModel.generateContent(any<com.google.ai.client.generativeai.type.Content>()) } coAnswers {
             callCount++
             if (callCount % 2 == 0 && callCount <= successResponses * 2) {
                 mockResponse
@@ -462,7 +460,7 @@ class NetworkApiTestSuite {
         assertThat(failures).isEqualTo(failureResponses)
         
         // All requests should have been attempted
-        coVerify(exactly = attemptCount) { localThis.mockGenerativeModel.generateContent(any()) }
+        coVerify(exactly = attemptCount) { localThis.mockGenerativeModel.generateContent(any<com.google.ai.client.generativeai.type.Content>()) }
     }
     
     // MARK: - API Response Validation Tests
@@ -480,9 +478,9 @@ class NetworkApiTestSuite {
         )
         
         maliciousResponses.forEach { (maliciousContent, testType) ->
-            val mockResponse = mockk<GenerateContentResponse>()
+            val mockResponse = mockk<GenerateContentResponse>(relaxed = true)
             every { mockResponse.text } returns maliciousContent
-            coEvery { localThis.mockGenerativeModel.generateContent(any()) } returns mockResponse
+            coEvery { localThis.mockGenerativeModel.generateContent(any<com.google.ai.client.generativeai.type.Content>()) } returns mockResponse
             
             // When - receiving potentially malicious response
             val result = localThis.aiRepository.generateContent(
@@ -501,9 +499,17 @@ class NetworkApiTestSuite {
                     // Warning should be provided for questionable content
                     assertThat(result.warning).isNotEmpty()
                 }
+                is AIResponseProcessingResult.Warning -> {
+                    // Warning for questionable content
+                    assertThat(result.warning).isNotEmpty()
+                }
+                is AIResponseProcessingResult.Blocked -> {
+                    // Blocked for dangerous content
+                    assertThat(result.message).contains("blocked")
+                }
                 is AIResponseProcessingResult.Error -> {
                     // Error for clearly malicious content
-                    assertThat(result.userMessage).contains("content")
+                    assertThat(result.message).contains("content")
                 }
             }
         }
@@ -523,9 +529,9 @@ class NetworkApiTestSuite {
         )
         
         malformedResponses.forEach { malformedContent ->
-            val mockResponse = mockk<GenerateContentResponse>()
+            val mockResponse = mockk<GenerateContentResponse>(relaxed = true)
             every { mockResponse.text } returns malformedContent
-            coEvery { localThis.mockGenerativeModel.generateContent(any()) } returns mockResponse
+            coEvery { localThis.mockGenerativeModel.generateContent(any<com.google.ai.client.generativeai.type.Content>()) } returns mockResponse
             
             // When - receiving malformed response
             val result = localThis.aiRepository.generateContent(
@@ -541,13 +547,21 @@ class NetworkApiTestSuite {
                     assertThat(result.response).doesNotContain("\u0000")
                     assertThat(result.response.length).isLessThan(100000) // Reasonable length
                 }
-                is AIResponseProcessingResult.Error -> {
-                    // Error for completely unusable content
-                    assertThat(result.userMessage).isNotEmpty()
-                }
                 is AIResponseProcessingResult.SuccessWithWarning -> {
                     // Warning for questionable but usable content
                     assertThat(result.warning).isNotEmpty()
+                }
+                is AIResponseProcessingResult.Warning -> {
+                    // Warning for questionable content
+                    assertThat(result.warning).isNotEmpty()
+                }
+                is AIResponseProcessingResult.Blocked -> {
+                    // Blocked for dangerous content
+                    assertThat(result.message).contains("blocked")
+                }
+                is AIResponseProcessingResult.Error -> {
+                    // Error for completely unusable content
+                    assertThat(result.message).isNotEmpty()
                 }
             }
         }
@@ -562,11 +576,11 @@ class NetworkApiTestSuite {
         val loadDuration = 5000L // 5 seconds
         val maxRequestsPerSecond = 10
         
-        val mockResponse = mockk<GenerateContentResponse>()
+        val mockResponse = mockk<GenerateContentResponse>(relaxed = true)
         every { mockResponse.text } returns "Load test response"
         
         // Simulate realistic API response time
-        coEvery { localThis.mockGenerativeModel.generateContent(any()) } coAnswers {
+        coEvery { localThis.mockGenerativeModel.generateContent(any<com.google.ai.client.generativeai.type.Content>()) } coAnswers {
             delay(100) // 100ms simulated API response time
             mockResponse
         }
@@ -584,7 +598,7 @@ class NetworkApiTestSuite {
             results.add(result)
             
             // Rate limiting to avoid overwhelming
-            delay(1000 / maxRequestsPerSecond)
+            delay((1000 / maxRequestsPerSecond).toLong())
         }
         
         val endTime = System.currentTimeMillis()
@@ -617,5 +631,29 @@ class NetworkApiTestSuite {
             instructions = listOf("step1", "step2"),
             source = RecipeSource.AI_GENERATED
         )
+    }
+    
+    private fun createTestResponse(recipe: Recipe): com.ravidor.forksure.data.model.RecipeAnalysisResponse {
+        return com.ravidor.forksure.data.model.RecipeAnalysisResponse(
+            recipe = recipe,
+            rawResponse = "Test response for ${recipe.title}",
+            processingTime = 100L,
+            success = true,
+            errorMessage = null,
+            warnings = emptyList()
+        )
+    }
+    
+    private fun generateImageHash(bitmap: Bitmap): String {
+        // Simple hash generation for testing
+        val width = bitmap.width
+        val height = bitmap.height
+        val config = bitmap.config?.name ?: "UNKNOWN"
+        return "test_hash_${width}x${height}_${config}_${System.currentTimeMillis()}"
+    }
+    
+    private fun getMemoryUsage(): Long {
+        val runtime = Runtime.getRuntime()
+        return runtime.totalMemory() - runtime.freeMemory()
     }
 } 
