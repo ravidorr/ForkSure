@@ -13,7 +13,7 @@
     <string name="take_photo">📷 Prendre une Photo</string>
     <string name="upload_photo">📤 Télécharger une Photo</string>
     <string name="take_another_photo">📷 Prendre une Autre Photo</string>
-    <string name="back_to_main_screen">⬅️ Retour à l'Écran Principal</string>
+    <string name="back_to_main_screen">⬅️ Retour à l\'Écran Principal</string>
     <string name="action_retry">🔄 Réessayer</string>
     <string name="action_dismiss">❌ Ignorer</string>
     <string name="action_print">🖨️ Imprimer</string>
@@ -65,7 +65,6 @@
     <string name="accessibility_main_screen">Écran principal de l\'assistant de pâtisserie ForkSure</string>
     <string name="accessibility_take_photo_description">Bouton prendre une photo. Ouvre la caméra pour capturer des produits de boulangerie</string>
     <string name="accessibility_upload_photo_description">Bouton télécharger une photo. Ouvre la galerie pour sélectionner une photo existante de produits de boulangerie</string>
-    <string name="accessibility_back_from_camera">Bouton retour depuis la caméra. Retourner à l'écran principal sans prendre de photo</string>
     <string name="accessibility_sample_image_selected">%1$s image d\'échantillon, actuellement sélectionnée pour l\'analyse</string>
     <string name="accessibility_sample_image_not_selected">%1$s image d\'échantillon, touchez pour sélectionner pour l\'analyse</string>
     <string name="accessibility_analyze_button_enabled">Bouton analyser. Démarrer l\'analyse IA de l\'image sélectionnée</string>

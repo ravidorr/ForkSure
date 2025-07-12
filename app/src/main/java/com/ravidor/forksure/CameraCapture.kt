@@ -182,6 +182,8 @@ private fun CameraPreview(
         }
     }
 
+    val backFromCameraDesc = stringResource(R.string.accessibility_back_from_camera)
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -208,7 +210,7 @@ private fun CameraPreview(
                 .align(Alignment.TopStart)
                 .padding(16.dp)
                 .semantics {
-                    contentDescription = stringResource(R.string.accessibility_back_from_camera)
+                    contentDescription = backFromCameraDesc
                 }
         ) {
             Text(
