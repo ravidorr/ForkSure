@@ -89,6 +89,15 @@ class IntegrationTestSuite {
         val testBitmap = createTestBitmap()
         val testCoroutineScheduler = TestCoroutineScheduler()
         
+        // Setup default user preferences flow to prevent NoSuchElementException
+        val defaultUserPreferences = UserPreferences()
+        every { mockPreferencesDataSource.userPreferences } returns flowOf(defaultUserPreferences)
+        
+        // Setup other common mock behaviors
+        coEvery { mockPreferencesDataSource.saveUserPreferences(any()) } just Runs
+        coEvery { mockPreferencesDataSource.incrementAnalysisCount() } just Runs
+        coEvery { mockPreferencesDataSource.updateCacheSettings(any(), any(), any()) } just Runs
+        
         localThis = TestFixtures(
             context = context,
             mockAIRepository = mockAIRepository,
