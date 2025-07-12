@@ -206,10 +206,10 @@ class Phase3TestSuite {
         )
         
         // Then - quality standards should be met
-        assertThat(qualityMetrics["Test file count"]).isEqualTo(4)
-        assertThat(qualityMetrics["Expected test methods"]).isAtLeast(80)
-        assertThat(qualityMetrics["Expected lines of code"]).isAtLeast(1500)
-        assertThat(qualityMetrics["Coverage areas"]).isAtLeast(25)
+        assertThat(qualityMetrics["Test file count"] as Int).isEqualTo(4)
+        assertThat(qualityMetrics["Expected test methods"] as Int).isAtLeast(80)
+        assertThat(qualityMetrics["Expected lines of code"] as Int).isAtLeast(1500)
+        assertThat(qualityMetrics["Coverage areas"] as Int).isAtLeast(25)
         assertThat(qualityMetrics["Integration points"]).isEqualTo(6)
         assertThat(qualityMetrics["Testing patterns used"] as List<*>).hasSize(4)
     }

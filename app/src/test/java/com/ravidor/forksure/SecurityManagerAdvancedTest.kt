@@ -137,7 +137,7 @@ class SecurityManagerAdvancedTest {
             val result = SecurityManager.validateInput(input)
             
             // Then
-            assertThat(result).isInstanceOf(expectedType)
+            assertThat(result).isInstanceOf(expectedType as Class<*>)
             if (result is InputValidationResult.Valid && input.isBlank()) {
                 assertThat(result.sanitizedInput).isEmpty()
             }
