@@ -33,6 +33,9 @@ import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 import java.util.Date
 import kotlin.system.measureTimeMillis
 
@@ -49,6 +52,8 @@ import kotlin.system.measureTimeMillis
  * Tests the coordination and effectiveness of all advanced testing components
  * and validates that the comprehensive testing strategy is complete and robust.
  */
+@RunWith(RobolectricTestRunner::class)
+@Config(sdk = [34])
 @ExperimentalCoroutinesApi
 class TestSuiteCoordinationValidationSuite {
 

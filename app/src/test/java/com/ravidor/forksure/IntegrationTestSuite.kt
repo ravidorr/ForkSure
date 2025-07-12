@@ -36,6 +36,9 @@ import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 import java.util.Date
 
 /**
@@ -49,6 +52,8 @@ import java.util.Date
  * - User preference integration with app behavior
  * - Security and caching integration scenarios
  */
+@RunWith(RobolectricTestRunner::class)
+@Config(sdk = [34])
 @ExperimentalCoroutinesApi
 class IntegrationTestSuite {
 
