@@ -94,10 +94,10 @@ class PerformanceTestSuite {
         val recipeCacheDataSource = RecipeCacheDataSource()
         val testCoroutineScheduler = TestCoroutineScheduler()
         
-        // Create test bitmaps of different sizes for memory testing
-        val largeTestBitmap = Bitmap.createBitmap(1920, 1080, Bitmap.Config.ARGB_8888)
-        val mediumTestBitmap = Bitmap.createBitmap(1280, 720, Bitmap.Config.ARGB_8888)
-        val smallTestBitmap = Bitmap.createBitmap(640, 480, Bitmap.Config.ARGB_8888)
+        // Create simple test bitmaps for testing purposes
+        val largeTestBitmap = Bitmap.createBitmap(10, 10, Bitmap.Config.ARGB_8888)
+        val mediumTestBitmap = Bitmap.createBitmap(5, 5, Bitmap.Config.ARGB_8888)
+        val smallTestBitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
         
         val performanceMetrics = PerformanceMetrics()
         

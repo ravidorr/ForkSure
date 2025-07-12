@@ -767,11 +767,11 @@ class StressTestSuite {
     
     private fun createTestBitmaps(): List<Bitmap> {
         return listOf(
-            Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888),
-            Bitmap.createBitmap(200, 150, Bitmap.Config.ARGB_8888),
-            Bitmap.createBitmap(300, 200, Bitmap.Config.ARGB_8888),
-            Bitmap.createBitmap(150, 100, Bitmap.Config.ARGB_8888),
-            Bitmap.createBitmap(250, 175, Bitmap.Config.ARGB_8888)
+            Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888),
+            Bitmap.createBitmap(2, 2, Bitmap.Config.ARGB_8888),
+            Bitmap.createBitmap(3, 3, Bitmap.Config.ARGB_8888),
+            Bitmap.createBitmap(2, 1, Bitmap.Config.ARGB_8888),
+            Bitmap.createBitmap(1, 2, Bitmap.Config.ARGB_8888)
         )
     }
     

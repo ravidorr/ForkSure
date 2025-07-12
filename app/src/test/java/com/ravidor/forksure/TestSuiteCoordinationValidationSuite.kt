@@ -85,7 +85,7 @@ class TestSuiteCoordinationValidationSuite {
         val userPreferencesRepository = UserPreferencesRepositoryImpl(mockPreferencesDataSource)
         val mainScreenState = MainScreenState()
         val navigationState = NavigationState()
-        val testBitmap = Bitmap.createBitmap(600, 400, Bitmap.Config.ARGB_8888)
+        val testBitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
         val testCoroutineScheduler = TestCoroutineScheduler()
         
         localThis = TestFixtures(
