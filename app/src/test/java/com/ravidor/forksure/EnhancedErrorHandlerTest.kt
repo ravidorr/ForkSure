@@ -45,6 +45,36 @@ class EnhancedErrorHandlerTest {
             lastInputValidationResult = null
         )
         
+        // Mock all string resources
+        every { mockContext.getString(R.string.error_title_security) } returns "Security Error"
+        every { mockContext.getString(R.string.error_title_network) } returns "Network Error"
+        every { mockContext.getString(R.string.error_title_rate_limit) } returns "Rate Limit Exceeded"
+        every { mockContext.getString(R.string.error_title_input) } returns "Input Error"
+        every { mockContext.getString(R.string.error_title_ai_service) } returns "AI Service Error"
+        every { mockContext.getString(R.string.error_title_system) } returns "System Error"
+        every { mockContext.getString(R.string.error_title_unexpected) } returns "Unexpected Error"
+        
+        every { mockContext.getString(R.string.error_security_detected) } returns "A security issue was detected. Please ensure you're using the app in a secure environment."
+        every { mockContext.getString(R.string.error_no_internet_connection) } returns "No internet connection. Please check your network and try again."
+        every { mockContext.getString(R.string.error_request_timeout) } returns "Request timed out. Please check your connection and try again."
+        every { mockContext.getString(R.string.error_network_general) } returns "Network error occurred. Please check your internet connection."
+        every { mockContext.getString(R.string.error_rate_limit_message) } returns "You've made too many requests. Please wait before trying again."
+        every { mockContext.getString(R.string.error_input_too_long) } returns "Your input is too long. Please shorten your request and try again."
+        every { mockContext.getString(R.string.error_input_invalid) } returns "Invalid input detected. Please check your request and try again."
+        every { mockContext.getString(R.string.error_ai_service_issue) } returns "The AI service encountered an issue processing your request."
+        every { mockContext.getString(R.string.error_system_general) } returns "A system error occurred. The app may need to be restarted."
+        every { mockContext.getString(R.string.error_unexpected_general) } returns "An unexpected error occurred. Please try again."
+        
+        every { mockContext.getString(R.string.suggestion_restart_or_contact) } returns "Try restarting the app or contact support if the issue persists."
+        every { mockContext.getString(R.string.suggestion_check_connection_retry) } returns "Check your internet connection and try again."
+        every { mockContext.getString(R.string.suggestion_wait_minutes) } returns "Wait a few minutes before making another request."
+        every { mockContext.getString(R.string.suggestion_modify_input) } returns "Please modify your input and try again."
+        every { mockContext.getString(R.string.suggestion_try_different_prompt) } returns "Please try again with a different prompt or contact support."
+        every { mockContext.getString(R.string.suggestion_restart_app) } returns "Please restart the app. If the problem persists, contact support."
+        every { mockContext.getString(R.string.suggestion_contact_support) } returns "If the problem persists, please contact support."
+        
+        every { mockContext.getString(R.string.ai_response_warning) } returns "The AI response may contain inaccuracies. Please verify the information with reliable sources."
+        
         // Mock SecurityManager for controlled testing
         mockkObject(SecurityManager)
         every { SecurityManager.checkSecurityEnvironment(any()) } returns SecurityEnvironmentResult.Secure
@@ -220,7 +250,7 @@ class EnhancedErrorHandlerTest {
         
         validResponses.forEach { response ->
             // When
-            val result = EnhancedErrorHandler.processAIResponse(response)
+            val result = EnhancedErrorHandler.processAIResponse(localThis.mockContext, response)
             localThis.lastAIProcessingResult = result
             
             // Then
@@ -238,7 +268,7 @@ class EnhancedErrorHandlerTest {
             AIResponseValidationResult.RequiresWarning(warningResponse, "Food safety reminder")
         
         // When
-        val result = EnhancedErrorHandler.processAIResponse(warningResponse)
+        val result = EnhancedErrorHandler.processAIResponse(localThis.mockContext, warningResponse)
         localThis.lastAIProcessingResult = result
         
         // Then
@@ -256,7 +286,7 @@ class EnhancedErrorHandlerTest {
             AIResponseValidationResult.Suspicious("Unusual content", "Please verify this information")
         
         // When
-        val result = EnhancedErrorHandler.processAIResponse(suspiciousResponse)
+        val result = EnhancedErrorHandler.processAIResponse(localThis.mockContext, suspiciousResponse)
         localThis.lastAIProcessingResult = result
         
         // Then
@@ -275,7 +305,7 @@ class EnhancedErrorHandlerTest {
             AIResponseValidationResult.Unsafe("Dangerous instruction", "Unsafe cooking temperature")
         
         // When
-        val result = EnhancedErrorHandler.processAIResponse(unsafeResponse)
+        val result = EnhancedErrorHandler.processAIResponse(localThis.mockContext, unsafeResponse)
         localThis.lastAIProcessingResult = result
         
         // Then
@@ -293,7 +323,7 @@ class EnhancedErrorHandlerTest {
             AIResponseValidationResult.Invalid("Response too long", "Content exceeds limits")
         
         // When
-        val result = EnhancedErrorHandler.processAIResponse(invalidResponse)
+        val result = EnhancedErrorHandler.processAIResponse(localThis.mockContext, invalidResponse)
         localThis.lastAIProcessingResult = result
         
         // Then
@@ -359,7 +389,10 @@ class EnhancedErrorHandlerTest {
     fun `handleError should check security environment and log issues`() = runTest {
         // Given
         every { SecurityManager.checkSecurityEnvironment(any()) } returns 
-            SecurityEnvironmentResult.Insecure(listOf("Debug build detected", "Root access found"))
+            SecurityEnvironmentResult.Insecure(
+                reason = "Test security issues",
+                details = "debug, emulator"
+            )
         
         // When
         val result = EnhancedErrorHandler.handleError(
@@ -477,7 +510,7 @@ class EnhancedErrorHandlerTest {
         
         edgeCaseResponses.forEach { response ->
             // When
-            val result = EnhancedErrorHandler.processAIResponse(response)
+            val result = EnhancedErrorHandler.processAIResponse(localThis.mockContext, response)
             localThis.lastAIProcessingResult = result
             
             // Then - Should handle gracefully

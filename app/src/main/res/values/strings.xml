@@ -11,6 +11,7 @@
     <!-- Button strings -->
     <string name="action_go">🔍 Analyze</string>
     <string name="take_photo">📷 Take Photo</string>
+    <string name="upload_photo">📤 Upload Photo</string>
     <string name="take_another_photo">📷 Take Another Photo</string>
     <string name="action_retry">🔄 Retry</string>
     <string name="action_dismiss">✕ Dismiss</string>
@@ -46,8 +47,9 @@
     <string name="accessibility_share_to_keep_button">Save to Google Keep button. Save the recipe to Google Keep notes</string>
     
     <!-- Essential accessibility strings for main features -->
-    <string name="accessibility_main_screen">ForkSure baking assistant main screen</string>
+    <string name="accessibility_main_screen">Main ForkSure baking assistant screen</string>
     <string name="accessibility_take_photo_description">Take photo button. Opens camera to capture baked goods</string>
+    <string name="accessibility_upload_photo_description">Upload photo button. Opens gallery to select existing photo of baked goods</string>
     <string name="accessibility_sample_image_selected">%1$s sample image, currently selected for analysis</string>
     <string name="accessibility_sample_image_not_selected">%1$s sample image, tap to select for analysis</string>
     <string name="accessibility_analyze_button_enabled">Analyze button. Start AI analysis of selected image</string>
@@ -66,6 +68,7 @@
     <!-- Success Messages -->
     <string name="success_recipe_generated">Recipe generated successfully! 🎉</string>
     <string name="success_photo_captured">Photo captured successfully!</string>
+    <string name="success_photo_uploaded">Photo uploaded successfully!</string>
     <string name="success_share_completed">Recipe shared successfully</string>
     <string name="success_print_started">Recipe sent to printer</string>
     <string name="success_report_submitted">Thank you for your report. We will review the content.</string>
@@ -74,20 +77,57 @@
     <!-- Error Messages -->
     <string name="error_analysis_failed">Analysis failed. Please try again.</string>
     <string name="error_photo_capture_failed">Failed to capture photo. Please try again.</string>
+    <string name="error_photo_upload_failed">Failed to upload photo. Please try again.</string>
     <string name="error_share_failed">Unable to share recipe. Please try again.</string>
     <string name="error_print_failed">Unable to print recipe. Please try again.</string>
     <string name="error_print_not_available">Printing is not available on this device</string>
     <string name="error_report_submission_failed">Failed to submit report. Please try again.</string>
     <string name="error_network_unavailable">No internet connection. Please check your network and try again.</string>
-    <string name="error_camera_permission_denied">Camera permission is required to take photos</string>
+    <string name="error_camera_permission_denied">Camera permission denied</string>
+    <string name="error_gallery_permission_denied">Gallery permission denied</string>
+    <string name="error_no_photo_selected">No photo selected</string>
+    <string name="error_invalid_image_format">Invalid image format</string>
+    <string name="error_server_unavailable">Service temporarily unavailable. Please try again later.</string>
+    <string name="error_rate_limit_exceeded">Too many requests. Please wait a moment before trying again.</string>
+    <string name="error_content_blocked">Content was blocked by safety filters. Please try a different image.</string>
+    <string name="error_unexpected">An unexpected error occurred. Please try again.</string>
     <string name="camera_permission_required">Camera permission is required to take photos of your baked goods.</string>
     <string name="camera_permission_settings_hint">Please grant camera permission in your device settings if the permission dialog didn\'t appear.</string>
     <string name="camera_initializing">Initializing camera…</string>
     <string name="camera_capturing">Capturing photo…</string>
     <string name="error_image_too_large">Image is too large. Please try a smaller image.</string>
-    <string name="error_invalid_image_format">Invalid image format. Please try a different image.</string>
-    <string name="error_server_unavailable">Service temporarily unavailable. Please try again later.</string>
-    <string name="error_rate_limit_exceeded">Too many requests. Please wait a moment before trying again.</string>
-    <string name="error_content_blocked">Content was blocked by safety filters. Please try a different image.</string>
-    <string name="error_unexpected">An unexpected error occurred. Please try again.</string>
+    
+    <!-- Enhanced Error Handler strings -->
+    <!-- Error titles -->
+    <string name="error_title_security">Security Error</string>
+    <string name="error_title_network">Network Error</string>
+    <string name="error_title_rate_limit">Rate Limit Exceeded</string>
+    <string name="error_title_input">Input Error</string>
+    <string name="error_title_ai_service">AI Service Error</string>
+    <string name="error_title_system">System Error</string>
+    <string name="error_title_unexpected">Unexpected Error</string>
+    
+    <!-- Error messages -->
+    <string name="error_security_detected">A security issue was detected. Please ensure you\'re using the app in a secure environment.</string>
+    <string name="error_no_internet_connection">No internet connection. Please check your network and try again.</string>
+    <string name="error_request_timeout">Request timed out. Please check your connection and try again.</string>
+    <string name="error_network_general">Network error occurred. Please check your internet connection.</string>
+    <string name="error_rate_limit_message">You\'ve made too many requests. Please wait before trying again.</string>
+    <string name="error_input_too_long">Your input is too long. Please shorten your request and try again.</string>
+    <string name="error_input_invalid">Invalid input detected. Please check your request and try again.</string>
+    <string name="error_ai_service_issue">The AI service encountered an issue processing your request.</string>
+    <string name="error_system_general">A system error occurred. The app may need to be restarted.</string>
+    <string name="error_unexpected_general">An unexpected error occurred. Please try again.</string>
+    
+    <!-- Error suggestions -->
+    <string name="suggestion_restart_or_contact">Try restarting the app or contact support if the issue persists.</string>
+    <string name="suggestion_check_connection_retry">Check your internet connection and try again.</string>
+    <string name="suggestion_wait_minutes">Wait a few minutes before making another request.</string>
+    <string name="suggestion_modify_input">Please modify your input and try again.</string>
+    <string name="suggestion_try_different_prompt">Please try again with a different prompt or contact support.</string>
+    <string name="suggestion_restart_app">Please restart the app. If the problem persists, contact support.</string>
+    <string name="suggestion_contact_support">If the problem persists, please contact support.</string>
+    
+    <!-- AI Response validation -->
+    <string name="ai_response_warning">The AI response may contain inaccuracies. Please verify the information with reliable sources.</string>
 </resources>

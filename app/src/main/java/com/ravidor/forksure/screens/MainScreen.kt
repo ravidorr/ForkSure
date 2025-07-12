@@ -260,7 +260,8 @@ private fun MainScreenContent(
 
             // Camera section
             CameraSection(
-                onTakePhoto = actions::onNavigateToCamera
+                onTakePhoto = actions::onNavigateToCamera,
+                onPhotoUploaded = actions::onCapturedImageUpdated
             )
 
             // Show captured image if available

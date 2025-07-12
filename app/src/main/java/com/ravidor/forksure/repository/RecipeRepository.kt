@@ -11,6 +11,7 @@ import com.ravidor.forksure.data.source.local.RecipeCacheDataSource
 import com.ravidor.forksure.SecurityManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 import java.security.MessageDigest
@@ -44,109 +45,107 @@ class RecipeRepositoryImpl @Inject constructor(
     override suspend fun analyzeRecipe(bitmap: Bitmap, prompt: String): Flow<RecipeAnalysisResponse> = flow {
         val startTime = System.currentTimeMillis()
         
-        try {
-            // Generate image hash for caching
-            val imageHash = generateImageHash(bitmap)
-            val request = RecipeAnalysisRequest(
-                imageHash = imageHash,
-                prompt = prompt
+        // Generate image hash for caching
+        val imageHash = generateImageHash(bitmap)
+        val request = RecipeAnalysisRequest(
+            imageHash = imageHash,
+            prompt = prompt
+        )
+        
+        // Check cache first
+        val cachedRecipe = cacheDataSource.getCachedRecipe(request)
+        if (cachedRecipe != null) {
+            val response = RecipeAnalysisResponse(
+                recipe = cachedRecipe.copy(source = RecipeSource.CACHED),
+                rawResponse = "Cached result",
+                processingTime = System.currentTimeMillis() - startTime,
+                success = true
             )
-            
-            // Check cache first
-            val cachedRecipe = cacheDataSource.getCachedRecipe(request)
-            if (cachedRecipe != null) {
+            emit(response)
+            return@flow
+        }
+        
+        // Perform AI analysis
+        when (val aiResult = aiRepository.generateContent(bitmap, prompt)) {
+            is AIResponseProcessingResult.Success -> {
+                val recipe = parseAIResponse(aiResult.response, imageHash)
                 val response = RecipeAnalysisResponse(
-                    recipe = cachedRecipe.copy(source = RecipeSource.CACHED),
-                    rawResponse = "Cached result",
+                    recipe = recipe,
+                    rawResponse = aiResult.response,
                     processingTime = System.currentTimeMillis() - startTime,
                     success = true
                 )
+                
+                // Cache the result
+                cacheDataSource.cacheRecipe(request, response)
+                
                 emit(response)
-                return@flow
             }
             
-            // Perform AI analysis
-            when (val aiResult = aiRepository.generateContent(bitmap, prompt)) {
-                is AIResponseProcessingResult.Success -> {
-                    val recipe = parseAIResponse(aiResult.response, imageHash)
-                    val response = RecipeAnalysisResponse(
-                        recipe = recipe,
-                        rawResponse = aiResult.response,
-                        processingTime = System.currentTimeMillis() - startTime,
-                        success = true
-                    )
-                    
-                    // Cache the result
-                    cacheDataSource.cacheRecipe(request, response)
-                    
-                    emit(response)
-                }
+            is AIResponseProcessingResult.SuccessWithWarning -> {
+                val recipe = parseAIResponse(aiResult.response, imageHash)
+                val response = RecipeAnalysisResponse(
+                    recipe = recipe,
+                    rawResponse = aiResult.response,
+                    processingTime = System.currentTimeMillis() - startTime,
+                    success = true,
+                    warnings = listOf(aiResult.warning)
+                )
                 
-                is AIResponseProcessingResult.SuccessWithWarning -> {
-                    val recipe = parseAIResponse(aiResult.response, imageHash)
-                    val response = RecipeAnalysisResponse(
-                        recipe = recipe,
-                        rawResponse = aiResult.response,
-                        processingTime = System.currentTimeMillis() - startTime,
-                        success = true,
-                        warnings = listOf(aiResult.warning)
-                    )
-                    
-                    // Cache the result
-                    cacheDataSource.cacheRecipe(request, response)
-                    
-                    emit(response)
-                }
+                // Cache the result
+                cacheDataSource.cacheRecipe(request, response)
                 
-                is AIResponseProcessingResult.Warning -> {
-                    val recipe = parseAIResponse(aiResult.response, imageHash)
-                    val response = RecipeAnalysisResponse(
-                        recipe = recipe,
-                        rawResponse = aiResult.response,
-                        processingTime = System.currentTimeMillis() - startTime,
-                        success = true,
-                        warnings = listOf(aiResult.warning)
-                    )
-                    
-                    // Cache the result
-                    cacheDataSource.cacheRecipe(request, response)
-                    
-                    emit(response)
-                }
-                
-                is AIResponseProcessingResult.Error -> {
-                    val response = RecipeAnalysisResponse(
-                        recipe = null,
-                        rawResponse = aiResult.message,
-                        processingTime = System.currentTimeMillis() - startTime,
-                        success = false,
-                        errorMessage = aiResult.message
-                    )
-                    emit(response)
-                }
-                
-                is AIResponseProcessingResult.Blocked -> {
-                    val response = RecipeAnalysisResponse(
-                        recipe = null,
-                        rawResponse = aiResult.message,
-                        processingTime = System.currentTimeMillis() - startTime,
-                        success = false,
-                        errorMessage = "Content blocked: ${aiResult.message}"
-                    )
-                    emit(response)
-                }
+                emit(response)
             }
             
-        } catch (e: Exception) {
-            val response = RecipeAnalysisResponse(
-                recipe = null,
-                rawResponse = "",
-                processingTime = System.currentTimeMillis() - startTime,
-                success = false,
-                errorMessage = "Analysis failed: ${e.message}"
-            )
-            emit(response)
+            is AIResponseProcessingResult.Warning -> {
+                val recipe = parseAIResponse(aiResult.response, imageHash)
+                val response = RecipeAnalysisResponse(
+                    recipe = recipe,
+                    rawResponse = aiResult.response,
+                    processingTime = System.currentTimeMillis() - startTime,
+                    success = true,
+                    warnings = listOf(aiResult.warning)
+                )
+                
+                // Cache the result
+                cacheDataSource.cacheRecipe(request, response)
+                
+                emit(response)
+            }
+            
+            is AIResponseProcessingResult.Error -> {
+                val response = RecipeAnalysisResponse(
+                    recipe = null,
+                    rawResponse = aiResult.message,
+                    processingTime = System.currentTimeMillis() - startTime,
+                    success = false,
+                    errorMessage = aiResult.message
+                )
+                emit(response)
+            }
+            
+            is AIResponseProcessingResult.Blocked -> {
+                val response = RecipeAnalysisResponse(
+                    recipe = null,
+                    rawResponse = aiResult.message,
+                    processingTime = System.currentTimeMillis() - startTime,
+                    success = false,
+                    errorMessage = "Content blocked: ${aiResult.message}"
+                )
+                emit(response)
+            }
         }
+    }.catch { e ->
+        // Use Flow.catch() operator for proper exception handling
+        val response = RecipeAnalysisResponse(
+            recipe = null,
+            rawResponse = "",
+            processingTime = System.currentTimeMillis(),
+            success = false,
+            errorMessage = "Analysis failed: ${e.message}"
+        )
+        emit(response)
     }
     
     override suspend fun getCachedRecipes(): List<Recipe> {

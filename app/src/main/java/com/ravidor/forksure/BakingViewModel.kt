@@ -45,7 +45,7 @@ class BakingViewModel @Inject constructor(
                 // 1. Check security environment
                 val securityCheck = securityRepository.checkSecurityEnvironment()
                 if (securityCheck is SecurityEnvironmentResult.Insecure) {
-                    Log.w(TAG, "Security issues detected: ${securityCheck.issues}")
+                    Log.w(TAG, "Security issues detected: ${securityCheck.details}")
                     _uiState.value = UiState.Error(
                         "Security validation failed. Please ensure you're using the app in a secure environment.",
                         ErrorType.UNKNOWN,

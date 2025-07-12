@@ -11,6 +11,7 @@
     <!-- Button strings -->
     <string name="action_go">🔍 Analizar</string>
     <string name="take_photo">📷 Tomar Foto</string>
+    <string name="upload_photo">📤 Subir Foto</string>
     <string name="take_another_photo">📷 Tomar Otra Foto</string>
     <string name="action_retry">🔄 Reintentar</string>
     <string name="action_dismiss">✕ Descartar</string>
@@ -46,8 +47,9 @@
     <string name="accessibility_share_to_keep_button">Botón de guardar en Google Keep. Guardar la receta en notas de Google Keep</string>
     
     <!-- Essential accessibility strings for main features -->
-    <string name="accessibility_main_screen">Pantalla principal del asistente de horneado ForkSure</string>
-    <string name="accessibility_take_photo_description">Botón de tomar foto. Abre la cámara para capturar productos horneados</string>
+    <string name="accessibility_main_screen">Pantalla principal del asistente de repostería ForkSure</string>
+    <string name="accessibility_take_photo_description">Botón tomar foto. Abre la cámara para capturar productos horneados</string>
+    <string name="accessibility_upload_photo_description">Botón subir foto. Abre la galería para seleccionar una foto existente de productos horneados</string>
     <string name="accessibility_sample_image_selected">%1$s imagen de muestra, actualmente seleccionada para análisis</string>
     <string name="accessibility_sample_image_not_selected">%1$s imagen de muestra, toca para seleccionar para análisis</string>
     <string name="accessibility_analyze_button_enabled">Botón de analizar. Iniciar análisis de IA de la imagen seleccionada</string>
@@ -90,4 +92,38 @@
     <string name="error_rate_limit_exceeded">Demasiadas solicitudes. Por favor espera un momento antes de intentar de nuevo.</string>
     <string name="error_content_blocked">El contenido fue bloqueado por filtros de seguridad. Por favor intenta con una imagen diferente.</string>
     <string name="error_unexpected">Ocurrió un error inesperado. Por favor, inténtalo de nuevo.</string>
+    
+    <!-- Enhanced Error Handler strings -->
+    <!-- Error titles -->
+    <string name="error_title_security">Error de Seguridad</string>
+    <string name="error_title_network">Error de Red</string>
+    <string name="error_title_rate_limit">Límite de Velocidad Excedido</string>
+    <string name="error_title_input">Error de Entrada</string>
+    <string name="error_title_ai_service">Error del Servicio de IA</string>
+    <string name="error_title_system">Error del Sistema</string>
+    <string name="error_title_unexpected">Error Inesperado</string>
+    
+    <!-- Error messages -->
+    <string name="error_security_detected">Se detectó un problema de seguridad. Por favor asegúrate de que estés usando la aplicación en un entorno seguro.</string>
+    <string name="error_no_internet_connection">Sin conexión a internet. Por favor verifica tu red e inténtalo de nuevo.</string>
+    <string name="error_request_timeout">Tiempo de espera agotado. Por favor verifica tu conexión e inténtalo de nuevo.</string>
+    <string name="error_network_general">Error de red ocurrido. Por favor verifica tu conexión a internet.</string>
+    <string name="error_rate_limit_message">Has hecho demasiadas solicitudes. Por favor espera antes de intentar de nuevo.</string>
+    <string name="error_input_too_long">Tu entrada es muy larga. Por favor acorta tu solicitud e inténtalo de nuevo.</string>
+    <string name="error_input_invalid">Entrada inválida detectada. Por favor verifica tu solicitud e inténtalo de nuevo.</string>
+    <string name="error_ai_service_issue">El servicio de IA encontró un problema procesando tu solicitud.</string>
+    <string name="error_system_general">Ocurrió un error del sistema. La aplicación puede necesitar reiniciarse.</string>
+    <string name="error_unexpected_general">Ocurrió un error inesperado. Por favor inténtalo de nuevo.</string>
+    
+    <!-- Error suggestions -->
+    <string name="suggestion_restart_or_contact">Intenta reiniciar la aplicación o contacta al soporte si el problema persiste.</string>
+    <string name="suggestion_check_connection_retry">Verifica tu conexión a internet e inténtalo de nuevo.</string>
+    <string name="suggestion_wait_minutes">Espera unos minutos antes de hacer otra solicitud.</string>
+    <string name="suggestion_modify_input">Por favor modifica tu entrada e inténtalo de nuevo.</string>
+    <string name="suggestion_try_different_prompt">Por favor inténtalo con una solicitud diferente o contacta al soporte.</string>
+    <string name="suggestion_restart_app">Por favor reinicia la aplicación. Si el problema persiste, contacta al soporte.</string>
+    <string name="suggestion_contact_support">Si el problema persiste, por favor contacta al soporte.</string>
+    
+    <!-- AI Response validation -->
+    <string name="ai_response_warning">La respuesta de IA puede contener inexactitudes. Por favor verifica la información con fuentes confiables.</string>
 </resources>

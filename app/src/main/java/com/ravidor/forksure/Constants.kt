@@ -122,23 +122,14 @@ object AppColors {
     const val ALPHA_LOW = 0.1f
 }
 
-/**
- * Security and rate limiting constants
- */
-@Immutable
+// ===== Security Constants =====
 object SecurityConstants {
-    // SharedPreferences
-    const val PREFS_NAME = "forksure_security"
-    
-    // Rate limiting
-    const val MAX_REQUESTS_PER_MINUTE = 2
-    const val MAX_REQUESTS_PER_HOUR = 20
-    const val MAX_REQUESTS_PER_DAY = 80
-    
-    // Input validation
+    const val PREFS_NAME = "forksure_security_prefs"
+    const val MAX_REQUESTS_PER_MINUTE = 10
+    const val MAX_REQUESTS_PER_HOUR = 50
+    const val MAX_REQUESTS_PER_DAY = 200
     const val MAX_PROMPT_LENGTH = 1000
-    const val MAX_RESPONSE_LENGTH = 10000
-    const val MIN_PROMPT_LENGTH = 3
+    const val MAX_RESPONSE_LENGTH = 5000
     
     // Status update intervals
     const val UPDATE_INTERVAL_MS = 5000L // 5 seconds

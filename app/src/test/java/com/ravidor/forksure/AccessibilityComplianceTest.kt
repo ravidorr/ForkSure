@@ -32,10 +32,10 @@ class AccessibilityComplianceTest {
     @Before
     fun setup() {
         localThis = this
-        mockContext = mockk(relaxed = true)
-        mockAccessibilityManager = mockk(relaxed = true)
-        mockResources = mockk(relaxed = true)
-        mockConfiguration = mockk(relaxed = true)
+        mockContext = mockk(relaxed = true, relaxUnitFun = true)
+        mockAccessibilityManager = mockk(relaxed = true, relaxUnitFun = true)
+        mockResources = mockk(relaxed = true, relaxUnitFun = true)
+        mockConfiguration = mockk(relaxed = true, relaxUnitFun = true)
         
         // Mock context dependencies
         every { mockContext.getSystemService(AccessibilityManager::class.java) } returns mockAccessibilityManager
