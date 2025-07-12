@@ -182,8 +182,9 @@ class SecurityManagerAdvancedTest {
         
         // Then
         assertThat(result).isInstanceOf(AIResponseValidationResult.Invalid::class.java)
-        val invalidResult = result as AIResponseValidationResult.Invalid
-        assertThat(invalidResult.reason).contains("too long")
+        if (result is AIResponseValidationResult.Invalid) {
+            assertThat(result.reason).contains("too long")
+        }
     }
 
     @Test

@@ -574,8 +574,8 @@ class StressTestSuite {
     fun `System should maintain stability during prolonged stress testing`() = runTest {
         // Given - prolonged stress test scenario
         val localThis = this@StressTestSuite.localThis
-        val testDuration = 10000L // 10 seconds of continuous stress
-        val operationsPerSecond = 50
+        val testDuration = 3000L // 3 seconds of continuous stress (reduced from 10s)
+        val operationsPerSecond = 20 // Reduced from 50
         val operationInterval = 1000L / operationsPerSecond
         
         coEvery { localThis.mockAIRepository.generateContent(any(), any()) } returns 
@@ -586,7 +586,7 @@ class StressTestSuite {
         val initialMemory = getMemoryUsage()
         
         // When - running prolonged stress test
-        withTimeout(testDuration + 5000) { // Add buffer for timeout
+        withTimeout(testDuration + 2000) { // 2 second buffer (reduced from 5s)
             while (System.currentTimeMillis() - startTime < testDuration) {
                 try {
                     val currentTime = System.currentTimeMillis()

@@ -68,7 +68,8 @@ class PersistenceTestSuite {
         val mockSharedPreferences = mockk<SharedPreferences>(relaxed = true)
         val mockEditor = mockk<SharedPreferences.Editor>(relaxed = true)
         val preferencesDataSource = PreferencesDataSource(mockSharedPreferences)
-        val recipeCacheDataSource = RecipeCacheDataSource()
+        // Create a mock RecipeCacheDataSource instead of using constructor
+        val recipeCacheDataSource = mockk<RecipeCacheDataSource>(relaxed = true)
         val testCoroutineScheduler = TestCoroutineScheduler()
         
         // Setup SharedPreferences mock behavior
@@ -80,6 +81,18 @@ class PersistenceTestSuite {
         every { mockEditor.putStringSet(any(), any()) } returns mockEditor
         every { mockEditor.apply() } just Runs
         every { mockEditor.commit() } returns true
+        
+        // Setup RecipeCacheDataSource mock behavior
+        coEvery { recipeCacheDataSource.cacheRecipe(any(), any()) } returns Unit
+        coEvery { recipeCacheDataSource.getCachedRecipe(any()) } returns null
+        coEvery { recipeCacheDataSource.cacheStats } returns kotlinx.coroutines.flow.flowOf(
+            RecipeCacheDataSource.CacheStatistics(
+                totalEntries = 5,
+                hitCount = 1,
+                missCount = 1,
+                evictionCount = 0
+            )
+        )
         
         localThis = TestFixtures(
             context = context,
