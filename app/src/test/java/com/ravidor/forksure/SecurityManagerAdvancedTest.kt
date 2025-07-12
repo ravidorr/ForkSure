@@ -3,6 +3,12 @@ package com.ravidor.forksure
 import android.content.Context
 import android.content.SharedPreferences
 import com.google.common.truth.Truth.assertThat
+import com.ravidor.forksure.SecurityManager
+import com.ravidor.forksure.InputValidationResult
+import com.ravidor.forksure.AIResponseValidationResult
+import com.ravidor.forksure.RateLimitResult
+import com.ravidor.forksure.SecurityEnvironmentResult
+import com.ravidor.forksure.SecurityConstants
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -319,7 +325,7 @@ class SecurityManagerAdvancedTest {
         // If it's insecure, check for debug build detection
         if (result is SecurityEnvironmentResult.Insecure) {
             // In test environment, it might detect debug build
-            assertThat(result.issues).isNotEmpty()
+            assertThat(result.details).isNotEmpty()
         }
     }
 

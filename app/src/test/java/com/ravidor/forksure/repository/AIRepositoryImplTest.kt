@@ -1,6 +1,8 @@
 package com.ravidor.forksure.repository
 
+import android.content.Context
 import android.graphics.Bitmap
+import androidx.test.core.app.ApplicationProvider
 import com.google.ai.client.generativeai.GenerativeModel
 import com.google.ai.client.generativeai.type.GenerateContentResponse
 import com.google.common.truth.Truth.assertThat
@@ -10,11 +12,16 @@ import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 
 /**
  * Unit tests for AIRepositoryImpl
  * Tests AI content generation and response processing
  */
+@RunWith(RobolectricTestRunner::class)
+@Config(sdk = [34])
 class AIRepositoryImplTest {
 
     private lateinit var mockGenerativeModel: GenerativeModel
@@ -23,8 +30,9 @@ class AIRepositoryImplTest {
 
     @Before
     fun setup() {
+        val context = ApplicationProvider.getApplicationContext<Context>()
         mockGenerativeModel = mockk(relaxed = true)
-        repository = AIRepositoryImpl(mockGenerativeModel)
+        repository = AIRepositoryImpl(context, mockGenerativeModel)
     }
 
     @Test

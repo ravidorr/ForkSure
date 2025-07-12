@@ -6,6 +6,7 @@ import androidx.test.core.app.ApplicationProvider
 import com.google.common.truth.Truth.assertThat
 import com.ravidor.forksure.data.model.Recipe
 import com.ravidor.forksure.data.model.RecipeSource
+import com.ravidor.forksure.data.model.DifficultyLevel
 import com.ravidor.forksure.data.source.local.RecipeCacheDataSource
 import com.ravidor.forksure.data.source.local.PreferencesDataSource
 import com.ravidor.forksure.repository.AIRepository
@@ -16,6 +17,10 @@ import com.ravidor.forksure.repository.UserPreferencesRepository
 import com.ravidor.forksure.repository.UserPreferencesRepositoryImpl
 import com.ravidor.forksure.state.MainScreenState
 import com.ravidor.forksure.state.NavigationState
+import com.ravidor.forksure.AIResponseProcessingResult
+import com.ravidor.forksure.SecurityEnvironmentResult
+import com.ravidor.forksure.UserInputValidationResult
+import com.ravidor.forksure.RateLimitResult
 import io.mockk.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
@@ -28,6 +33,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import java.util.Date
 import kotlin.system.measureTimeMillis
 
 /**
@@ -557,7 +563,7 @@ class TestSuiteCoordinationValidationSuite {
         assertThat(localThis.testCoroutineScheduler).isNotNull()
     }
     
-    // MARK: - Helper Methods
+    // MARK: - Helper Functions
     
     private fun getMemoryUsage(): Long {
         val runtime = Runtime.getRuntime()
@@ -566,21 +572,33 @@ class TestSuiteCoordinationValidationSuite {
     
     private fun createTestRecipe(title: String, content: String): Recipe {
         return Recipe(
-            id = "coordination_test_${System.currentTimeMillis()}",
+            id = "test_${System.currentTimeMillis()}",
             title = title,
             description = content,
-            ingredients = listOf("ingredient1", "ingredient2"),
-            instructions = listOf("step1", "step2"),
-            source = RecipeSource.AI_GENERATED
+            ingredients = listOf("Test ingredient 1", "Test ingredient 2"),
+            instructions = listOf("Step 1: $content", "Step 2: Mix well"),
+            prepTime = "15 min",
+            cookTime = "30 min",
+            servings = "4",
+            difficulty = DifficultyLevel.BEGINNER,
+            tags = emptyList(),
+            nutritionInfo = null,
+            warnings = emptyList(),
+            source = RecipeSource.AI_GENERATED,
+            confidence = 0.95f,
+            createdAt = Date(),
+            imageHash = null
         )
     }
     
     private fun createTestResponse(recipe: Recipe): com.ravidor.forksure.data.model.RecipeAnalysisResponse {
         return com.ravidor.forksure.data.model.RecipeAnalysisResponse(
             recipe = recipe,
-            rawResponse = "coordination_test_response",
-            processingTime = 100,
-            success = true
+            rawResponse = "Test response for ${recipe.title}",
+            processingTime = 150L,
+            success = true,
+            errorMessage = null,
+            warnings = emptyList()
         )
     }
 } 

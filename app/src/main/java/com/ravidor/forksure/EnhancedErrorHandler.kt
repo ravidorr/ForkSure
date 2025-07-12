@@ -40,7 +40,13 @@ object EnhancedErrorHandler {
         // Check security environment
         val securityCheck = SecurityManager.checkSecurityEnvironment(context)
         if (securityCheck is SecurityEnvironmentResult.Insecure) {
-            Log.w(TAG, "Insecure environment detected: ${securityCheck.issues}")
+            Log.w(TAG, "Insecure environment detected: ${securityCheck.details}")
+            return EnhancedErrorResult.Critical(
+                title = context.getString(R.string.error_title_security),
+                message = context.getString(R.string.error_security_detected),
+                suggestion = context.getString(R.string.suggestion_restart_or_contact),
+                requiresUserAction = true
+            )
         }
         
         // Categorize error
@@ -48,20 +54,20 @@ object EnhancedErrorHandler {
         
         // Generate appropriate response
         return when (errorCategory) {
-            ErrorCategory.NETWORK -> handleNetworkError(error)
-            ErrorCategory.AUTHENTICATION -> handleSecurityError(error)
-            ErrorCategory.RATE_LIMIT -> handleRateLimitError(error)
-            ErrorCategory.INPUT_VALIDATION -> handleInputValidationError(error, userInput)
-            ErrorCategory.SERVER_ERROR -> handleAIResponseError(error, aiResponse)
-            ErrorCategory.CLIENT_ERROR -> handleSystemError(error)
-            ErrorCategory.UNKNOWN -> handleUnknownError(error)
+            ErrorCategory.NETWORK -> handleNetworkError(context, error)
+            ErrorCategory.AUTHENTICATION -> handleSecurityError(context, error)
+            ErrorCategory.RATE_LIMIT -> handleRateLimitError(context, error)
+            ErrorCategory.INPUT_VALIDATION -> handleInputValidationError(context, error, userInput)
+            ErrorCategory.SERVER_ERROR -> handleAIResponseError(context, error, aiResponse)
+            ErrorCategory.CLIENT_ERROR -> handleSystemError(context, error)
+            ErrorCategory.UNKNOWN -> handleUnknownError(context, error)
         }
     }
     
     /**
      * Validates and processes AI responses with security checks
      */
-    fun processAIResponse(response: String): AIResponseProcessingResult {
+    fun processAIResponse(context: Context, response: String): AIResponseProcessingResult {
         // Validate response safety
         val validationResult = SecurityManager.validateAIResponse(response)
         
@@ -79,7 +85,7 @@ object EnhancedErrorHandler {
                 AIResponseProcessingResult.Warning(
                     response,
                     validationResult.warning,
-                    "The AI response may contain inaccuracies. Please verify the information with reliable sources."
+                    context.getString(R.string.ai_response_warning)
                 )
             }
             is AIResponseValidationResult.Unsafe -> {
@@ -142,80 +148,80 @@ object EnhancedErrorHandler {
         }
     }
     
-    private fun handleNetworkError(error: Throwable): EnhancedErrorResult {
+    private fun handleNetworkError(context: Context, error: Throwable): EnhancedErrorResult {
         val message = when (error) {
-            is UnknownHostException -> "No internet connection. Please check your network and try again."
-            is SocketTimeoutException -> "Request timed out. Please check your connection and try again."
-            else -> "Network error occurred. Please check your internet connection."
+            is UnknownHostException -> context.getString(R.string.error_no_internet_connection)
+            is SocketTimeoutException -> context.getString(R.string.error_request_timeout)
+            else -> context.getString(R.string.error_network_general)
         }
         
         return EnhancedErrorResult.Recoverable(
-            title = "Network Error",
+            title = context.getString(R.string.error_title_network),
             message = message,
-            suggestion = "Check your internet connection and try again.",
+            suggestion = context.getString(R.string.suggestion_check_connection_retry),
             canRetry = true,
             retryDelay = 5000
         )
     }
     
-    private fun handleSecurityError(error: Throwable): EnhancedErrorResult {
+    private fun handleSecurityError(context: Context, error: Throwable): EnhancedErrorResult {
         Log.w(TAG, "Security error: ${error.message}")
         
         return EnhancedErrorResult.Critical(
-            title = "Security Error",
-            message = "A security issue was detected. Please ensure you're using the app in a secure environment.",
-            suggestion = "Try restarting the app or contact support if the issue persists.",
+            title = context.getString(R.string.error_title_security),
+            message = context.getString(R.string.error_security_detected),
+            suggestion = context.getString(R.string.suggestion_restart_or_contact),
             requiresUserAction = true
         )
     }
     
-    private fun handleRateLimitError(error: Throwable): EnhancedErrorResult {
+    private fun handleRateLimitError(context: Context, error: Throwable): EnhancedErrorResult {
         return EnhancedErrorResult.Temporary(
-            title = "Rate Limit Exceeded",
-            message = "You've made too many requests. Please wait before trying again.",
-            suggestion = "Wait a few minutes before making another request.",
+            title = context.getString(R.string.error_title_rate_limit),
+            message = context.getString(R.string.error_rate_limit_message),
+            suggestion = context.getString(R.string.suggestion_wait_minutes),
             retryAfter = 60000
         )
     }
     
-    private fun handleInputValidationError(error: Throwable, userInput: String?): EnhancedErrorResult {
+    private fun handleInputValidationError(context: Context, error: Throwable, userInput: String?): EnhancedErrorResult {
         val message = if (userInput != null && userInput.length > 1000) {
-            "Your input is too long. Please shorten your request and try again."
+            context.getString(R.string.error_input_too_long)
         } else {
-            "Invalid input detected. Please check your request and try again."
+            context.getString(R.string.error_input_invalid)
         }
         
         return EnhancedErrorResult.UserError(
-            title = "Input Error",
+            title = context.getString(R.string.error_title_input),
             message = message,
-            suggestion = "Please modify your input and try again.",
+            suggestion = context.getString(R.string.suggestion_modify_input),
             inputRelated = true
         )
     }
     
-    private fun handleAIResponseError(error: Throwable, aiResponse: String?): EnhancedErrorResult {
+    private fun handleAIResponseError(context: Context, error: Throwable, aiResponse: String?): EnhancedErrorResult {
         return EnhancedErrorResult.ServiceError(
-            title = "AI Service Error",
-            message = "The AI service encountered an issue processing your request.",
-            suggestion = "Please try again with a different prompt or contact support.",
+            title = context.getString(R.string.error_title_ai_service),
+            message = context.getString(R.string.error_ai_service_issue),
+            suggestion = context.getString(R.string.suggestion_try_different_prompt),
             serviceRelated = true
         )
     }
     
-    private fun handleSystemError(error: Throwable): EnhancedErrorResult {
+    private fun handleSystemError(context: Context, error: Throwable): EnhancedErrorResult {
         return EnhancedErrorResult.Critical(
-            title = "System Error",
-            message = "A system error occurred. The app may need to be restarted.",
-            suggestion = "Please restart the app. If the problem persists, contact support.",
+            title = context.getString(R.string.error_title_system),
+            message = context.getString(R.string.error_system_general),
+            suggestion = context.getString(R.string.suggestion_restart_app),
             requiresUserAction = true
         )
     }
     
-    private fun handleUnknownError(error: Throwable): EnhancedErrorResult {
+    private fun handleUnknownError(context: Context, error: Throwable): EnhancedErrorResult {
         return EnhancedErrorResult.Unknown(
-            title = "Unexpected Error",
-            message = "An unexpected error occurred. Please try again.",
-            suggestion = "If the problem persists, please contact support.",
+            title = context.getString(R.string.error_title_unexpected),
+            message = context.getString(R.string.error_unexpected_general),
+            suggestion = context.getString(R.string.suggestion_contact_support),
             errorCode = error.javaClass.simpleName
         )
     }

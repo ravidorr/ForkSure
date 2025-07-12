@@ -1,10 +1,12 @@
 package com.ravidor.forksure.repository
 
+import android.content.Context
 import android.graphics.Bitmap
 import com.google.ai.client.generativeai.GenerativeModel
 import com.google.ai.client.generativeai.type.content
 import com.ravidor.forksure.AIResponseProcessingResult
 import com.ravidor.forksure.EnhancedErrorHandler
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -22,6 +24,7 @@ interface AIRepository {
  */
 @Singleton
 class AIRepositoryImpl @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val generativeModel: GenerativeModel
 ) : AIRepository {
 
@@ -37,7 +40,7 @@ class AIRepositoryImpl @Inject constructor(
 
                 response.text?.let { outputContent ->
                     // Validate AI response for safety
-                    EnhancedErrorHandler.processAIResponse(outputContent)
+                    EnhancedErrorHandler.processAIResponse(context, outputContent)
                 } ?: AIResponseProcessingResult.Error(
                     "No response received",
                     "No response received from AI service. Please try again."

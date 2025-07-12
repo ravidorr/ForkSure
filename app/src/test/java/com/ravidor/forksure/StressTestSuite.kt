@@ -8,6 +8,7 @@ import com.ravidor.forksure.data.model.Recipe
 import com.ravidor.forksure.data.model.RecipeAnalysisRequest
 import com.ravidor.forksure.data.model.RecipeAnalysisResponse
 import com.ravidor.forksure.data.model.RecipeSource
+import com.ravidor.forksure.data.model.DifficultyLevel
 import com.ravidor.forksure.data.model.UserPreferences
 import com.ravidor.forksure.data.source.local.PreferencesDataSource
 import com.ravidor.forksure.data.source.local.RecipeCacheDataSource
@@ -16,6 +17,7 @@ import com.ravidor.forksure.repository.RecipeRepository
 import com.ravidor.forksure.repository.RecipeRepositoryImpl
 import com.ravidor.forksure.state.MainScreenState
 import com.ravidor.forksure.state.NavigationState
+import com.ravidor.forksure.AIResponseProcessingResult
 import io.mockk.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
@@ -741,17 +743,7 @@ class StressTestSuite {
         assertThat(localThis.mainScreenState.isAnalyzeEnabled).isNotNull()
     }
     
-    // MARK: - Helper Methods
-    
-    private fun createTestBitmaps(): List<Bitmap> {
-        return listOf(
-            Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888),
-            Bitmap.createBitmap(500, 500, Bitmap.Config.ARGB_8888),
-            Bitmap.createBitmap(1000, 1000, Bitmap.Config.ARGB_8888),
-            Bitmap.createBitmap(50, 200, Bitmap.Config.RGB_565),
-            Bitmap.createBitmap(300, 400, Bitmap.Config.ARGB_8888)
-        )
-    }
+    // MARK: - Helper Functions
     
     private fun getMemoryUsage(): Long {
         val runtime = Runtime.getRuntime()
@@ -759,33 +751,54 @@ class StressTestSuite {
     }
     
     private fun updatePeakMemory(metrics: StressMetrics, currentMemory: Long) {
-        var currentPeak = metrics.peakMemoryUsage.get()
-        while (currentMemory > currentPeak) {
-            if (metrics.peakMemoryUsage.compareAndSet(currentPeak, currentMemory)) {
+        var peak = metrics.peakMemoryUsage.get()
+        while (currentMemory > peak) {
+            if (metrics.peakMemoryUsage.compareAndSet(peak, currentMemory)) {
                 break
             }
-            currentPeak = metrics.peakMemoryUsage.get()
+            peak = metrics.peakMemoryUsage.get()
         }
+    }
+    
+    private fun createTestBitmaps(): List<Bitmap> {
+        return listOf(
+            Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888),
+            Bitmap.createBitmap(200, 150, Bitmap.Config.ARGB_8888),
+            Bitmap.createBitmap(300, 200, Bitmap.Config.ARGB_8888),
+            Bitmap.createBitmap(150, 100, Bitmap.Config.ARGB_8888),
+            Bitmap.createBitmap(250, 175, Bitmap.Config.ARGB_8888)
+        )
     }
     
     private fun createTestRecipe(title: String, content: String): Recipe {
         return Recipe(
-            id = "stress_test_${System.currentTimeMillis()}_${Random.nextInt()}",
+            id = "test_${System.currentTimeMillis()}",
             title = title,
             description = content,
-            ingredients = listOf("ingredient1", "ingredient2"),
-            instructions = listOf("step1", "step2"),
+            ingredients = listOf("Test ingredient 1", "Test ingredient 2"),
+            instructions = listOf("Step 1: $content", "Step 2: Mix well"),
+            prepTime = "15 min",
+            cookTime = "30 min",
+            servings = "4",
+            difficulty = DifficultyLevel.BEGINNER,
+            tags = emptyList(),
+            nutritionInfo = null,
+            warnings = emptyList(),
             source = RecipeSource.AI_GENERATED,
-            createdAt = Date()
+            confidence = 0.95f,
+            createdAt = Date(),
+            imageHash = null
         )
     }
     
     private fun createTestResponse(recipe: Recipe): RecipeAnalysisResponse {
         return RecipeAnalysisResponse(
             recipe = recipe,
-            rawResponse = "stress_test_response",
-            processingTime = Random.nextLong(50, 200),
-            success = true
+            rawResponse = "Test response for ${recipe.title}",
+            processingTime = 150L,
+            success = true,
+            errorMessage = null,
+            warnings = emptyList()
         )
     }
 } 

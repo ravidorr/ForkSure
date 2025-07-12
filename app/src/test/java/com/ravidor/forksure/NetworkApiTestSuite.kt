@@ -23,6 +23,9 @@ import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 import java.io.IOException
 import java.net.ConnectException
 import java.net.SocketTimeoutException
@@ -45,6 +48,8 @@ import javax.net.ssl.SSLException
  * - API response validation and malformed data handling
  * - Fallback mechanisms and cache integration
  */
+@RunWith(RobolectricTestRunner::class)
+@Config(sdk = [34])
 @ExperimentalCoroutinesApi
 class NetworkApiTestSuite {
 
@@ -66,7 +71,7 @@ class NetworkApiTestSuite {
         val context = ApplicationProvider.getApplicationContext<Context>()
         val mockGenerativeModel = mockk<GenerativeModel>(relaxed = true)
         val mockSecurityRepository = mockk<SecurityRepository>(relaxed = true)
-        val aiRepository = AIRepositoryImpl(mockGenerativeModel)
+        val aiRepository = AIRepositoryImpl(context, mockGenerativeModel)
         val recipeCacheDataSource = RecipeCacheDataSource()
         val testBitmap = Bitmap.createBitmap(400, 300, Bitmap.Config.ARGB_8888)
         val testCoroutineScheduler = TestCoroutineScheduler()
