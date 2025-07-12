@@ -24,7 +24,7 @@ import org.robolectric.annotation.Config
 class AccessibilityComplianceTest {
 
     private lateinit var localThis: AccessibilityComplianceTest
-    private lateinit var mockContext: Context
+    private lateinit var testContext: Context
     private lateinit var mockAccessibilityManager: AccessibilityManager
     private lateinit var mockResources: Resources
     private lateinit var mockConfiguration: Configuration
@@ -32,15 +32,25 @@ class AccessibilityComplianceTest {
     @Before
     fun setup() {
         localThis = this
-        mockContext = mockk(relaxed = true, relaxUnitFun = true)
-        mockAccessibilityManager = mockk(relaxed = true, relaxUnitFun = true)
-        mockResources = mockk(relaxed = true, relaxUnitFun = true)
-        mockConfiguration = mockk(relaxed = true, relaxUnitFun = true)
+        
+        // Create mock objects
+        mockAccessibilityManager = mockk(relaxed = true)
+        mockResources = mockk(relaxed = true)
+        mockConfiguration = mockk(relaxed = true)
+        
+        // Create a mock context with proper setup
+        testContext = mockk(relaxed = true)
         
         // Mock context dependencies
-        every { mockContext.getSystemService(AccessibilityManager::class.java) } returns mockAccessibilityManager
-        every { mockContext.resources } returns mockResources
+        every { testContext.getSystemService(AccessibilityManager::class.java) } returns mockAccessibilityManager
+        every { testContext.getSystemService(Context.ACCESSIBILITY_SERVICE) } returns mockAccessibilityManager
+        every { testContext.resources } returns mockResources
         every { mockResources.configuration } returns mockConfiguration
+        
+        // Set default mock behaviors
+        every { mockAccessibilityManager.isEnabled } returns true
+        every { mockAccessibilityManager.isTouchExplorationEnabled } returns false
+        every { mockConfiguration.fontScale } returns 1.0f
     }
 
     // Screen Reader Detection Tests
@@ -51,7 +61,7 @@ class AccessibilityComplianceTest {
         every { mockAccessibilityManager.isTouchExplorationEnabled } returns true
         
         // When
-        val result = AccessibilityHelper.isScreenReaderEnabled(mockContext)
+        val result = AccessibilityHelper.isScreenReaderEnabled(testContext)
         
         // Then
         assertThat(result).isTrue()
@@ -64,7 +74,7 @@ class AccessibilityComplianceTest {
         every { mockAccessibilityManager.isTouchExplorationEnabled } returns false
         
         // When
-        val result = AccessibilityHelper.isScreenReaderEnabled(mockContext)
+        val result = AccessibilityHelper.isScreenReaderEnabled(testContext)
         
         // Then
         assertThat(result).isFalse()
@@ -74,11 +84,11 @@ class AccessibilityComplianceTest {
     fun `AccessibilityHelper should handle null accessibility manager gracefully`() {
         // Given
         val localThis = this.localThis
-        every { mockContext.getSystemService(AccessibilityManager::class.java) } returns null
+        every { testContext.getSystemService(AccessibilityManager::class.java) } returns null
         
         // When & Then - should not crash
         try {
-            AccessibilityHelper.isScreenReaderEnabled(mockContext)
+            AccessibilityHelper.isScreenReaderEnabled(testContext)
         } catch (e: Exception) {
             // Should handle gracefully
         }
@@ -92,7 +102,7 @@ class AccessibilityComplianceTest {
         every { mockConfiguration.fontScale } returns 1.3f
         
         // When
-        val result = AccessibilityHelper.isLargeTextEnabled(mockContext)
+        val result = AccessibilityHelper.isLargeTextEnabled(testContext)
         
         // Then
         assertThat(result).isTrue()
@@ -105,7 +115,7 @@ class AccessibilityComplianceTest {
         every { mockConfiguration.fontScale } returns 1.5f
         
         // When
-        val result = AccessibilityHelper.isLargeTextEnabled(mockContext)
+        val result = AccessibilityHelper.isLargeTextEnabled(testContext)
         
         // Then
         assertThat(result).isTrue()
@@ -118,7 +128,7 @@ class AccessibilityComplianceTest {
         every { mockConfiguration.fontScale } returns 2.0f
         
         // When
-        val result = AccessibilityHelper.isLargeTextEnabled(mockContext)
+        val result = AccessibilityHelper.isLargeTextEnabled(testContext)
         
         // Then
         assertThat(result).isTrue()
@@ -131,7 +141,7 @@ class AccessibilityComplianceTest {
         every { mockConfiguration.fontScale } returns 1.0f
         
         // When
-        val result = AccessibilityHelper.isLargeTextEnabled(mockContext)
+        val result = AccessibilityHelper.isLargeTextEnabled(testContext)
         
         // Then
         assertThat(result).isFalse()
@@ -144,7 +154,7 @@ class AccessibilityComplianceTest {
         every { mockConfiguration.fontScale } returns 0.9f
         
         // When
-        val result = AccessibilityHelper.isLargeTextEnabled(mockContext)
+        val result = AccessibilityHelper.isLargeTextEnabled(testContext)
         
         // Then
         assertThat(result).isFalse()
@@ -159,7 +169,7 @@ class AccessibilityComplianceTest {
         testScales.forEach { scale ->
             // When
             every { mockConfiguration.fontScale } returns scale
-            val result = AccessibilityHelper.getFontScale(mockContext)
+            val result = AccessibilityHelper.getFontScale(testContext)
             
             // Then
             assertThat(result).isEqualTo(scale)
@@ -243,7 +253,7 @@ class AccessibilityComplianceTest {
         every { mockAccessibilityManager.isEnabled } returns true
         
         // When
-        val result = AccessibilityTestHelper.isAccessibilityEnabled(mockContext)
+        val result = AccessibilityTestHelper.isAccessibilityEnabled(testContext)
         
         // Then
         assertThat(result).isTrue()
@@ -256,7 +266,7 @@ class AccessibilityComplianceTest {
         every { mockAccessibilityManager.isEnabled } returns false
         
         // When
-        val result = AccessibilityTestHelper.isAccessibilityEnabled(mockContext)
+        val result = AccessibilityTestHelper.isAccessibilityEnabled(testContext)
         
         // Then
         assertThat(result).isFalse()
@@ -269,7 +279,7 @@ class AccessibilityComplianceTest {
         every { mockAccessibilityManager.isTouchExplorationEnabled } returns true
         
         // When
-        val result = AccessibilityTestHelper.isScreenReaderEnabled(mockContext)
+        val result = AccessibilityTestHelper.isScreenReaderEnabled(testContext)
         
         // Then
         assertThat(result).isTrue()
@@ -285,7 +295,7 @@ class AccessibilityComplianceTest {
         every { mockAccessibilityManager.getEnabledAccessibilityServiceList(-1) } returns emptyList()
         
         // When
-        val report = AccessibilityTestHelper.generateAccessibilityReport(mockContext)
+        val report = AccessibilityTestHelper.generateAccessibilityReport(testContext)
         
         // Then
         assertThat(report.isAccessibilityEnabled).isTrue()
@@ -303,7 +313,7 @@ class AccessibilityComplianceTest {
         every { mockAccessibilityManager.getEnabledAccessibilityServiceList(-1) } returns emptyList()
         
         // When
-        val report = AccessibilityTestHelper.generateAccessibilityReport(mockContext)
+        val report = AccessibilityTestHelper.generateAccessibilityReport(testContext)
         
         // Then
         assertThat(report.isAccessibilityEnabled).isFalse()
@@ -339,7 +349,7 @@ class AccessibilityComplianceTest {
         
         // When & Then - should not crash
         try {
-            AccessibilityHelper.announceForAccessibility(mockContext, "Test announcement")
+            AccessibilityHelper.announceForAccessibility(testContext, "Test announcement")
         } catch (e: Exception) {
             // Should handle gracefully in test environment
         }
@@ -354,7 +364,7 @@ class AccessibilityComplianceTest {
         
         // When & Then - should not crash
         try {
-            AccessibilityHelper.announceForAccessibility(mockContext, longMessage)
+            AccessibilityHelper.announceForAccessibility(testContext, longMessage)
         } catch (e: Exception) {
             // Should handle gracefully in test environment
         }
@@ -368,7 +378,7 @@ class AccessibilityComplianceTest {
         
         // When & Then - should not crash
         try {
-            AccessibilityHelper.announceForAccessibility(mockContext, "Test announcement")
+            AccessibilityHelper.announceForAccessibility(testContext, "Test announcement")
         } catch (e: Exception) {
             // Should handle gracefully in test environment
         }
@@ -485,11 +495,11 @@ class AccessibilityComplianceTest {
     fun `AccessibilityHelper should handle system service unavailability gracefully`() {
         // Given
         val localThis = this.localThis
-        every { mockContext.getSystemService(AccessibilityManager::class.java) } throws SecurityException("Service unavailable")
+        every { testContext.getSystemService(AccessibilityManager::class.java) } throws SecurityException("Service unavailable")
         
         // When & Then - should not crash
         try {
-            AccessibilityHelper.isScreenReaderEnabled(mockContext)
+            AccessibilityHelper.isScreenReaderEnabled(testContext)
         } catch (e: Exception) {
             // Should handle gracefully
         }
@@ -499,11 +509,11 @@ class AccessibilityComplianceTest {
     fun `AccessibilityHelper should handle resource unavailability gracefully`() {
         // Given
         val localThis = this.localThis
-        every { mockContext.resources } throws Exception("Resources unavailable")
+        every { testContext.resources } throws Exception("Resources unavailable")
         
         // When & Then - should not crash
         try {
-            AccessibilityHelper.getFontScale(mockContext)
+            AccessibilityHelper.getFontScale(testContext)
         } catch (e: Exception) {
             // Should handle gracefully
         }

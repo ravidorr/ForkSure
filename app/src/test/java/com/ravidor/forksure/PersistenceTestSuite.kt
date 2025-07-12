@@ -67,12 +67,9 @@ class PersistenceTestSuite {
         val context = ApplicationProvider.getApplicationContext<Context>()
         val mockSharedPreferences = mockk<SharedPreferences>(relaxed = true)
         val mockEditor = mockk<SharedPreferences.Editor>(relaxed = true)
-        val preferencesDataSource = PreferencesDataSource(mockSharedPreferences)
-        // Create a mock RecipeCacheDataSource instead of using constructor
-        val recipeCacheDataSource = mockk<RecipeCacheDataSource>(relaxed = true)
         val testCoroutineScheduler = TestCoroutineScheduler()
         
-        // Setup SharedPreferences mock behavior
+        // Setup SharedPreferences mock behavior BEFORE creating PreferencesDataSource
         every { mockSharedPreferences.edit() } returns mockEditor
         every { mockEditor.putString(any(), any()) } returns mockEditor
         every { mockEditor.putInt(any(), any()) } returns mockEditor
@@ -82,17 +79,23 @@ class PersistenceTestSuite {
         every { mockEditor.apply() } just Runs
         every { mockEditor.commit() } returns true
         
-        // Setup RecipeCacheDataSource mock behavior
-        coEvery { recipeCacheDataSource.cacheRecipe(any(), any()) } returns Unit
-        coEvery { recipeCacheDataSource.getCachedRecipe(any()) } returns null
-        coEvery { recipeCacheDataSource.cacheStats } returns kotlinx.coroutines.flow.flowOf(
-            RecipeCacheDataSource.CacheStatistics(
-                totalEntries = 5,
-                hitCount = 1,
-                missCount = 1,
-                evictionCount = 0
-            )
-        )
+        // Setup default SharedPreferences return values with proper defaults
+        every { mockSharedPreferences.getString("theme", any()) } returns "SYSTEM"
+        every { mockSharedPreferences.getString("language", any()) } returns "en"
+        every { mockSharedPreferences.getString("preferred_image_quality", any()) } returns "HIGH"
+        every { mockSharedPreferences.getString("font_size", any()) } returns "MEDIUM"
+        every { mockSharedPreferences.getString("last_app_version", any()) } returns ""
+        every { mockSharedPreferences.getString(any(), any()) } returns null
+        every { mockSharedPreferences.getInt(any(), any()) } returns 0
+        every { mockSharedPreferences.getLong(any(), any()) } returns System.currentTimeMillis()
+        every { mockSharedPreferences.getBoolean(any(), any()) } returns false
+        every { mockSharedPreferences.getStringSet(any(), any()) } returns emptySet()
+        
+        // Now create PreferencesDataSource with properly mocked SharedPreferences
+        val preferencesDataSource = PreferencesDataSource(mockSharedPreferences)
+        
+        // Use a real RecipeCacheDataSource for integration testing
+        val recipeCacheDataSource = RecipeCacheDataSource()
         
         localThis = TestFixtures(
             context = context,
