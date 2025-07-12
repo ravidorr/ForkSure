@@ -241,6 +241,10 @@ dependencies {
     testImplementation(libs.turbine)
     testImplementation(libs.truth)
     
+    // Navigation Testing for unit tests
+    testImplementation(libs.androidx.navigation.testing)
+    testImplementation(libs.androidx.navigation.compose)
+    
     // Hilt Testing
     testImplementation(libs.hilt.android.testing)
     kspTest(libs.hilt.android.compiler)
