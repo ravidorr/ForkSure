@@ -113,7 +113,7 @@ fun StatelessContentReportDialog(
                 
                 // Report reason selection
                 Text(
-                    text = "Reason for reporting:",
+                    text = stringResource(R.string.report_reason_label),
                     style = MaterialTheme.typography.labelLarge,
                     modifier = Modifier.semantics {
                         contentDescription = "Select reason for reporting section"
@@ -194,7 +194,7 @@ fun StatelessContentReportDialog(
                     singleLine = false,
                     placeholder = {
                         Text(
-                            "Optional: Provide additional details about your report",
+                            stringResource(R.string.report_additional_details_placeholder),
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
                             modifier = Modifier.semantics {

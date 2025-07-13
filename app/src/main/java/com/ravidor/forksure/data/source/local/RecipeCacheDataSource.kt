@@ -15,16 +15,35 @@ import java.util.Date
 import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 import javax.inject.Singleton
+import android.content.Context
+import com.google.gson.Gson
+import com.google.gson.annotations.SerializedName
+import java.io.File
+import java.security.MessageDigest
 
 /**
  * Local data source for recipe caching using LRU cache
  * Provides fast access to recently analyzed recipes
  */
 @Singleton
-class RecipeCacheDataSource @Inject constructor() {
+class RecipeCacheDataSource @Inject constructor(
+    private val context: Context
+) {
     
     // LRU cache for recipes (max 50 entries by default)
-    private val recipeCache = LruCache<String, CachedRecipe>(50)
+    private val recipeCache = object : LruCache<String, CachedRecipe>(50) {
+        override fun entryRemoved(evicted: Boolean, key: String, oldValue: CachedRecipe, newValue: CachedRecipe?) {
+            if (evicted) {
+                requestHistory.remove(key)
+                val currentStats = _cacheStats.value
+                _cacheStats.value = currentStats.copy(
+                    evictionCount = currentStats.evictionCount + 1,
+                    totalEntries = size(),
+                    totalSize = size()
+                )
+            }
+        }
+    }
     
     // Request history for analytics
     private val requestHistory = ConcurrentHashMap<String, RecipeAnalysisRequest>()
@@ -36,6 +55,51 @@ class RecipeCacheDataSource @Inject constructor() {
     // Mutex for thread-safe operations
     private val cacheMutex = Mutex()
     
+    private val gson = Gson()
+    private val cacheFile: File by lazy { File(context.filesDir, "recipe_cache.json") }
+    private val CACHE_VERSION = 1
+
+    init {
+        loadCacheFromDisk()
+    }
+
+    private fun loadCacheFromDisk() {
+        if (!cacheFile.exists()) return
+        try {
+            val json = cacheFile.readText()
+            val persisted = gson.fromJson(json, PersistedCache::class.java)
+            if (persisted.version != CACHE_VERSION) return
+            val calculatedChecksum = calculateChecksum(persisted.dataJson)
+            if (persisted.checksum != calculatedChecksum) return
+            val data = gson.fromJson(persisted.dataJson, CacheData::class.java)
+            data.entries.forEach { (key, cachedRecipe) ->
+                recipeCache.put(key, cachedRecipe)
+            }
+            requestHistory.putAll(data.requestHistory)
+        } catch (_: Exception) { /* ignore corrupt cache */ }
+    }
+
+    private fun persistCacheToDisk() {
+        val data = CacheData(
+            entries = recipeCache.snapshot(),
+            requestHistory = HashMap(requestHistory)
+        )
+        val dataJson = gson.toJson(data)
+        val checksum = calculateChecksum(dataJson)
+        val persisted = PersistedCache(
+            version = CACHE_VERSION,
+            checksum = checksum,
+            dataJson = dataJson
+        )
+        cacheFile.writeText(gson.toJson(persisted))
+    }
+
+    private fun calculateChecksum(data: String): String {
+        val md = MessageDigest.getInstance("SHA-256")
+        val hash = md.digest(data.toByteArray())
+        return hash.joinToString("") { "%02x".format(it) }
+    }
+
     /**
      * Cached recipe with metadata
      */
@@ -84,6 +148,7 @@ class RecipeCacheDataSource @Inject constructor() {
                 requestHistory[cacheKey] = request
                 
                 updateCacheStatistics()
+                persistCacheToDisk()
             }
         }
     }
@@ -122,8 +187,10 @@ class RecipeCacheDataSource @Inject constructor() {
      * Check if a recipe is cached
      */
     suspend fun isCached(request: RecipeAnalysisRequest): Boolean = withContext(Dispatchers.IO) {
-        val cacheKey = generateCacheKey(request)
-        recipeCache.get(cacheKey) != null
+        cacheMutex.withLock {
+            val cacheKey = generateCacheKey(request)
+            recipeCache.get(cacheKey) != null
+        }
     }
     
     /**
@@ -179,6 +246,7 @@ class RecipeCacheDataSource @Inject constructor() {
                 requestHistory.remove(key)
             }
             updateCacheStatistics()
+            persistCacheToDisk()
         }
     }
     
@@ -202,6 +270,7 @@ class RecipeCacheDataSource @Inject constructor() {
             }
             
             updateCacheStatistics()
+            persistCacheToDisk()
         }
     }
     
@@ -213,6 +282,7 @@ class RecipeCacheDataSource @Inject constructor() {
             recipeCache.evictAll()
             requestHistory.clear()
             updateCacheStatistics()
+            persistCacheToDisk()
         }
     }
     
@@ -223,6 +293,7 @@ class RecipeCacheDataSource @Inject constructor() {
         cacheMutex.withLock {
             recipeCache.resize(newSize)
             updateCacheStatistics()
+            persistCacheToDisk()
         }
     }
     
@@ -317,5 +388,15 @@ class RecipeCacheDataSource @Inject constructor() {
         val totalRequests: Long,
         val cacheEfficiency: Float,
         val averageAccessCount: Double
+    )
+
+    data class PersistedCache(
+        @SerializedName("version") val version: Int,
+        @SerializedName("checksum") val checksum: String,
+        @SerializedName("dataJson") val dataJson: String
+    )
+    data class CacheData(
+        @SerializedName("entries") val entries: Map<String, CachedRecipe>,
+        @SerializedName("requestHistory") val requestHistory: Map<String, RecipeAnalysisRequest>
     )
 } 

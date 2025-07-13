@@ -20,7 +20,7 @@ class StateSectionsTest {
     val composeTestRule = createComposeRule()
 
     @Test
-    fun `LoadingSection should display loading indicator and text`() {
+    fun loadingSection_shouldDisplayLoadingIndicatorAndText() {
         // Given - localThis pattern
         val localThis = object {
             // No state needed for loading section
@@ -44,7 +44,7 @@ class StateSectionsTest {
     }
 
     @Test
-    fun `ErrorSection should display error message and action buttons`() {
+    fun errorSection_shouldDisplayErrorMessageAndActionButtons() {
         // Given - localThis pattern
         val localThis = object {
             var retryCount = 0
@@ -85,7 +85,7 @@ class StateSectionsTest {
     }
 
     @Test
-    fun `ErrorSection should handle retry button clicks`() {
+    fun errorSection_shouldHandleRetryButtonClicks() {
         // Given - localThis pattern
         val localThis = object {
             var retryCount = 0
@@ -120,7 +120,7 @@ class StateSectionsTest {
     }
 
     @Test
-    fun `ErrorSection should handle dismiss button clicks`() {
+    fun errorSection_shouldHandleDismissButtonClicks() {
         // Given - localThis pattern
         val localThis = object {
             var retryCount = 0
@@ -155,7 +155,7 @@ class StateSectionsTest {
     }
 
     @Test
-    fun `ErrorSection should hide retry button when canRetry is false`() {
+    fun errorSection_shouldHideRetryButtonWhenCanRetryIsFalse() {
         // Given - localThis pattern
         val localThis = object {
             var retryCount = 0
@@ -190,7 +190,7 @@ class StateSectionsTest {
     }
 
     @Test
-    fun `ErrorSection should display correct error icons for different error types`() {
+    fun errorSection_shouldDisplayCorrectErrorIconsForDifferentErrorTypes() {
         // Given - localThis pattern
         val localThis = object {
             val errorTypes = listOf(
@@ -230,7 +230,7 @@ class StateSectionsTest {
     }
 
     @Test
-    fun `ErrorActionButtons should display both buttons when canRetry is true`() {
+    fun errorActionButtons_shouldDisplayBothButtonsWhenCanRetryIsTrue() {
         // Given - localThis pattern
         val localThis = object {
             var retryCount = 0
@@ -261,7 +261,7 @@ class StateSectionsTest {
     }
 
     @Test
-    fun `ErrorActionButtons should display only dismiss button when canRetry is false`() {
+    fun errorActionButtons_shouldDisplayOnlyDismissButtonWhenCanRetryIsFalse() {
         // Given - localThis pattern
         val localThis = object {
             var retryCount = 0
@@ -291,7 +291,7 @@ class StateSectionsTest {
     }
 
     @Test
-    fun `ErrorActionButtons should handle multiple clicks correctly`() {
+    fun errorActionButtons_shouldHandleMultipleClicksCorrectly() {
         // Given - localThis pattern
         val localThis = object {
             var retryCount = 0
@@ -328,7 +328,7 @@ class StateSectionsTest {
     }
 
     @Test
-    fun `ErrorSection should handle long error messages correctly`() {
+    fun errorSection_shouldHandleLongErrorMessagesCorrectly() {
         // Given - localThis pattern
         val localThis = object {
             val longErrorMessage = "This is a very long error message that should be displayed properly " +
@@ -365,7 +365,7 @@ class StateSectionsTest {
     }
 
     @Test
-    fun `LoadingSection should have proper accessibility features`() {
+    fun loadingSection_shouldHaveProperAccessibilityFeatures() {
         // Given - localThis pattern
         val localThis = object {
             // No state needed for loading section

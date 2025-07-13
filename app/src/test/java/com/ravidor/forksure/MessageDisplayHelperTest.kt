@@ -3,7 +3,7 @@ package com.ravidor.forksure
 import org.junit.Test
 import org.junit.Assert.*
 
-class SecurityManagerTest {
+class MessageDisplayHelperTest {
     @Test
     fun sampleTest() {
         // TODO: Implement test

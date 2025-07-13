@@ -13,8 +13,9 @@
     <string name="take_photo">📷 Take Photo</string>
     <string name="upload_photo">📤 Upload Photo</string>
     <string name="take_another_photo">📷 Take Another Photo</string>
+    <string name="back_to_main_screen">⬅️ Back to Main Screen</string>
     <string name="action_retry">🔄 Retry</string>
-    <string name="action_dismiss">✕ Dismiss</string>
+    <string name="action_dismiss">❌ Dismiss</string>
     <string name="action_print">🖨️ Print</string>
     <string name="action_report">🚩 Report</string>
     
@@ -39,8 +40,22 @@
     <string name="report_reason_harmful">Potentially harmful instructions</string>
     <string name="report_reason_other">Other</string>
     <string name="report_additional_details">Additional details (optional)</string>
+    <string name="report_reason_label">Reason for reporting:</string>
+    <string name="report_additional_details_placeholder">Optional: Provide additional details about your report</string>
     <string name="action_submit_report">Submit Report</string>
     <string name="action_cancel">Cancel</string>
+    
+    <!-- Security status -->
+    <string name="security_requests_label">Requests: </string>
+    <string name="security_requests_used"> (%d used)</string>
+    <string name="security_warning_title">Security Warning</string>
+    <string name="security_issues_detected">The following security issues were detected:</string>
+    <string name="security_disclaimer">For your security, some features may be limited. Please use the app in a secure environment.</string>
+    
+    <!-- Camera error messages -->
+    <string name="camera_bind_error">Failed to bind camera: %s</string>
+    <string name="camera_process_error">Failed to process captured image: %s</string>
+    <string name="camera_capture_error">Image capture failed: %s</string>
     
     <!-- Accessibility strings (minimal set for share functionality) -->
     <string name="accessibility_share_button">Share recipe button. Share the AI-generated recipe to other apps</string>
@@ -50,6 +65,7 @@
     <string name="accessibility_main_screen">Main ForkSure baking assistant screen</string>
     <string name="accessibility_take_photo_description">Take photo button. Opens camera to capture baked goods</string>
     <string name="accessibility_upload_photo_description">Upload photo button. Opens gallery to select existing photo of baked goods</string>
+    <string name="accessibility_back_from_camera">Back from camera button. Return to main screen without taking photo</string>
     <string name="accessibility_sample_image_selected">%1$s sample image, currently selected for analysis</string>
     <string name="accessibility_sample_image_not_selected">%1$s sample image, tap to select for analysis</string>
     <string name="accessibility_analyze_button_enabled">Analyze button. Start AI analysis of selected image</string>

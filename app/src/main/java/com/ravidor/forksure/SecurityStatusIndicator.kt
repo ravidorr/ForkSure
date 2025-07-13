@@ -31,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
@@ -226,7 +227,7 @@ private fun RateLimitStatusItem(
         }
 
         Text(
-            text = "Requests: ",
+            text = stringResource(R.string.security_requests_label),
             style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             maxLines = 1,
@@ -244,7 +245,7 @@ private fun RateLimitStatusItem(
 
         if (requestCount > 0) {
             Text(
-                text = " ($requestCount used)",
+                text = stringResource(R.string.security_requests_used, requestCount),
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
                 maxLines = 1,
@@ -284,7 +285,7 @@ fun SecurityWarningBanner(
                     modifier = Modifier.size(Dimensions.ICON_SIZE_LARGE)
                 )
                 Text(
-                    text = "Security Warning",
+                    text = stringResource(R.string.security_warning_title),
                     style = MaterialTheme.typography.titleMedium,
                     color = ThemeColors.errorColor(),
                     fontWeight = FontWeight.Bold,
@@ -295,7 +296,7 @@ fun SecurityWarningBanner(
             }
 
             Text(
-                text = "The following security issues were detected:",
+                text = stringResource(R.string.security_issues_detected),
                 style = MaterialTheme.typography.bodyMedium,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
@@ -313,7 +314,7 @@ fun SecurityWarningBanner(
             }
 
             Text(
-                text = "For your security, some features may be limited. Please use the app in a secure environment.",
+                text = stringResource(R.string.security_disclaimer),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 maxLines = 3,

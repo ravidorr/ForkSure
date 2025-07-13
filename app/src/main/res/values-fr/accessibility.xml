@@ -58,4 +58,5 @@
     <string name="accessibility_progress_initializing_camera">Initialisation de la caméra, veuillez patienter</string>
     <string name="accessibility_progress_analyzing_image">Analyse de l\'image avec IA, cela peut prendre un moment</string>
     <string name="accessibility_progress_submitting_report">Soumission du rapport, veuillez patienter</string>
+    <string name="accessibility_back_from_camera">⬅ ️ Bouton retour depuis la caméra. Retourner à \'écran principal sans prendre de photo</string>
 </resources> 

@@ -95,6 +95,11 @@ android {
         }
     }
     
+    packagingOptions {
+        pickFirst("META-INF/LICENSE.md")
+        pickFirst("META-INF/LICENSE-notice.md")
+    }
+    
     // Optimize dependencies info for better performance
     dependenciesInfo {
         includeInApk = false
@@ -276,6 +281,7 @@ dependencies {
     // Debug implementations
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation(libs.gson)
 }
 
 // KSP configuration for generated code
