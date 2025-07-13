@@ -21,7 +21,7 @@ class ImageComponentsTest {
     val composeTestRule = createComposeRule()
 
     @Test
-    fun `CameraSection should display take photo button and respond to clicks`() {
+    fun cameraSection_shouldDisplayTakePhotoButtonAndRespondToClicks() {
         // Given - localThis pattern
         val localThis = object {
             var clickCount = 0
@@ -31,7 +31,8 @@ class ImageComponentsTest {
         // When
         composeTestRule.setContent {
             CameraSection(
-                onTakePhoto = localThis.onTakePhoto
+                onTakePhoto = localThis.onTakePhoto,
+                onPhotoUploaded = { /* no-op for test */ }
             )
         }
 
@@ -46,7 +47,7 @@ class ImageComponentsTest {
     }
 
     @Test
-    fun `CameraSection should have proper accessibility content description`() {
+    fun cameraSection_shouldHaveProperAccessibilityContentDescription() {
         // Given - localThis pattern
         val localThis = object {
             var clickCount = 0
@@ -56,7 +57,8 @@ class ImageComponentsTest {
         // When
         composeTestRule.setContent {
             CameraSection(
-                onTakePhoto = localThis.onTakePhoto
+                onTakePhoto = localThis.onTakePhoto,
+                onPhotoUploaded = { /* no-op for test */ }
             )
         }
 
@@ -68,7 +70,7 @@ class ImageComponentsTest {
     }
 
     @Test
-    fun `CapturedImageCard should display image and handle selection state`() {
+    fun capturedImageCard_shouldDisplayImageAndHandleSelectionState() {
         // Given - localThis pattern
         val localThis = object {
             var isSelected = false
@@ -117,7 +119,7 @@ class ImageComponentsTest {
     }
 
     @Test
-    fun `SampleImagesSection should display horizontal list of images`() {
+    fun sampleImagesSection_shouldDisplayHorizontalListOfImages() {
         // Given - localThis pattern
         val localThis = object {
             val images = arrayOf(
@@ -161,7 +163,7 @@ class ImageComponentsTest {
     }
 
     @Test
-    fun `SampleImageItem should handle selection state changes`() {
+    fun sampleImageItem_shouldHandleSelectionStateChanges() {
         // Given - localThis pattern
         val localThis = object {
             var isSelected = false
@@ -213,7 +215,7 @@ class ImageComponentsTest {
     }
 
     @Test
-    fun `SampleImagesSection should allow multiple image selection`() {
+    fun sampleImagesSection_shouldAllowMultipleImageSelection() {
         // Given - localThis pattern
         val localThis = object {
             val images = arrayOf(
@@ -260,7 +262,7 @@ class ImageComponentsTest {
     }
 
     @Test
-    fun `ImageComponents should handle edge cases gracefully`() {
+    fun imageComponents_shouldHandleEdgeCasesGracefully() {
         // Given - localThis pattern
         val localThis = object {
             val emptyImages = arrayOf<Int>()
@@ -287,7 +289,7 @@ class ImageComponentsTest {
     }
 
     @Test
-    fun `CapturedImageCard should handle null bitmap gracefully`() {
+    fun capturedImageCard_shouldHandleNullBitmapGracefully() {
         // Given - localThis pattern
         val localThis = object {
             var clickCount = 0

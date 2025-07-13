@@ -1,9 +1,9 @@
-package com.ravidor.forksure.data.model
+package com.ravidor.forksure.di
 
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
-class RecipeTest {
+class AppModuleTest {
     @Test
     fun sampleTest() {
         assertTrue(true)

@@ -99,7 +99,9 @@ fun AnalyzeButtonSection(
         ) {
             Text(
                 text = actionGoText,
-                style = MaterialTheme.typography.headlineSmall
+                style = MaterialTheme.typography.titleSmall,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
         }
     }

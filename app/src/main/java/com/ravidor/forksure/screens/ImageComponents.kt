@@ -33,6 +33,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.ravidor.forksure.AccessibilityHelper
 import com.ravidor.forksure.Dimensions
@@ -109,7 +110,9 @@ fun CameraSection(
         ) {
             Text(
                 text = takePhotoText,
-                style = MaterialTheme.typography.headlineSmall
+                style = MaterialTheme.typography.titleSmall,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
         }
         
@@ -131,7 +134,9 @@ fun CameraSection(
         ) {
             Text(
                 text = uploadPhotoText,
-                style = MaterialTheme.typography.headlineSmall
+                style = MaterialTheme.typography.titleSmall,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
         }
     }

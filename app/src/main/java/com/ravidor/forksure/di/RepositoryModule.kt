@@ -8,11 +8,13 @@ import com.ravidor.forksure.repository.RecipeRepository
 import com.ravidor.forksure.repository.RecipeRepositoryImpl
 import com.ravidor.forksure.repository.UserPreferencesRepository
 import com.ravidor.forksure.repository.UserPreferencesRepositoryImpl
+import com.ravidor.forksure.repository.PreferencesCacheManager
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
+import dagger.Provides
 
 /**
  * Hilt module for binding repository interfaces to their implementations
@@ -57,4 +59,17 @@ abstract class RepositoryModule {
     abstract fun bindUserPreferencesRepository(
         userPreferencesRepositoryImpl: UserPreferencesRepositoryImpl
     ): UserPreferencesRepository
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+object PreferencesCacheManagerModule {
+    @Provides
+    @Singleton
+    fun providePreferencesCacheManager(
+        userPreferencesRepository: UserPreferencesRepository,
+        recipeRepository: RecipeRepository
+    ): PreferencesCacheManager {
+        return PreferencesCacheManager(userPreferencesRepository, recipeRepository)
+    }
 } 

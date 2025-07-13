@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ravidor.forksure.repository.AIRepository
 import com.ravidor.forksure.repository.SecurityRepository
+import com.ravidor.forksure.repository.PreferencesCacheManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -19,7 +20,8 @@ import com.ravidor.forksure.AppConstants
 @HiltViewModel
 class BakingViewModel @Inject constructor(
     private val aiRepository: AIRepository,
-    private val securityRepository: SecurityRepository
+    private val securityRepository: SecurityRepository,
+    private val preferencesCacheManager: PreferencesCacheManager // <-- Injected
 ) : ViewModel() {
     
     private val _uiState: MutableStateFlow<UiState> =
