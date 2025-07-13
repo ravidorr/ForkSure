@@ -26,12 +26,14 @@ import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
-import org.robolectric.annotation.Config
+import dagger.hilt.android.testing.HiltAndroidTest
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.UninstallModules
+import com.ravidor.forksure.di.RepositoryModule
 import java.util.Date
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
+import org.junit.Rule
 
 /**
  * Comprehensive persistence testing suite for ForkSure app
@@ -45,13 +47,15 @@ import java.util.concurrent.TimeUnit
  * - Concurrent access and thread safety
  * - Memory usage optimization for persistent data
  */
-@RunWith(RobolectricTestRunner::class)
-@Config(sdk = [34])
+@HiltAndroidTest
+@UninstallModules(RepositoryModule::class)
 @ExperimentalCoroutinesApi
 class PersistenceTestSuite {
 
     // Test fixtures using localThis pattern
     private lateinit var localThis: TestFixtures
+    @get:Rule
+    val hiltRule = HiltAndroidRule(this)
     
     private data class TestFixtures(
         val context: Context,
@@ -95,7 +99,7 @@ class PersistenceTestSuite {
         val preferencesDataSource = PreferencesDataSource(mockSharedPreferences)
         
         // Use a real RecipeCacheDataSource for integration testing
-        val recipeCacheDataSource = RecipeCacheDataSource()
+        val recipeCacheDataSource = RecipeCacheDataSource(context)
         
         localThis = TestFixtures(
             context = context,
@@ -115,7 +119,7 @@ class PersistenceTestSuite {
     // MARK: - Recipe Cache Persistence Tests
     
     @Test
-    fun `RecipeCacheDataSource should persist recipes correctly with LRU eviction`() = runTest {
+    fun recipeCacheDataSource_shouldPersistRecipesCorrectlyWithLRUEviction() = runTest {
         // Given - cache with limited size and multiple recipes
         val localThis = this@PersistenceTestSuite.localThis
         val maxCacheSize = 5
@@ -157,7 +161,7 @@ class PersistenceTestSuite {
     }
     
     @Test
-    fun `Recipe cache should maintain data integrity under concurrent access`() = runTest {
+    fun recipeCache_shouldMaintainDataIntegrityUnderConcurrentAccess() = runTest {
         // Given - concurrent cache operations
         val localThis = this@PersistenceTestSuite.localThis
         val threadCount = 20
@@ -208,7 +212,7 @@ class PersistenceTestSuite {
     }
     
     @Test
-    fun `Recipe cache should handle cache corruption gracefully`() = runTest {
+    fun recipeCache_shouldHandleCacheCorruptionGracefully() = runTest {
         // Given - recipe cache with some valid data
         val localThis = this@PersistenceTestSuite.localThis
         
@@ -250,7 +254,7 @@ class PersistenceTestSuite {
     }
     
     @Test
-    fun `Recipe cache should optimize memory usage with large datasets`() = runTest {
+    fun recipeCache_shouldOptimizeMemoryUsageWithLargeDatasets() = runTest {
         // Given - memory-intensive recipe data
         val localThis = this@PersistenceTestSuite.localThis
         
@@ -297,7 +301,7 @@ class PersistenceTestSuite {
     // MARK: - SharedPreferences Persistence Tests
     
     @Test
-    fun `PreferencesDataSource should persist user preferences correctly`() = runTest {
+    fun preferencesDataSource_shouldPersistUserPreferencesCorrectly() = runTest {
         // Given - user preferences with various data types
         val localThis = this@PersistenceTestSuite.localThis
         
@@ -350,7 +354,7 @@ class PersistenceTestSuite {
     }
     
     @Test
-    fun `PreferencesDataSource should handle data integrity during concurrent updates`() = runTest {
+    fun preferencesDataSource_shouldHandleDataIntegrityDuringConcurrentUpdates() = runTest {
         // Given - concurrent preference updates
         val localThis = this@PersistenceTestSuite.localThis
         val updateCount = 100
@@ -397,7 +401,7 @@ class PersistenceTestSuite {
     }
     
     @Test
-    fun `PreferencesDataSource should handle usage statistics persistence correctly`() = runTest {
+    fun preferencesDataSource_shouldHandleUsageStatisticsPersistenceCorrectly() = runTest {
         // Given - usage statistics data
         val localThis = this@PersistenceTestSuite.localThis
         
@@ -434,7 +438,7 @@ class PersistenceTestSuite {
     }
     
     @Test
-    fun `PreferencesDataSource should recover from SharedPreferences corruption`() = runTest {
+    fun preferencesDataSource_shouldRecoverFromSharedPreferencesCorruption() = runTest {
         // Given - SharedPreferences with some corrupted data
         val localThis = this@PersistenceTestSuite.localThis
         
@@ -460,7 +464,7 @@ class PersistenceTestSuite {
     // MARK: - Data Consistency Tests
     
     @Test
-    fun `Cache and preferences should maintain consistency across app lifecycle`() = runTest {
+    fun cacheAndPreferences_shouldMaintainConsistencyAcrossAppLifecycle() = runTest {
         // Given - app lifecycle simulation with cache and preferences
         val localThis = this@PersistenceTestSuite.localThis
         
@@ -500,7 +504,7 @@ class PersistenceTestSuite {
     }
     
     @Test
-    fun `Long-term data persistence should maintain integrity over time`() = runTest {
+    fun longTermDataPersistence_shouldMaintainIntegrityOverTime() = runTest {
         // Given - long-term usage simulation
         val localThis = this@PersistenceTestSuite.localThis
         val daysSimulated = 30
@@ -558,7 +562,7 @@ class PersistenceTestSuite {
     // MARK: - Performance and Efficiency Tests
     
     @Test
-    fun `Persistence operations should be performant under high load`() = runTest {
+    fun persistenceOperations_shouldBePerformantUnderHighLoad() = runTest {
         // Given - high-load persistence scenario
         val localThis = this@PersistenceTestSuite.localThis
         val operationCount = 1000

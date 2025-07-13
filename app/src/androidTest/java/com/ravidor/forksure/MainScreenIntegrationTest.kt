@@ -13,6 +13,7 @@ import androidx.compose.ui.test.performTextInput
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.ravidor.forksure.repository.FakeAIRepository
 import com.ravidor.forksure.repository.FakeSecurityRepository
+import com.ravidor.forksure.repository.PreferencesCacheManager
 import com.ravidor.forksure.screens.MainScreen
 import com.ravidor.forksure.state.rememberMainScreenState
 import com.ravidor.forksure.ui.theme.ForkSureTheme
@@ -44,6 +45,9 @@ class MainScreenIntegrationTest {
     @Inject
     lateinit var fakeSecurityRepository: FakeSecurityRepository
 
+    @Inject
+    lateinit var preferencesCacheManager: PreferencesCacheManager
+
     private lateinit var bakingViewModel: BakingViewModel
 
     @Before
@@ -54,7 +58,7 @@ class MainScreenIntegrationTest {
         fakeAIRepository.reset()
         fakeSecurityRepository.reset()
         
-        bakingViewModel = BakingViewModel(fakeAIRepository, fakeSecurityRepository)
+        bakingViewModel = BakingViewModel(fakeAIRepository, fakeSecurityRepository, preferencesCacheManager)
     }
 
     @Test

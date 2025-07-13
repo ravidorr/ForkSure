@@ -1,9 +1,9 @@
-package com.ravidor.forksure
+package com.ravidor.forksure.repository
 
 import org.junit.Test
 import org.junit.Assert.*
 
-class SecurityManagerTest {
+class AIRepositoryTest {
     @Test
     fun sampleTest() {
         // TODO: Implement test

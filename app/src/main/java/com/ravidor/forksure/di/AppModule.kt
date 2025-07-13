@@ -44,4 +44,11 @@ object AppModule {
             Context.MODE_PRIVATE
         )
     }
+
+    /**
+     * Provides application context for injection
+     */
+    @Provides
+    @Singleton
+    fun provideAppContext(@ApplicationContext context: Context): Context = context
 } 

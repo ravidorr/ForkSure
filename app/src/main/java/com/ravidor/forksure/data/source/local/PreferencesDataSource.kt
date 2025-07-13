@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
+import java.security.MessageDigest
 
 /**
  * Local data source for user preferences using SharedPreferences
@@ -57,60 +58,110 @@ class PreferencesDataSource @Inject constructor(
         private const val KEY_TOTAL_SAMPLE_IMAGES_USED = "total_sample_images_used"
         private const val KEY_AVERAGE_SESSION_DURATION = "average_session_duration"
         private const val KEY_LAST_USED_DATE = "last_used_date"
+        private const val KEY_PREFS_VERSION = "prefs_version"
+        private const val KEY_PREFS_CHECKSUM = "prefs_checksum"
+        private const val PREFS_VERSION = 1
+    }
+
+    private fun calculateChecksum(preferences: UserPreferences): String {
+        val data = listOf(
+            preferences.theme.name,
+            preferences.language,
+            preferences.enableHapticFeedback.toString(),
+            preferences.enableSoundEffects.toString(),
+            preferences.cacheRecipes.toString(),
+            preferences.maxCacheSize.toString(),
+            preferences.autoDeleteOldRecipes.toString(),
+            preferences.cacheRetentionDays.toString(),
+            preferences.enableAnalytics.toString(),
+            preferences.enableCrashReporting.toString(),
+            preferences.preferredImageQuality.name,
+            preferences.enableAccessibilityFeatures.toString(),
+            preferences.fontSize.name,
+            preferences.enableHighContrast.toString(),
+            preferences.enableReducedMotion.toString(),
+            preferences.lastAppVersion,
+            preferences.firstLaunchDate.toString(),
+            preferences.totalAnalysisCount.toString(),
+            preferences.favoriteRecipeIds.sorted().joinToString(",")
+        ).joinToString("|")
+        val md = MessageDigest.getInstance("SHA-256")
+        val hash = md.digest(data.toByteArray())
+        return hash.joinToString("") { "%02x".format(it) }
+    }
+
+    private fun isPrefsValid(preferences: UserPreferences): Boolean {
+        val storedVersion = sharedPreferences.getInt(KEY_PREFS_VERSION, PREFS_VERSION)
+        val storedChecksum = sharedPreferences.getString(KEY_PREFS_CHECKSUM, null)
+        val calculatedChecksum = calculateChecksum(preferences)
+        return storedVersion == PREFS_VERSION && storedChecksum == calculatedChecksum
     }
 
     /**
      * Load user preferences from SharedPreferences
      */
     private fun loadUserPreferences(): UserPreferences {
-        return UserPreferences(
-            theme = AppTheme.valueOf(
-                sharedPreferences.getString(KEY_THEME, AppTheme.SYSTEM.name) ?: AppTheme.SYSTEM.name
-            ),
-            language = sharedPreferences.getString(KEY_LANGUAGE, "en") ?: "en",
-            enableHapticFeedback = sharedPreferences.getBoolean(KEY_HAPTIC_FEEDBACK, true),
-            enableSoundEffects = sharedPreferences.getBoolean(KEY_SOUND_EFFECTS, true),
-            cacheRecipes = sharedPreferences.getBoolean(KEY_CACHE_RECIPES, true),
-            maxCacheSize = sharedPreferences.getInt(KEY_MAX_CACHE_SIZE, 50),
-            autoDeleteOldRecipes = sharedPreferences.getBoolean(KEY_AUTO_DELETE_OLD_RECIPES, true),
-            cacheRetentionDays = sharedPreferences.getInt(KEY_CACHE_RETENTION_DAYS, 30),
-            enableAnalytics = sharedPreferences.getBoolean(KEY_ENABLE_ANALYTICS, false),
-            enableCrashReporting = sharedPreferences.getBoolean(KEY_ENABLE_CRASH_REPORTING, true),
-            preferredImageQuality = ImageQuality.valueOf(
-                sharedPreferences.getString(KEY_PREFERRED_IMAGE_QUALITY, ImageQuality.HIGH.name) 
-                    ?: ImageQuality.HIGH.name
-            ),
-            enableAccessibilityFeatures = sharedPreferences.getBoolean(KEY_ENABLE_ACCESSIBILITY_FEATURES, false),
-            fontSize = FontSize.valueOf(
-                sharedPreferences.getString(KEY_FONT_SIZE, FontSize.MEDIUM.name) ?: FontSize.MEDIUM.name
-            ),
-            enableHighContrast = sharedPreferences.getBoolean(KEY_ENABLE_HIGH_CONTRAST, false),
-            enableReducedMotion = sharedPreferences.getBoolean(KEY_ENABLE_REDUCED_MOTION, false),
-            lastAppVersion = sharedPreferences.getString(KEY_LAST_APP_VERSION, "") ?: "",
-            firstLaunchDate = sharedPreferences.getLong(KEY_FIRST_LAUNCH_DATE, System.currentTimeMillis()),
-            totalAnalysisCount = sharedPreferences.getInt(KEY_TOTAL_ANALYSIS_COUNT, 0),
-            favoriteRecipeIds = sharedPreferences.getStringSet(KEY_FAVORITE_RECIPE_IDS, emptySet()) ?: emptySet()
-        )
+        val prefs = try {
+            UserPreferences(
+                theme = AppTheme.valueOf(
+                    sharedPreferences.getString(KEY_THEME, AppTheme.SYSTEM.name) ?: AppTheme.SYSTEM.name
+                ),
+                language = sharedPreferences.getString(KEY_LANGUAGE, "en") ?: "en",
+                enableHapticFeedback = sharedPreferences.getBoolean(KEY_HAPTIC_FEEDBACK, true),
+                enableSoundEffects = sharedPreferences.getBoolean(KEY_SOUND_EFFECTS, true),
+                cacheRecipes = sharedPreferences.getBoolean(KEY_CACHE_RECIPES, true),
+                maxCacheSize = sharedPreferences.getInt(KEY_MAX_CACHE_SIZE, 50),
+                autoDeleteOldRecipes = sharedPreferences.getBoolean(KEY_AUTO_DELETE_OLD_RECIPES, true),
+                cacheRetentionDays = sharedPreferences.getInt(KEY_CACHE_RETENTION_DAYS, 30),
+                enableAnalytics = sharedPreferences.getBoolean(KEY_ENABLE_ANALYTICS, false),
+                enableCrashReporting = sharedPreferences.getBoolean(KEY_ENABLE_CRASH_REPORTING, true),
+                preferredImageQuality = ImageQuality.valueOf(
+                    sharedPreferences.getString(KEY_PREFERRED_IMAGE_QUALITY, ImageQuality.HIGH.name)
+                        ?: ImageQuality.HIGH.name
+                ),
+                enableAccessibilityFeatures = sharedPreferences.getBoolean(KEY_ENABLE_ACCESSIBILITY_FEATURES, false),
+                fontSize = FontSize.valueOf(
+                    sharedPreferences.getString(KEY_FONT_SIZE, FontSize.MEDIUM.name) ?: FontSize.MEDIUM.name
+                ),
+                enableHighContrast = sharedPreferences.getBoolean(KEY_ENABLE_HIGH_CONTRAST, false),
+                enableReducedMotion = sharedPreferences.getBoolean(KEY_ENABLE_REDUCED_MOTION, false),
+                lastAppVersion = sharedPreferences.getString(KEY_LAST_APP_VERSION, "") ?: "",
+                firstLaunchDate = sharedPreferences.getLong(KEY_FIRST_LAUNCH_DATE, System.currentTimeMillis()),
+                totalAnalysisCount = sharedPreferences.getInt(KEY_TOTAL_ANALYSIS_COUNT, 0),
+                favoriteRecipeIds = sharedPreferences.getStringSet(KEY_FAVORITE_RECIPE_IDS, emptySet()) ?: emptySet()
+            )
+        } catch (e: Exception) {
+            sharedPreferences.edit().clear().apply()
+            UserPreferences()
+        }
+        return if (isPrefsValid(prefs)) prefs else UserPreferences()
     }
 
     /**
      * Load usage statistics from SharedPreferences
      */
     private fun loadUsageStats(): AppUsageStats {
-        return AppUsageStats(
-            totalLaunches = sharedPreferences.getInt(KEY_TOTAL_LAUNCHES, 0),
-            totalAnalyses = sharedPreferences.getInt(KEY_TOTAL_ANALYSES, 0),
-            totalPhotosAnalyzed = sharedPreferences.getInt(KEY_TOTAL_PHOTOS_ANALYZED, 0),
-            totalSampleImagesUsed = sharedPreferences.getInt(KEY_TOTAL_SAMPLE_IMAGES_USED, 0),
-            averageSessionDuration = sharedPreferences.getLong(KEY_AVERAGE_SESSION_DURATION, 0),
-            lastUsedDate = sharedPreferences.getLong(KEY_LAST_USED_DATE, System.currentTimeMillis())
-        )
+        return try {
+            AppUsageStats(
+                totalLaunches = sharedPreferences.getInt(KEY_TOTAL_LAUNCHES, 0),
+                totalAnalyses = sharedPreferences.getInt(KEY_TOTAL_ANALYSES, 0),
+                totalPhotosAnalyzed = sharedPreferences.getInt(KEY_TOTAL_PHOTOS_ANALYZED, 0),
+                totalSampleImagesUsed = sharedPreferences.getInt(KEY_TOTAL_SAMPLE_IMAGES_USED, 0),
+                averageSessionDuration = sharedPreferences.getLong(KEY_AVERAGE_SESSION_DURATION, 0),
+                lastUsedDate = sharedPreferences.getLong(KEY_LAST_USED_DATE, System.currentTimeMillis())
+            )
+        } catch (e: Exception) {
+            // Handle corruption, reset to defaults
+            sharedPreferences.edit().clear().apply()
+            AppUsageStats()
+        }
     }
 
     /**
      * Save user preferences to SharedPreferences
      */
     suspend fun saveUserPreferences(preferences: UserPreferences) = withContext(Dispatchers.IO) {
+        val checksum = calculateChecksum(preferences)
         sharedPreferences.edit {
             putString(KEY_THEME, preferences.theme.name)
             putString(KEY_LANGUAGE, preferences.language)
@@ -131,6 +182,8 @@ class PreferencesDataSource @Inject constructor(
             putLong(KEY_FIRST_LAUNCH_DATE, preferences.firstLaunchDate)
             putInt(KEY_TOTAL_ANALYSIS_COUNT, preferences.totalAnalysisCount)
             putStringSet(KEY_FAVORITE_RECIPE_IDS, preferences.favoriteRecipeIds)
+            putInt(KEY_PREFS_VERSION, PREFS_VERSION)
+            putString(KEY_PREFS_CHECKSUM, checksum)
         }
         _userPreferences.value = preferences
     }
