@@ -94,12 +94,12 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
-    
     packagingOptions {
-        pickFirst("META-INF/LICENSE.md")
-        pickFirst("META-INF/LICENSE-notice.md")
+        resources {
+            pickFirsts += setOf("META-INF/LICENSE.md", "META-INF/LICENSE-notice.md")
+        }
     }
-    
+
     // Optimize dependencies info for better performance
     dependenciesInfo {
         includeInApk = false
