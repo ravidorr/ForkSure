@@ -1,5 +1,8 @@
 # 🍴 ForkSure - AI Baking Assistant
 
+[![CI - Assemble Debug](https://github.com/ravidorr/ForkSure/actions/workflows/ci-build.yml/badge.svg?branch=main)](https://github.com/ravidorr/ForkSure/actions/workflows/ci-build.yml)
+[![Verify 16KB page size](https://github.com/ravidorr/ForkSure/actions/workflows/verify-16kb.yml/badge.svg?branch=main)](https://github.com/ravidorr/ForkSure/actions/workflows/verify-16kb.yml)
+
 An Android app that uses AI to analyze photos of baked goods and provide instant recipes and baking tips.
 
 ## 📱 Features
@@ -101,7 +104,7 @@ The privacy policy is available at: [Privacy Policy](https://ravidor.github.io/F
 
 ## 📱 Download
 
-Available on Google Play Store: [Coming Soon]
+Available on Google Play Store: https://play.google.com/store/apps/details?id=com.ravidor.forksure
 
 ## 📧 Contact
 
