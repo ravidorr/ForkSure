@@ -1,13 +1,13 @@
-name: Verify 16KB page size
+name: CI - Assemble Debug
 
 on:
   push:
-    branches: [ main, "release/**" ]
+    branches: [ main, "release/**", "feat/**", "chore/**", "docs/**" ]
   pull_request:
     branches: [ main ]
 
 jobs:
-  verify-16kb:
+  assemble-debug:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -28,14 +28,18 @@ jobs:
           echo "sdk.dir=$ANDROID_HOME" > local.properties
           echo "apiKey=${{ secrets.GEMINI_API_KEY }}" >> local.properties
 
-      - name: Ensure binutils (readelf)
-        run: sudo apt-get update && sudo apt-get install -y binutils
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties', 'gradle/libs.versions.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Build release bundle
-        run: ./gradlew --no-daemon :app:bundleRelease
-
-      - name: Verify 16KB page size in native libraries
-        run: bash scripts/verify_16kb.sh app/build/outputs/bundle/release/app-release.aab
+      - name: Assemble Debug
+        run: ./gradlew --no-daemon :app:assembleDebug

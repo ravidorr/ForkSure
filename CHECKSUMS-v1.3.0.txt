@@ -1,0 +1,6 @@
+# Checksums for ForkSure v1.3.0
+# File: app/build/outputs/bundle/release/app-release.aab
+# Size: 11840780 bytes
+
+SHA-256: 2e5df2a992565f549315c681bc60cc537bc36b2b4ce38d87158377c320fc14d8
+SHA-512: a5768e3aedf3d79d15cc4ac49b16d0a4508895e14a121f5f2f650d88d2e06075023c0a32ae5192f80496c95e5f30558619089718aaa1b2f265bf1edb663ea69a
