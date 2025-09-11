@@ -1,0 +1,33 @@
+name: Verify 16KB page size
+
+on:
+  push:
+    branches: [ main, "release/**" ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  verify-16kb:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: gradle
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Ensure binutils (readelf)
+        run: sudo apt-get update && sudo apt-get install -y binutils
+
+      - name: Build release bundle
+        run: ./gradlew --no-daemon :app:bundleRelease
+
+      - name: Verify 16KB page size in native libraries
+        run: bash scripts/verify_16kb.sh app/build/outputs/bundle/release/app-release.aab
