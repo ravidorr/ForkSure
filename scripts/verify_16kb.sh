@@ -51,7 +51,8 @@ non_compliant=0
 for so in "${SO_FILES[@]}"; do
   echo "== $so =="
   # Extract the 'Align' value of PT_LOAD rows from readelf -l output.
-  aligns=$(readelf -l "$so" | awk '/^  LOAD/ {print $NF}')
+  # Use -W to prevent line wrapping that breaks field parsing on CI
+  aligns=$(readelf -W -l "$so" | awk '/^  LOAD/ {print $NF}')
   if [[ -z "$aligns" ]]; then
     echo "  RESULT: UNKNOWN (no LOAD rows found)"
     non_compliant=$((non_compliant+1))
@@ -63,11 +64,13 @@ for so in "${SO_FILES[@]}"; do
     [[ -z "$a" ]] && continue
     ah=$(echo "$a" | tr 'A-Z' 'a-z')
     # Convert hex to decimal; default to 0 on unexpected format
-    if [[ "$ah" == 0x* ]]; then
+    if [[ "$ah" == 0x* ]] || [[ "$ah" == 0X* ]]; then
       val=$((16#${ah#0x}))
     else
       # Some readelf builds may print decimal; fall back to parsing as decimal
-      val=${ah}
+      # Remove any leading zeros/spaces
+      val=$(echo "$ah" | sed 's/^0*//')
+      [[ -z "$val" ]] && val=0
     fi
     echo "  LOAD Align=$ah ($val)"
     if (( val < 16384 )); then
