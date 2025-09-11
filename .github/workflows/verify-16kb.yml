@@ -23,8 +23,16 @@ jobs:
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
 
+      - name: Create local.properties
+        run: |
+          echo "sdk.dir=$ANDROID_HOME" > local.properties
+          echo "apiKey=${{ secrets.GEMINI_API_KEY }}" >> local.properties
+
       - name: Ensure binutils (readelf)
         run: sudo apt-get update && sudo apt-get install -y binutils
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
 
       - name: Build release bundle
         run: ./gradlew --no-daemon :app:bundleRelease
