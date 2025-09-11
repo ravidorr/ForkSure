@@ -74,9 +74,6 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    kotlinOptions {
-        jvmTarget = "11"
-    }
     buildFeatures {
         compose = true
         buildConfig = true
@@ -148,6 +145,12 @@ android {
 // JaCoCo Configuration
 jacoco {
     toolVersion = "0.8.10"
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
+    }
 }
 
 tasks.register<JacocoReport>("jacocoTestReport") {
