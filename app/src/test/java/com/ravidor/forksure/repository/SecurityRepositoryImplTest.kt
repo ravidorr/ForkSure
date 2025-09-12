@@ -45,7 +45,7 @@ class SecurityRepositoryImplTest {
     fun checkRateLimit_delegates() = runTest {
         mockkObject(SecurityManager)
         val ctx = mockk<Context>(relaxed = true)
-        every { SecurityManager.checkRateLimit(ctx, any()) } returns RateLimitResult.Allowed(5, 60)
+coEvery { SecurityManager.checkRateLimit(ctx, any()) } returns RateLimitResult.Allowed(5, 60)
         val prefs = mockk<SharedPreferences>(relaxed = true)
         val repo = SecurityRepositoryImpl(ctx, prefs)
 

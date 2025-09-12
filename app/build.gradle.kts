@@ -155,14 +155,49 @@ kotlin {
 
 tasks.register<JacocoReport>("jacocoTestReport") {
     dependsOn("testDebugUnitTest")
-    
+
     reports {
         xml.required.set(true)
         html.required.set(true)
         csv.required.set(false)
     }
-    
-    val fileFilter = listOf(
+
+    // Exclude generated and boilerplate code from coverage
+    val excludes = listOf(
+        "**/R.class",
+        "**/R$*.class",
+        "**/BuildConfig.*",
+        "**/Manifest*.*",
+        "**/*Test*.*",
+        "android/**/*.*",
+        // Dagger/Hilt/KSP generated
+        "**/Hilt_*.*",
+        "**/*_Hilt*.*",
+        "**/*_Factory.*",
+        "**/*_MembersInjector.*",
+        "**/*Module*.*",
+        "**/*Component*.*",
+        "**/Dagger*.*",
+        "**/hilt_aggregated_deps/**",
+        // Compose generated singletons and theme boilerplate
+        "**/ComposableSingletons*.*",
+        "**/ui/theme/**"
+    )
+
+    val buildDirFile = project.layout.buildDirectory.get().asFile
+    val kotlinDebug = fileTree("${buildDirFile}/tmp/kotlin-classes/debug").exclude(excludes)
+    val javaDebug = fileTree("${buildDirFile}/intermediates/javac/debug/classes").exclude(excludes)
+    val mainSrc = "${project.projectDir}/src/main/java"
+
+    sourceDirectories.setFrom(files(mainSrc))
+    classDirectories.setFrom(files(kotlinDebug, javaDebug))
+    executionData.setFrom(fileTree(buildDirFile).include("jacoco/testDebugUnitTest.exec"))
+}
+
+tasks.register<JacocoCoverageVerification>("jacocoCoverageVerification") {
+    dependsOn("jacocoTestReport")
+
+    val excludes = listOf(
         "**/R.class",
         "**/R$*.class",
         "**/BuildConfig.*",
@@ -170,28 +205,30 @@ tasks.register<JacocoReport>("jacocoTestReport") {
         "**/*Test*.*",
         "android/**/*.*",
         "**/Hilt_*.*",
+        "**/*_Hilt*.*",
         "**/*_Factory.*",
         "**/*_MembersInjector.*",
-        "**/*Module.*",
-        "**/*Component.*",
-        "**/DaggerApplicationComponent*.*"
+        "**/*Module*.*",
+        "**/*Component*.*",
+        "**/Dagger*.*",
+        "**/hilt_aggregated_deps/**",
+        "**/ComposableSingletons*.*",
+        "**/ui/theme/**"
     )
-    
-    val debugTree = fileTree("${project.layout.buildDirectory.get().asFile}/tmp/kotlin-classes/debug")
-    val mainSrc = "${project.projectDir}/src/main/java"
-    
-    sourceDirectories.setFrom(files(mainSrc))
-    classDirectories.setFrom(files(debugTree.exclude(fileFilter)))
-    executionData.setFrom(fileTree(project.layout.buildDirectory.get().asFile).include("jacoco/testDebugUnitTest.exec"))
-}
+    val buildDirFile = project.layout.buildDirectory.get().asFile
+    classDirectories.setFrom(
+        files(
+            fileTree("${buildDirFile}/tmp/kotlin-classes/debug").exclude(excludes),
+            fileTree("${buildDirFile}/intermediates/javac/debug/classes").exclude(excludes)
+        )
+    )
+    executionData.setFrom(fileTree(buildDirFile).include("jacoco/testDebugUnitTest.exec"))
 
-tasks.register<JacocoCoverageVerification>("jacocoCoverageVerification") {
-    dependsOn("jacocoTestReport")
-    
     violationRules {
         rule {
+            // Keep the existing threshold for now; we will raise this as real tests are added
             limit {
-                minimum = "0.60".toBigDecimal() // 60% minimum coverage
+                minimum = "0.60".toBigDecimal()
             }
         }
     }
