@@ -84,7 +84,7 @@ class RecipeRepositoryImplTest {
         assertTrue(recipe.ingredients.isNotEmpty())
         assertTrue(recipe.instructions.isNotEmpty())
         // confidence should be > 0 due to ingredients, instructions and title
-        assertTrue("confidence should be > 0", recipe.confidence > 0f)
+assertTrue(recipe.confidence > 0f)
         coVerify { cache.cacheRecipe(any(), any()) }
     }
 
@@ -95,13 +95,13 @@ class RecipeRepositoryImplTest {
         val repo = RecipeRepositoryImpl(aiRepo, cache)
 
         coEvery { cache.getCachedRecipe(any()) } returns null
-        coEvery { aiRepo.generateContent(any(), any()) } returns AIResponseProcessingResult.Error("boom")
+coEvery { aiRepo.generateContent(any(), any()) } returns AIResponseProcessingResult.Error("AI request failed", "boom")
 
         val bmp = mockk<Bitmap>(relaxed = true)
         val res = repo.analyzeRecipe(bmp, "prompt").first()
 
         assertEquals(false, res.success)
-        assertTrue(res.errorMessage?.contains("boom") == true)
+assertEquals(true, res.errorMessage?.contains("boom") ?: false)
     }
 
     @Test
@@ -111,13 +111,13 @@ class RecipeRepositoryImplTest {
         val repo = RecipeRepositoryImpl(aiRepo, cache)
 
         coEvery { cache.getCachedRecipe(any()) } returns null
-        coEvery { aiRepo.generateContent(any(), any()) } returns AIResponseProcessingResult.Blocked("policy")
+coEvery { aiRepo.generateContent(any(), any()) } returns AIResponseProcessingResult.Blocked("Content policy", "policy")
 
         val bmp = mockk<Bitmap>(relaxed = true)
         val res = repo.analyzeRecipe(bmp, "prompt").first()
 
         assertEquals(false, res.success)
-        assertTrue(res.errorMessage?.contains("blocked", ignoreCase = true) == true)
+assertEquals(true, res.errorMessage?.contains("blocked", ignoreCase = true) ?: false)
     }
 
     @Test
@@ -133,8 +133,8 @@ class RecipeRepositoryImplTest {
         )
         coEvery { cache.getAllCachedRecipes() } returns items
 
-        val result = repo.searchRecipes("chocolate sweet").first()
+val result = repo.searchRecipes("chocolate sweet")
         assertTrue(result.first().title.contains("Chocolate"))
-        assertTrue(result.all { it.tags.contains("sweet") || it.title.contains("chocolate", true) || it.description.contains("chocolate", true) || it.ingredients.any { s -> s.contains("chocolate", true) } })
+        assertTrue(result.all { r -> r.tags.contains("sweet") || r.title.contains("chocolate", true) || r.description.contains("chocolate", true) || r.ingredients.any { s -> s.contains("chocolate", true) } })
     }
 }
