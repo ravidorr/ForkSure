@@ -2,8 +2,11 @@
 
 [![CI - Assemble Debug](https://github.com/ravidorr/ForkSure/actions/workflows/ci-build.yml/badge.svg?branch=main)](https://github.com/ravidorr/ForkSure/actions/workflows/ci-build.yml)
 [![Verify 16KB page size](https://github.com/ravidorr/ForkSure/actions/workflows/verify-16kb.yml/badge.svg?branch=main)](https://github.com/ravidorr/ForkSure/actions/workflows/verify-16kb.yml)
+[![Get it on Google Play](https://img.shields.io/badge/Get%20it%20on-Google%20Play-414141?style=for-the-badge&logo=google-play&logoColor=white)](https://play.google.com/store/apps/details?id=com.ravidor.forksure)
 
 An Android app that uses AI to analyze photos of baked goods and provide instant recipes and baking tips.
+
+Play Store: https://play.google.com/store/apps/details?id=com.ravidor.forksure
 
 ## 📱 Features
 
@@ -57,7 +60,7 @@ Comprehensive guides and documentation are organized by category in the [`docs/`
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Android Studio Arctic Fox or later
+- The latest Android Studio version
 - Android SDK 29 or higher
 - Google Gemini AI API key
 
@@ -118,5 +121,3 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ---
 
 *Transform any photo into a baking opportunity with ForkSure! 🧁✨*
-// Direct push test
-// Direct push test
