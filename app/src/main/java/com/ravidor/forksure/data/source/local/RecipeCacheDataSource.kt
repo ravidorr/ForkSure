@@ -34,16 +34,21 @@ class RecipeCacheDataSource @Inject constructor(
     private val recipeCache = object : LruCache<String, CachedRecipe>(50) {
         override fun entryRemoved(evicted: Boolean, key: String, oldValue: CachedRecipe, newValue: CachedRecipe?) {
             if (evicted) {
+                // Keep mirrors in sync on eviction
+                entries.remove(key)
                 requestHistory.remove(key)
                 val currentStats = _cacheStats.value
                 _cacheStats.value = currentStats.copy(
                     evictionCount = currentStats.evictionCount + 1,
-                    totalEntries = size(),
-                    totalSize = size()
+                    totalEntries = entries.size,
+                    totalSize = entries.size
                 )
             }
         }
     }
+    
+    // Mirror of cache entries for reliable iteration in tests and runtime
+    private val entries = ConcurrentHashMap<String, CachedRecipe>()
     
     // Request history for analytics
     private val requestHistory = ConcurrentHashMap<String, RecipeAnalysisRequest>()
@@ -74,6 +79,7 @@ class RecipeCacheDataSource @Inject constructor(
             val data = gson.fromJson(persisted.dataJson, CacheData::class.java)
             data.entries.forEach { (key, cachedRecipe) ->
                 recipeCache.put(key, cachedRecipe)
+                entries[key] = cachedRecipe
             }
             requestHistory.putAll(data.requestHistory)
         } catch (_: Throwable) {
@@ -83,10 +89,8 @@ class RecipeCacheDataSource @Inject constructor(
 
     private fun persistCacheToDisk() {
         try {
-            val snapshot = try { recipeCache.snapshot() ?: emptyMap() } catch (_: Throwable) { emptyMap() }
-            val safeEntries = snapshot.filterValues { it != null } as Map<String, CachedRecipe>
             val data = CacheData(
-                entries = safeEntries,
+                entries = HashMap(entries),
                 requestHistory = HashMap(requestHistory)
             )
             val dataJson = gson.toJson(data)
@@ -154,6 +158,7 @@ class RecipeCacheDataSource @Inject constructor(
                 )
                 
                 recipeCache.put(cacheKey, cachedRecipe)
+                entries[cacheKey] = cachedRecipe
                 requestHistory[cacheKey] = request
                 
                 updateCacheStatistics()
@@ -177,6 +182,7 @@ class RecipeCacheDataSource @Inject constructor(
                     lastAccessed = Date()
                 )
                 recipeCache.put(cacheKey, updatedRecipe)
+                entries[cacheKey] = updatedRecipe
                 
                 // Update cache statistics
                 val currentStats = _cacheStats.value
@@ -207,11 +213,11 @@ class RecipeCacheDataSource @Inject constructor(
      */
     suspend fun getAllCachedRecipes(): List<Recipe> = withContext(Dispatchers.IO) {
         cacheMutex.withLock {
-            val values = try {
-                val v = recipeCache.snapshot().values
-                (v?.toList() ?: emptyList()).filterNotNull()
+            try {
+                val list = entries.values.toList()
+                list.map { it.recipe }
+                    .sortedByDescending { it.createdAt }
             } catch (_: Throwable) { emptyList() }
-            values.map { it.recipe }.sortedByDescending { it.createdAt }
         }
     }
     
@@ -220,13 +226,12 @@ class RecipeCacheDataSource @Inject constructor(
      */
     suspend fun getRecentlyAccessedRecipes(limit: Int = 10): List<Recipe> = withContext(Dispatchers.IO) {
         cacheMutex.withLock {
-            val values = try {
-                val v = recipeCache.snapshot().values
-                (v?.toList() ?: emptyList()).filterNotNull()
+            try {
+                entries.values
+                    .sortedByDescending { it.lastAccessed }
+                    .take(limit)
+                    .map { it.recipe }
             } catch (_: Throwable) { emptyList() }
-            values.sortedByDescending { it.lastAccessed }
-                .take(limit)
-                .map { it.recipe }
         }
     }
     
@@ -235,13 +240,12 @@ class RecipeCacheDataSource @Inject constructor(
      */
     suspend fun getMostAccessedRecipes(limit: Int = 10): List<Recipe> = withContext(Dispatchers.IO) {
         cacheMutex.withLock {
-            val values = try {
-                val v = recipeCache.snapshot().values
-                (v?.toList() ?: emptyList()).filterNotNull()
+            try {
+                entries.values
+                    .sortedByDescending { it.accessCount }
+                    .take(limit)
+                    .map { it.recipe }
             } catch (_: Throwable) { emptyList() }
-            values.sortedByDescending { it.accessCount }
-                .take(limit)
-                .map { it.recipe }
         }
     }
     
@@ -250,20 +254,16 @@ class RecipeCacheDataSource @Inject constructor(
      */
     suspend fun removeRecipe(recipeId: String) = withContext(Dispatchers.IO) {
         cacheMutex.withLock {
-            val keysToRemove = mutableListOf<String>()
             try {
-                recipeCache.snapshot().forEach { (key, cachedRecipe) ->
-                    if (cachedRecipe?.recipe?.id == recipeId) {
-                        keysToRemove.add(key)
-                    }
+                val keysToRemove = entries.filterValues { it.recipe.id == recipeId }.keys
+                keysToRemove.forEach { key ->
+                    try { recipeCache.remove(key) } catch (_: Throwable) { }
+                    try { entries.remove(key) } catch (_: Throwable) { }
+                    try { requestHistory.remove(key) } catch (_: Throwable) { }
                 }
+                updateCacheStatistics()
+                persistCacheToDisk()
             } catch (_: Throwable) { /* ignore */ }
-            keysToRemove.forEach { key ->
-                recipeCache.remove(key)
-                requestHistory.remove(key)
-            }
-            updateCacheStatistics()
-            persistCacheToDisk()
         }
     }
     
@@ -275,15 +275,15 @@ class RecipeCacheDataSource @Inject constructor(
             val cutoffDate = Date(System.currentTimeMillis() - (retentionDays * 24 * 60 * 60 * 1000L))
             val keysToRemove = mutableListOf<String>()
             try {
-                recipeCache.snapshot().forEach { (key, cachedRecipe) ->
-                    val ts = cachedRecipe?.cachedAt
-                    if (ts != null && ts.before(cutoffDate)) {
+                entries.forEach { (key, cachedRecipe) ->
+                    if (cachedRecipe.cachedAt.before(cutoffDate)) {
                         keysToRemove.add(key)
                     }
                 }
             } catch (_: Throwable) { /* ignore */ }
             
             keysToRemove.forEach { key ->
+                entries.remove(key)
                 recipeCache.remove(key)
                 requestHistory.remove(key)
             }
@@ -299,6 +299,7 @@ class RecipeCacheDataSource @Inject constructor(
     suspend fun clearAllRecipes() = withContext(Dispatchers.IO) {
         cacheMutex.withLock {
             recipeCache.evictAll()
+            entries.clear()
             requestHistory.clear()
             updateCacheStatistics()
             persistCacheToDisk()
@@ -321,22 +322,24 @@ class RecipeCacheDataSource @Inject constructor(
      */
     suspend fun getCacheUsage(): CacheUsage = withContext(Dispatchers.IO) {
         cacheMutex.withLock {
-            val snapshot = try { recipeCache.snapshot() ?: emptyMap() } catch (_: Throwable) { emptyMap() }
-            val values = try { snapshot.values.toList().filterNotNull() } catch (_: Throwable) { emptyList() }
-            val totalEntries = values.size
-            val maxSize = recipeCache.maxSize()
-            val usagePercentage = if (maxSize > 0) (totalEntries.toFloat() / maxSize) * 100 else 0f
-            
-            val oldestEntry = values.minByOrNull { it.cachedAt }?.cachedAt
-            val newestEntry = values.maxByOrNull { it.cachedAt }?.cachedAt
-            
-            CacheUsage(
-                currentEntries = totalEntries,
-                maxEntries = maxSize,
-                usagePercentage = usagePercentage,
-                oldestEntry = oldestEntry,
-                newestEntry = newestEntry
-            )
+            try {
+                val totalEntries = entries.size
+                val maxSize = recipeCache.maxSize()
+                val usagePercentage = if (maxSize > 0) (totalEntries.toFloat() / maxSize) * 100 else 0f
+                
+                val oldestEntry = entries.values.minByOrNull { it.cachedAt }?.cachedAt
+                val newestEntry = entries.values.maxByOrNull { it.cachedAt }?.cachedAt
+                
+                CacheUsage(
+                    currentEntries = totalEntries,
+                    maxEntries = maxSize,
+                    usagePercentage = usagePercentage,
+                    oldestEntry = oldestEntry,
+                    newestEntry = newestEntry
+                )
+            } catch (_: Throwable) {
+                CacheUsage(0, recipeCache.maxSize(), 0f, null, null)
+            }
         }
     }
     
@@ -355,20 +358,16 @@ class RecipeCacheDataSource @Inject constructor(
      * Generate cache key from request
      */
     private fun generateCacheKey(request: RecipeAnalysisRequest): String {
-        return "${request.imageHash}_${request.prompt.hashCode()}"
+        // Use a stable, collision-resistant key derived from full prompt rather than hashCode
+        // This avoids rare collisions and any environment-specific behavior with hash codes.
+        return "${request.imageHash}_${request.prompt}"
     }
     
     /**
      * Update cache statistics
      */
     private fun updateCacheStatistics() {
-        // Take a snapshot and guard against platform races/nulls
-        val values = try {
-            val v = recipeCache.snapshot().values
-            (v?.toList() ?: emptyList()).filterNotNull()
-        } catch (_: Throwable) {
-            emptyList()
-        }
+        val values = entries.values.toList()
         val oldestEntry = values.minByOrNull { it.cachedAt }?.cachedAt
         val newestEntry = values.maxByOrNull { it.cachedAt }?.cachedAt
         
@@ -394,18 +393,16 @@ class RecipeCacheDataSource @Inject constructor(
     suspend fun getCacheMetrics(): CacheMetrics = withContext(Dispatchers.IO) {
         val stats = _cacheStats.value
         val usage = getCacheUsage()
-        val values = try {
-            val v = recipeCache.snapshot().values
-            (v?.toList() ?: emptyList()).filterNotNull()
-        } catch (_: Throwable) { emptyList() }
+        val avg = try {
+            val v = entries.values.map { it.accessCount }.average()
+            if (v.isNaN()) 0.0 else v
+        } catch (_: Throwable) { 0.0 }
         
         CacheMetrics(
             hitRate = stats.hitRate,
             totalRequests = stats.hitCount + stats.missCount,
             cacheEfficiency = if (usage.maxEntries > 0) usage.usagePercentage / 100f else 0f,
-            averageAccessCount = values.map { it.accessCount }
-                .average()
-                .takeIf { !it.isNaN() } ?: 0.0
+            averageAccessCount = avg
         )
     }
     
