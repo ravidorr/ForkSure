@@ -1,22 +1,22 @@
-# 🍴 ForkSure - AI Baking Assistant
+# ForkSure - AI Baking Assistant
+*✨🧁 Transform any photo into a baking opportunity with ForkSure! 🧁✨*
+
+[![Get it on Google Play](https://img.shields.io/badge/Get%20it%20on-Google%20Play-414141?style=for-the-badge&logo=google-play&logoColor=white)](https://play.google.com/store/apps/details?id=com.ravidor.forksure)
 
 [![CI - Assemble Debug](https://github.com/ravidorr/ForkSure/actions/workflows/ci-build.yml/badge.svg?branch=main)](https://github.com/ravidorr/ForkSure/actions/workflows/ci-build.yml)
 [![Verify 16KB page size](https://github.com/ravidorr/ForkSure/actions/workflows/verify-16kb.yml/badge.svg?branch=main)](https://github.com/ravidorr/ForkSure/actions/workflows/verify-16kb.yml)
-[![Get it on Google Play](https://img.shields.io/badge/Get%20it%20on-Google%20Play-414141?style=for-the-badge&logo=google-play&logoColor=white)](https://play.google.com/store/apps/details?id=com.ravidor.forksure)
 
 An Android app that uses AI to analyze photos of baked goods and provide instant recipes and baking tips.
 
-Play Store: https://play.google.com/store/apps/details?id=com.ravidor.forksure
+## Features
 
-## 📱 Features
+- **Smart Camera Integration** - Take photos of cupcakes, cookies, cakes, and more
+- **AI-Powered Analysis** - Get instant recipe suggestions using Google's Gemini AI
+- **Recipe Guidance** - Detailed instructions and ingredient lists
+- **Beautiful Interface** - Clean, modern design for bakers of all levels
+- **Privacy-First** - Photos are processed securely and never stored permanently
 
-- **📸 Smart Camera Integration** - Take photos of cupcakes, cookies, cakes, and more
-- **🤖 AI-Powered Analysis** - Get instant recipe suggestions using Google's Gemini AI
-- **🧁 Recipe Guidance** - Detailed instructions and ingredient lists
-- **🎨 Beautiful Interface** - Clean, modern design for bakers of all levels
-- **🔒 Privacy-First** - Photos are processed securely and never stored permanently
-
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **Language**: Kotlin
 - **UI Framework**: Jetpack Compose
@@ -25,39 +25,39 @@ Play Store: https://play.google.com/store/apps/details?id=com.ravidor.forksure
 - **Architecture**: MVVM with ViewModels
 - **Build System**: Gradle with Kotlin DSL
 
-## 📚 Documentation
+## Documentation
 
 Comprehensive guides and documentation are organized by category in the [`docs/`](docs/) folder:
 
-### 🏗️ Architecture
+### Architecture
 - **[`docs/architecture/`](docs/architecture/)** - Technical architecture guides and design patterns
   - State management, repository patterns, dependency injection, navigation
 
-### ⚡ Features  
+### Features  
 - **[`docs/features/`](docs/features/)** - Feature implementation details
   - Security, dark mode, splash screen, rate limiting, webhooks
 
-### 🧪 Testing
+### Testing
 - **[`docs/testing/`](docs/testing/)** - Testing strategies and accessibility guides
-  - Comprehensive testing, accessibility compliance and implementation
+  - Comprehensive testing, accessibility compliance, and implementation
 
-### 🚀 Release
+### Release
 - **[`docs/release/`](docs/release/)** - Release management and processes
   - Release checklists, artifacts, and deployment procedures
 
-### 🏪 Google Play
+### Google Play
 - **[`docs/google-play/`](docs/google-play/)** - Google Play Store documentation
   - Store listing, data safety, compliance, and asset guidelines
 
-### ⚖️ Legal
+### Legal
 - **[`docs/legal/`](docs/legal/)** - Legal and privacy documentation  
   - Privacy policies and legal compliance
 
-### 🎨 Assets
+### Assets
 - **[`docs/assets/`](docs/assets/)** - Design and asset guidelines
   - Visual branding and asset creation specifications
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 - The latest Android Studio version
@@ -73,7 +73,7 @@ Comprehensive guides and documentation are organized by category in the [`docs/`
    ```
 4. Build and run the project
 
-## 📦 Build Release
+## Build Release
 
 To build a release version:
 
@@ -88,36 +88,27 @@ export JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home"
 ./gradlew assembleRelease
 ```
 
-## 🔐 Security Notes
+## Security Notes
 
 - **Keystore files are excluded** from version control for security
 - **API keys are stored** in `local.properties` (not committed)
-- **User photos are never stored** permanently
+- **User photos are never stored permanently**
 
-## 📄 Privacy Policy
+## Privacy Policy
 
 The privacy policy is available at: [Privacy Policy](https://ravidor.github.io/ForkSure/)
 
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Submit a pull request
-
-## 📱 Download
+## Download
 
 Available on Google Play Store: https://play.google.com/store/apps/details?id=com.ravidor.forksure
 
-## 📧 Contact
+## Contact
 
 - Developer: Raanan Avidor
 - Email: raanan@avidor.org
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
 ---
-
-*Transform any photo into a baking opportunity with ForkSure! 🧁✨*
