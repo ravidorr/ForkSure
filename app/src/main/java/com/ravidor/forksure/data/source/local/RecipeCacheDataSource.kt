@@ -76,22 +76,29 @@ class RecipeCacheDataSource @Inject constructor(
                 recipeCache.put(key, cachedRecipe)
             }
             requestHistory.putAll(data.requestHistory)
-        } catch (_: Exception) { /* ignore corrupt cache */ }
+        } catch (_: Throwable) {
+            // Ignore any issues reading/parsing cache; fall back to empty in-memory cache
+        }
     }
 
     private fun persistCacheToDisk() {
-        val data = CacheData(
-            entries = recipeCache.snapshot(),
-            requestHistory = HashMap(requestHistory)
-        )
-        val dataJson = gson.toJson(data)
-        val checksum = calculateChecksum(dataJson)
-        val persisted = PersistedCache(
-            version = CACHE_VERSION,
-            checksum = checksum,
-            dataJson = dataJson
-        )
-        cacheFile.writeText(gson.toJson(persisted))
+        try {
+            val data = CacheData(
+                entries = recipeCache.snapshot(),
+                requestHistory = HashMap(requestHistory)
+            )
+            val dataJson = gson.toJson(data)
+            val checksum = calculateChecksum(dataJson)
+            val persisted = PersistedCache(
+                version = CACHE_VERSION,
+                checksum = checksum,
+                dataJson = dataJson
+            )
+            cacheFile.parentFile?.mkdirs()
+            cacheFile.writeText(gson.toJson(persisted))
+        } catch (_: Throwable) {
+            // Ignore disk persistence issues in favor of in-memory cache reliability
+        }
     }
 
     private fun calculateChecksum(data: String): String {
@@ -342,14 +349,20 @@ class RecipeCacheDataSource @Inject constructor(
      * Update cache statistics
      */
     private fun updateCacheStatistics() {
-        val snapshot = recipeCache.snapshot()
-        val oldestEntry = snapshot.values.minByOrNull { it.cachedAt }?.cachedAt
-        val newestEntry = snapshot.values.maxByOrNull { it.cachedAt }?.cachedAt
+        // Take a snapshot and guard against platform races/nulls
+        val values = try {
+            val v = recipeCache.snapshot().values
+            (v?.toList() ?: emptyList()).filterNotNull()
+        } catch (_: Throwable) {
+            emptyList()
+        }
+        val oldestEntry = values.minByOrNull { it.cachedAt }?.cachedAt
+        val newestEntry = values.maxByOrNull { it.cachedAt }?.cachedAt
         
         val currentStats = _cacheStats.value
         _cacheStats.value = currentStats.copy(
-            totalEntries = snapshot.size,
-            totalSize = snapshot.size,
+            totalEntries = values.size,
+            totalSize = values.size,
             oldestEntry = oldestEntry,
             newestEntry = newestEntry
         )
