@@ -38,10 +38,11 @@ class RecipeCacheDataSource @Inject constructor(
                 entries.remove(key)
                 requestHistory.remove(key)
                 val currentStats = _cacheStats.value
+                val cappedSize = entries.size.coerceAtMost(this.maxSize())
                 _cacheStats.value = currentStats.copy(
                     evictionCount = currentStats.evictionCount + 1,
-                    totalEntries = entries.size,
-                    totalSize = entries.size
+                    totalEntries = cappedSize,
+                    totalSize = cappedSize
                 )
             }
         }
@@ -371,10 +372,11 @@ class RecipeCacheDataSource @Inject constructor(
         val oldestEntry = values.minByOrNull { it.cachedAt }?.cachedAt
         val newestEntry = values.maxByOrNull { it.cachedAt }?.cachedAt
         
+        val cappedSize = values.size.coerceAtMost(recipeCache.maxSize())
         val currentStats = _cacheStats.value
         _cacheStats.value = currentStats.copy(
-            totalEntries = values.size,
-            totalSize = values.size,
+            totalEntries = cappedSize,
+            totalSize = cappedSize,
             oldestEntry = oldestEntry,
             newestEntry = newestEntry
         )
