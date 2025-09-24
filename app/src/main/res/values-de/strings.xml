@@ -5,19 +5,19 @@
     
     <!-- Main UI strings -->
     <string name="prompt_placeholder">Geben Sie ein Rezept für die Backwaren im Bild</string>
-    <string name="results_placeholder">🧁 Bereit, Ihre Backwaren zu analysieren?\nMachen Sie ein Foto oder wählen Sie ein Beispielbild zum Starten.</string>
+    <string name="results_placeholder">Bereit, Ihre Backwaren zu analysieren?\nMachen Sie ein Foto oder wählen Sie ein Beispielbild zum Starten.</string>
     <string name="analyzing_baked_goods">Analysiere Ihre Backwaren…</string>
     
     <!-- Button strings -->
-    <string name="action_go">🔍 Analysieren</string>
-    <string name="take_photo">📷 Foto Aufnehmen</string>
-    <string name="upload_photo">📤 Foto Hochladen</string>
-    <string name="take_another_photo">📷 Weiteres Foto Aufnehmen</string>
-    <string name="back_to_main_screen">⬅️ Zurück zum Hauptbildschirm</string>
-    <string name="action_retry">🔄 Wiederholen</string>
-    <string name="action_dismiss">❌ Schließen</string>
-    <string name="action_print">🖨️ Drucken</string>
-    <string name="action_report">🚩 Melden</string>
+    <string name="action_go">Analysieren</string>
+    <string name="take_photo">Foto Aufnehmen</string>
+    <string name="upload_photo">Foto Hochladen</string>
+    <string name="take_another_photo">Weiteres Foto Aufnehmen</string>
+    <string name="back_to_main_screen">Start</string>
+    <string name="action_retry">Wiederholen</string>
+    <string name="action_dismiss">Schließen</string>
+    <string name="action_print">Drucken</string>
+    <string name="action_report">Melden</string>
     
     <!-- Image descriptions -->
     <string name="image1_description">Cupcake</string>
@@ -25,12 +25,12 @@
     <string name="image3_description">Kuchen</string>
     
     <!-- Share functionality -->
-    <string name="action_share">📤 Teilen</string>
-    <string name="action_share_to_keep">📤 In Keep Speichern</string>
-    <string name="share_google_keep">📝 In Google Keep Speichern</string>
-    <string name="share_email_recipe">✉️ Rezept per E-Mail Senden</string>
-    <string name="share_google_docs">📄 In Google Docs Speichern</string>
-    <string name="share_other_apps">📤 Mit anderen Apps teilen…</string>
+    <string name="action_share">Teilen</string>
+    <string name="action_share_to_keep">In Keep Speichern</string>
+    <string name="share_google_keep">In Google Keep Speichern</string>
+    <string name="share_email_recipe"> Rezept per E-Mail Senden</string>
+    <string name="share_google_docs">In Google Docs Speichern</string>
+    <string name="share_other_apps">Mit anderen Apps teilen…</string>
     
     <!-- Content reporting -->
     <string name="report_dialog_title">Inhalt Melden</string>
@@ -82,8 +82,9 @@
     <string name="accessibility_welcome_message">Willkommensnachricht: %1$s</string>
     
     <!-- Success Messages -->
-    <string name="success_recipe_generated">Rezept erfolgreich generiert! 🎉</string>
+    <string name="success_recipe_generated">Rezept erfolgreich generiert!</string>
     <string name="success_photo_captured">Foto erfolgreich aufgenommen!</string>
+    <string name="success_photo_uploaded">Foto erfolgreich hochgeladen!</string>
     <string name="success_share_completed">Rezept erfolgreich geteilt</string>
     <string name="success_print_started">Rezept an Drucker gesendet</string>
     <string name="success_report_submitted">Vielen Dank für Ihren Bericht. Wir werden den Inhalt überprüfen.</string>
@@ -92,6 +93,7 @@
     <!-- Error Messages -->
     <string name="error_analysis_failed">Analyse fehlgeschlagen. Bitte versuchen Sie es erneut.</string>
     <string name="error_photo_capture_failed">Foto-Aufnahme fehlgeschlagen. Bitte versuchen Sie es erneut.</string>
+    <string name="error_photo_upload_failed">Das Hochladen des Fotos ist fehlgeschlagen. Bitte versuchen Sie es erneut.</string>
     <string name="error_share_failed">Rezept konnte nicht geteilt werden. Bitte versuchen Sie es erneut.</string>
     <string name="error_print_failed">Rezept konnte nicht gedruckt werden. Bitte versuchen Sie es erneut.</string>
     <string name="error_print_not_available">Drucken ist auf diesem Gerät nicht verfügbar</string>
@@ -103,6 +105,7 @@
     <string name="camera_initializing">Kamera wird initialisiert…</string>
     <string name="camera_capturing">Foto wird aufgenommen…</string>
     <string name="error_image_too_large">Bild ist zu groß. Bitte versuchen Sie es mit einem kleineren Bild.</string>
+    <string name="error_no_photo_selected">Kein Foto ausgewählt</string>
     <string name="error_invalid_image_format">Ungültiges Bildformat. Bitte versuchen Sie es mit einem anderen Bild.</string>
     <string name="error_server_unavailable">Service vorübergehend nicht verfügbar. Bitte versuchen Sie es später erneut.</string>
     <string name="error_rate_limit_exceeded">Zu viele Anfragen. Bitte warten Sie einen Moment, bevor Sie es erneut versuchen.</string>
@@ -142,4 +145,5 @@
     
     <!-- AI Response validation -->
     <string name="ai_response_warning">Die KI-Antwort kann Ungenauigkeiten enthalten. Bitte überprüfen Sie die Informationen mit zuverlässigen Quellen.</string>
+    <string name="error_gallery_permission_denied">Galerieberechtigung verweigert</string>
 </resources>

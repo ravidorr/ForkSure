@@ -5,19 +5,19 @@
     
     <!-- Main UI strings -->
     <string name="prompt_placeholder">Proporciona una receta para los productos horneados en la imagen</string>
-    <string name="results_placeholder">🧁 ¿Listo para analizar tus productos horneados?\nToma una foto o elige una imagen de muestra para comenzar.</string>
+    <string name="results_placeholder">¿Listo para analizar tus productos horneados?\nToma una foto o elige una imagen de muestra para comenzar.</string>
     <string name="analyzing_baked_goods">Analizando tus productos horneados…</string>
     
     <!-- Button strings -->
-    <string name="action_go">🔍 Analizar</string>
-    <string name="take_photo">📷 Tomar Foto</string>
-    <string name="upload_photo">📤 Subir Foto</string>
-    <string name="take_another_photo">📷 Tomar Otra Foto</string>
-    <string name="back_to_main_screen">⬅️ Volver a la Pantalla Principal</string>
-    <string name="action_retry">🔄 Reintentar</string>
-    <string name="action_dismiss">❌ Descartar</string>
-    <string name="action_print">🖨️ Imprimir</string>
-    <string name="action_report">🚩 Reportar</string>
+    <string name="action_go">Analizar</string>
+    <string name="take_photo">Tomar Foto</string>
+    <string name="upload_photo">Subir Foto</string>
+    <string name="take_another_photo">Tomar Otra Foto</string>
+    <string name="back_to_main_screen">Inicio</string>
+    <string name="action_retry">Reintentar</string>
+    <string name="action_dismiss">Descartar</string>
+    <string name="action_print">Imprimir</string>
+    <string name="action_report">Reportar</string>
     
     <!-- Image descriptions -->
     <string name="image1_description">Cupcake</string>
@@ -25,12 +25,12 @@
     <string name="image3_description">Pastel</string>
     
     <!-- Share functionality -->
-    <string name="action_share">📤 Compartir</string>
-    <string name="action_share_to_keep">📤 Guardar en Keep</string>
-    <string name="share_google_keep">📝 Guardar en Google Keep</string>
-    <string name="share_email_recipe">✉️ Enviar Receta por Email</string>
-    <string name="share_google_docs">📄 Guardar en Google Docs</string>
-    <string name="share_other_apps">📤 Compartir con otras aplicaciones…</string>
+    <string name="action_share">Compartir</string>
+    <string name="action_share_to_keep">Guardar en Keep</string>
+    <string name="share_google_keep">Guardar en Google Keep</string>
+    <string name="share_email_recipe">Enviar Receta por Email</string>
+    <string name="share_google_docs">Guardar en Google Docs</string>
+    <string name="share_other_apps">Compartir con otras aplicaciones…</string>
     
     <!-- Content reporting -->
     <string name="report_dialog_title">Reportar Contenido</string>
@@ -84,6 +84,7 @@
     <!-- Success Messages -->
     <string name="success_recipe_generated">¡Receta generada exitosamente! 🎉</string>
     <string name="success_photo_captured">¡Foto capturada exitosamente!</string>
+    <string name="success_photo_uploaded">¡Foto cargada exitosamente!</string>
     <string name="success_share_completed">Receta compartida exitosamente</string>
     <string name="success_print_started">Receta enviada a impresora</string>
     <string name="success_report_submitted">Gracias por tu reporte. Revisaremos el contenido.</string>
@@ -92,6 +93,7 @@
     <!-- Error Messages -->
     <string name="error_analysis_failed">Análisis falló. Por favor, inténtalo de nuevo.</string>
     <string name="error_photo_capture_failed">Error al capturar foto. Por favor, inténtalo de nuevo.</string>
+    <string name="error_photo_upload_failed">No se pudo subir la foto. Inténtalo de nuevo.</string>
     <string name="error_share_failed">No se pudo compartir la receta. Por favor, inténtalo de nuevo.</string>
     <string name="error_print_failed">No se pudo imprimir la receta. Por favor, inténtalo de nuevo.</string>
     <string name="error_print_not_available">La impresión no está disponible en este dispositivo</string>
@@ -103,6 +105,7 @@
     <string name="camera_initializing">Inicializando cámara…</string>
     <string name="camera_capturing">Capturando foto…</string>
     <string name="error_image_too_large">La imagen es muy grande. Por favor intenta con una imagen más pequeña.</string>
+    <string name="error_no_photo_selected">No hay ninguna foto seleccionada</string>
     <string name="error_invalid_image_format">Formato de imagen inválido. Por favor intenta con una imagen diferente.</string>
     <string name="error_server_unavailable">Servicio temporalmente no disponible. Por favor inténtalo más tarde.</string>
     <string name="error_rate_limit_exceeded">Demasiadas solicitudes. Por favor espera un momento antes de intentar de nuevo.</string>
@@ -142,4 +145,5 @@
     
     <!-- AI Response validation -->
     <string name="ai_response_warning">La respuesta de IA puede contener inexactitudes. Por favor verifica la información con fuentes confiables.</string>
+    <string name="error_gallery_permission_denied">Permiso de galería denegado</string>
 </resources>
