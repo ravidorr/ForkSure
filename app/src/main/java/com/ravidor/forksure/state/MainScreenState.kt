@@ -140,6 +140,7 @@ interface MainScreenActions {
     fun onReportSubmitted(report: ContentReportingHelper.ContentReport)
     fun onRetryAnalysis()
     fun onDismissError()
+    fun onBackToMainScreen()
 }
 
 /**
@@ -153,7 +154,8 @@ class DefaultMainScreenActions(
     private val onAnalyze: (Bitmap, String) -> Unit,
     private val onSubmitReport: (ContentReportingHelper.ContentReport) -> Unit,
     private val onRetry: () -> Unit,
-    private val onDismissError: () -> Unit
+    private val onDismissError: () -> Unit,
+    private val onClearState: () -> Unit
 ) : MainScreenActions {
     
     override fun onPromptChange(prompt: String) {
@@ -206,4 +208,9 @@ class DefaultMainScreenActions(
     override fun onDismissError() {
         onDismissError()
     }
-} 
+    
+    override fun onBackToMainScreen() {
+        state.resetToInitialState()
+        onClearState()
+    }
+}

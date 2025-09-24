@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -54,7 +55,7 @@ fun MainResultsSection(
     onReportSubmitted: (ContentReportingHelper.ContentReport) -> Unit,
     onRetry: () -> Unit,
     onDismiss: () -> Unit,
-    onTakeAnotherPhoto: () -> Unit,
+    onBackToMainScreen: () -> Unit,
     showMessage: suspend (UserMessage) -> Unit
 ) {
     val context = LocalContext.current
@@ -136,7 +137,7 @@ fun MainResultsSection(
                         }
                     }
                 },
-                onTakeAnotherPhoto = onTakeAnotherPhoto,
+                onBackToMainScreen = onBackToMainScreen,
                 showMessage = showMessage,
                 modifier = Modifier.fillMaxSize()
             )
@@ -162,7 +163,7 @@ fun RecipeResultsSection(
     outputText: String,
     onReportContent: () -> Unit,
     onPrintRecipe: () -> Unit,
-    onTakeAnotherPhoto: () -> Unit,
+    onBackToMainScreen: () -> Unit,
     showMessage: suspend (UserMessage) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -171,7 +172,7 @@ fun RecipeResultsSection(
     val aiContentDescription = stringResource(R.string.accessibility_ai_content, outputText)
     val actionPrintText = stringResource(R.string.action_print)
     val actionReportText = stringResource(R.string.action_report)
-    val takeAnotherPhotoText = stringResource(R.string.take_another_photo)
+    val backToMainText = stringResource(R.string.back_to_main_screen)
     
     Column(
         modifier = modifier
@@ -194,8 +195,9 @@ fun RecipeResultsSection(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
+                .horizontalScroll(rememberScrollState())
                 .padding(top = Dimensions.PADDING_STANDARD),
-            horizontalArrangement = Arrangement.spacedBy(Dimensions.PADDING_SMALL, Alignment.CenterHorizontally)
+            horizontalArrangement = Arrangement.spacedBy(Dimensions.PADDING_SMALL, Alignment.Start)
         ) {
             // Print button
             Button(
@@ -254,30 +256,19 @@ fun RecipeResultsSection(
                     overflow = TextOverflow.Ellipsis
                 )
             }
-        }
-        
-        // Take Another Photo button - prominent and separate
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = Dimensions.PADDING_MEDIUM),
-            horizontalArrangement = Arrangement.Center
-        ) {
+            
+            // Back to Main Screen button
             Button(
                 onClick = {
-                    onTakeAnotherPhoto()
+                    onBackToMainScreen()
                     AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.CLICK)
                 },
-                modifier = Modifier
-                    .fillMaxWidth(0.8f)
-                    .height(56.dp)
-                    .semantics {
-                        contentDescription = "Take another photo button. Start analyzing a new baked good"
-                    }
+                modifier = Modifier.semantics {
+                    contentDescription = "Back to main screen button. Return to the main screen to select a new image"
+                }
             ) {
                 Text(
-                    text = takeAnotherPhotoText,
-                    style = MaterialTheme.typography.titleMedium,
+                    text = backToMainText,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
