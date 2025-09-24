@@ -13,11 +13,11 @@
     <string name="take_photo">📷 Tomar Foto</string>
     <string name="upload_photo">📤 Subir Foto</string>
     <string name="take_another_photo">📷 Tomar Otra Foto</string>
-    <string name="back_to_main_screen">🏠 Inicio</string>
+    <string name="back_to_main_screen">Inicio</string>
     <string name="action_retry">🔄 Reintentar</string>
     <string name="action_dismiss">❌ Descartar</string>
-    <string name="action_print">🖨️ Imprimir</string>
-    <string name="action_report">🚩 Reportar</string>
+    <string name="action_print">Imprimir</string>
+    <string name="action_report">Reportar</string>
     
     <!-- Image descriptions -->
     <string name="image1_description">Cupcake</string>
@@ -25,7 +25,7 @@
     <string name="image3_description">Pastel</string>
     
     <!-- Share functionality -->
-    <string name="action_share">📤 Compartir</string>
+    <string name="action_share">Compartir</string>
     <string name="action_share_to_keep">📤 Guardar en Keep</string>
     <string name="share_google_keep">📝 Guardar en Google Keep</string>
     <string name="share_email_recipe">✉️ Enviar Receta por Email</string>
