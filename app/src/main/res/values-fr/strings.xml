@@ -13,7 +13,7 @@
     <string name="take_photo">📷 Prendre une Photo</string>
     <string name="upload_photo">📤 Télécharger une Photo</string>
     <string name="take_another_photo">📷 Prendre une Autre Photo</string>
-    <string name="back_to_main_screen">⬅️ Retour à l\'Écran Principal</string>
+    <string name="back_to_main_screen">🏠 Accueil</string>
     <string name="action_retry">🔄 Réessayer</string>
     <string name="action_dismiss">❌ Ignorer</string>
     <string name="action_print">🖨️ Imprimer</string>

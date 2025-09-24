@@ -8,9 +8,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -192,86 +195,94 @@ fun RecipeResultsSection(
         )
         
         // Action buttons at the bottom
-        Row(
+        LazyRow(
             modifier = Modifier
                 .fillMaxWidth()
-                .horizontalScroll(rememberScrollState())
                 .padding(top = Dimensions.PADDING_STANDARD),
-            horizontalArrangement = Arrangement.spacedBy(Dimensions.PADDING_SMALL, Alignment.Start)
+            horizontalArrangement = Arrangement.spacedBy(Dimensions.PADDING_SMALL),
+            contentPadding = PaddingValues(horizontal = Dimensions.PADDING_SMALL)
         ) {
             // Print button
-            Button(
-                onClick = {
-                    onPrintRecipe()
-                    AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.CLICK)
-                },
-                modifier = Modifier.semantics {
-                    contentDescription = "Print recipe button. Print the AI-generated recipe"
+            item {
+                Button(
+                    onClick = {
+                        onPrintRecipe()
+                        AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.CLICK)
+                    },
+                    modifier = Modifier.semantics {
+                        contentDescription = "Print recipe button. Print the AI-generated recipe"
+                    }
+                ) {
+                    Text(
+                        text = actionPrintText,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
                 }
-            ) {
-                Text(
-                    text = actionPrintText,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
             }
             
             // Share button
-            ShareButton(
-                outputText = outputText,
-                onShareComplete = { success ->
-                    CoroutineScope(Dispatchers.Main).launch {
-                        if (success) {
-                            showMessage(
-                                UserMessage(
-                                    text = context.getString(R.string.success_share_completed),
-                                    type = MessageType.SUCCESS
+            item {
+                ShareButton(
+                    outputText = outputText,
+                    onShareComplete = { success ->
+                        CoroutineScope(Dispatchers.Main).launch {
+                            if (success) {
+                                showMessage(
+                                    UserMessage(
+                                        text = context.getString(R.string.success_share_completed),
+                                        type = MessageType.SUCCESS
+                                    )
                                 )
-                            )
-                        } else {
-                            showMessage(
-                                UserMessage(
-                                    text = context.getString(R.string.error_share_failed),
-                                    type = MessageType.ERROR
+                            } else {
+                                showMessage(
+                                    UserMessage(
+                                        text = context.getString(R.string.error_share_failed),
+                                        type = MessageType.ERROR
+                                    )
                                 )
-                            )
+                            }
                         }
                     }
-                }
-            )
-            
-            // Report button
-            Button(
-                onClick = {
-                    onReportContent()
-                    AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.CLICK)
-                },
-                modifier = Modifier.semantics {
-                    contentDescription = "Report content button. Report inappropriate AI-generated content"
-                }
-            ) {
-                Text(
-                    text = actionReportText,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
                 )
             }
             
-            // Back to Main Screen button
-            Button(
-                onClick = {
-                    onBackToMainScreen()
-                    AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.CLICK)
-                },
-                modifier = Modifier.semantics {
-                    contentDescription = "Back to main screen button. Return to the main screen to select a new image"
+            // Report button
+            item {
+                Button(
+                    onClick = {
+                        onReportContent()
+                        AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.CLICK)
+                    },
+                    modifier = Modifier.semantics {
+                        contentDescription = "Report content button. Report inappropriate AI-generated content"
+                    }
+                ) {
+                    Text(
+                        text = actionReportText,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
                 }
-            ) {
-                Text(
-                    text = backToMainText,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
+            }
+            
+            // Back to Main Screen button
+            item {
+                Button(
+                    onClick = {
+                        onBackToMainScreen()
+                        AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.CLICK)
+                    },
+                    modifier = Modifier.semantics {
+                        contentDescription = "Home button. Return to the main screen to select a new image"
+                    }
+                ) {
+                    Text(
+                        text = backToMainText,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
             }
         }
     }

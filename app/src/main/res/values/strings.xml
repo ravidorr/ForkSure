@@ -13,7 +13,7 @@
     <string name="take_photo">📷 Take Photo</string>
     <string name="upload_photo">📤 Upload Photo</string>
     <string name="take_another_photo">📷 Take Another Photo</string>
-    <string name="back_to_main_screen">⬅️ Back to Main Screen</string>
+    <string name="back_to_main_screen">🏠 Home</string>
     <string name="action_retry">🔄 Retry</string>
     <string name="action_dismiss">❌ Dismiss</string>
     <string name="action_print">🖨️ Print</string>
