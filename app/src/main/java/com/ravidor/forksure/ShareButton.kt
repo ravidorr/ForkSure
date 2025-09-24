@@ -8,6 +8,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 
 /**
@@ -47,7 +48,12 @@ fun ShareButton(
             contentDescription = context.getString(R.string.accessibility_share_button)
         }
     ) {
-        Text(stringResource(R.string.action_share))
+        Text(
+            text = stringResource(R.string.action_share),
+            style = MaterialTheme.typography.labelSmall,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
     }
 }
 
