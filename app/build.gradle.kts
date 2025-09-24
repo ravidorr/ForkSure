@@ -181,7 +181,18 @@ tasks.register<JacocoReport>("jacocoTestReport") {
         "**/hilt_aggregated_deps/**",
         // Compose generated singletons and theme boilerplate
         "**/ComposableSingletons*.*",
-        "**/ui/theme/**"
+        "**/ui/theme/**",
+        // UI-heavy packages excluded from unit coverage
+        "**/com/ravidor/forksure/screens/**",
+        "**/com/ravidor/forksure/navigation/**",
+        "**/com/ravidor/forksure/state/**",
+        // Specific root-level UI helpers (leave MessageDisplayHelper, EnhancedErrorHandler, ErrorHandler, RecipeSharingHelper included)
+        "**/com/ravidor/forksure/CameraCapture*.*",
+        "**/com/ravidor/forksure/ContentReportDialog*.*",
+        "**/com/ravidor/forksure/SecurityStatusIndicator*.*",
+        "**/com/ravidor/forksure/ShareButton*.*",
+        "**/com/ravidor/forksure/MainActivity*.*",
+        "**/com/ravidor/forksure/SplashActivity*.*"
     )
 
     val buildDirFile = project.layout.buildDirectory.get().asFile
@@ -213,7 +224,18 @@ tasks.register<JacocoCoverageVerification>("jacocoCoverageVerification") {
         "**/Dagger*.*",
         "**/hilt_aggregated_deps/**",
         "**/ComposableSingletons*.*",
-        "**/ui/theme/**"
+        "**/ui/theme/**",
+        // UI-heavy packages excluded from unit coverage
+        "**/com/ravidor/forksure/screens/**",
+        "**/com/ravidor/forksure/navigation/**",
+        "**/com/ravidor/forksure/state/**",
+        // Specific root-level UI helpers (leave MessageDisplayHelper, EnhancedErrorHandler, ErrorHandler, RecipeSharingHelper included)
+        "**/com/ravidor/forksure/CameraCapture*.*",
+        "**/com/ravidor/forksure/ContentReportDialog*.*",
+        "**/com/ravidor/forksure/SecurityStatusIndicator*.*",
+        "**/com/ravidor/forksure/ShareButton*.*",
+        "**/com/ravidor/forksure/MainActivity*.*",
+        "**/com/ravidor/forksure/SplashActivity*.*"
     )
     val buildDirFile = project.layout.buildDirectory.get().asFile
     classDirectories.setFrom(
