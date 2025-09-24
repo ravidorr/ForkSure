@@ -54,7 +54,7 @@ fun MainResultsSection(
     onReportSubmitted: (ContentReportingHelper.ContentReport) -> Unit,
     onRetry: () -> Unit,
     onDismiss: () -> Unit,
-    onTakeAnotherPhoto: () -> Unit,
+    onBackToMainScreen: () -> Unit,
     showMessage: suspend (UserMessage) -> Unit
 ) {
     val context = LocalContext.current
@@ -136,7 +136,7 @@ fun MainResultsSection(
                         }
                     }
                 },
-                onTakeAnotherPhoto = onTakeAnotherPhoto,
+                onBackToMainScreen = onBackToMainScreen,
                 showMessage = showMessage,
                 modifier = Modifier.fillMaxSize()
             )
@@ -162,7 +162,7 @@ fun RecipeResultsSection(
     outputText: String,
     onReportContent: () -> Unit,
     onPrintRecipe: () -> Unit,
-    onTakeAnotherPhoto: () -> Unit,
+    onBackToMainScreen: () -> Unit,
     showMessage: suspend (UserMessage) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -171,7 +171,7 @@ fun RecipeResultsSection(
     val aiContentDescription = stringResource(R.string.accessibility_ai_content, outputText)
     val actionPrintText = stringResource(R.string.action_print)
     val actionReportText = stringResource(R.string.action_report)
-    val takeAnotherPhotoText = stringResource(R.string.take_another_photo)
+    val backToMainText = stringResource(R.string.back_to_main_screen)
     
     Column(
         modifier = modifier
@@ -195,7 +195,7 @@ fun RecipeResultsSection(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = Dimensions.PADDING_STANDARD),
-            horizontalArrangement = Arrangement.spacedBy(Dimensions.PADDING_SMALL, Alignment.CenterHorizontally)
+            horizontalArrangement = Arrangement.spacedBy(Dimensions.PADDING_EXTRA_SMALL)
         ) {
             // Print button
             Button(
@@ -203,20 +203,24 @@ fun RecipeResultsSection(
                     onPrintRecipe()
                     AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.CLICK)
                 },
-                modifier = Modifier.semantics {
-                    contentDescription = "Print recipe button. Print the AI-generated recipe"
-                }
+                modifier = Modifier
+                    .weight(1f)
+                    .semantics {
+                        contentDescription = "Print recipe button. Print the AI-generated recipe"
+                    }
             ) {
                 Text(
                     text = actionPrintText,
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
+                    style = MaterialTheme.typography.labelSmall
                 )
             }
             
             // Share button
             ShareButton(
                 outputText = outputText,
+                modifier = Modifier.weight(1f),
                 onShareComplete = { success ->
                     CoroutineScope(Dispatchers.Main).launch {
                         if (success) {
@@ -244,42 +248,37 @@ fun RecipeResultsSection(
                     onReportContent()
                     AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.CLICK)
                 },
-                modifier = Modifier.semantics {
-                    contentDescription = "Report content button. Report inappropriate AI-generated content"
-                }
+                modifier = Modifier
+                    .weight(1f)
+                    .semantics {
+                        contentDescription = "Report content button. Report inappropriate AI-generated content"
+                    }
             ) {
                 Text(
                     text = actionReportText,
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
+                    style = MaterialTheme.typography.labelSmall
                 )
             }
-        }
-        
-        // Take Another Photo button - prominent and separate
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = Dimensions.PADDING_MEDIUM),
-            horizontalArrangement = Arrangement.Center
-        ) {
+            
+            // Home button
             Button(
                 onClick = {
-                    onTakeAnotherPhoto()
+                    onBackToMainScreen()
                     AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.CLICK)
                 },
                 modifier = Modifier
-                    .fillMaxWidth(0.8f)
-                    .height(56.dp)
+                    .weight(1f)
                     .semantics {
-                        contentDescription = "Take another photo button. Start analyzing a new baked good"
+                        contentDescription = "Home button. Return to the main screen to select a new image"
                     }
             ) {
                 Text(
-                    text = takeAnotherPhotoText,
-                    style = MaterialTheme.typography.titleMedium,
+                    text = backToMainText,
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
+                    style = MaterialTheme.typography.labelSmall
                 )
             }
         }
