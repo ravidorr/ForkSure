@@ -310,8 +310,8 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics-ktx")
     
     // Stability and Performance Monitoring
-    debugImplementation("com.squareup.leakcanary:leakcanary-android:2.14")
-    implementation("androidx.startup:startup-runtime:1.2.0")
+    debugImplementation(libs.leakcanary.android)
+    implementation(libs.androidx.startup.runtime)
     
     // Unit Testing
     testImplementation(libs.junit)
