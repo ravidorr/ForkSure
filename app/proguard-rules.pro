@@ -116,7 +116,7 @@
 -keep class com.google.gson.Gson {
     public <init>();
     public java.lang.String toJson(java.lang.Object);
-    public <T> T fromJson(java.lang.String, java.lang.Class<T>);
+    public java.lang.Object fromJson(java.lang.String, java.lang.Class);
 }
 -keep class com.google.gson.annotations.SerializedName
 
