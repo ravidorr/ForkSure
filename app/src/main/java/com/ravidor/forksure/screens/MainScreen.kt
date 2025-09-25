@@ -2,9 +2,19 @@ package com.ravidor.forksure.screens
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.util.Log
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.height
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableIntState
@@ -36,6 +46,14 @@ import com.ravidor.forksure.state.rememberMainScreenState
 import com.ravidor.forksure.MessageContainer
 import com.ravidor.forksure.UserMessage
 import com.ravidor.forksure.MessageType
+import com.ravidor.forksure.BuildConfig
+import com.ravidor.forksure.StabilityTestUtils
+import com.ravidor.forksure.CrashTestType
+import com.ravidor.forksure.CrashlyticsTestHelper
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.ui.unit.dp
 
 /**
  * Main screen of the ForkSure app with proper state hoisting
@@ -125,7 +143,7 @@ fun MainScreen(
                 },
                 onRetry = { bakingViewModel.retryLastRequest() },
                 onDismissError = { bakingViewModel.clearError() },
-                onClearState = { bakingViewModel.clearError() }
+                onClearState = { bakingViewModel.clearState() }
             )
         }
         
@@ -237,6 +255,7 @@ private fun MainScreenContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .verticalScroll(rememberScrollState())
             .semantics { 
                 contentDescription = mainScreenDescription
             }
@@ -292,18 +311,194 @@ private fun MainScreenContent(
             }
         }
 
-        // Results section
-        MainResultsSection(
-            uiState = uiState,
-            result = state.result,
-            showReportDialog = state.showReportDialog,
-            onShowReportDialog = actions::onShowReportDialog,
-            onHideReportDialog = actions::onHideReportDialog,
-            onReportSubmitted = actions::onReportSubmitted,
-            onRetry = actions::onRetryAnalysis,
-            onDismiss = actions::onDismissError,
-            onBackToMainScreen = actions::onBackToMainScreen,
-            showMessage = showMessage
-        )
+        // Results section - only takes full screen when showing results
+        if (uiState is UiState.Success || uiState is UiState.Loading || uiState is UiState.Error) {
+            MainResultsSection(
+                uiState = uiState,
+                result = state.result,
+                showReportDialog = state.showReportDialog,
+                onShowReportDialog = actions::onShowReportDialog,
+                onHideReportDialog = actions::onHideReportDialog,
+                onReportSubmitted = actions::onReportSubmitted,
+                onRetry = actions::onRetryAnalysis,
+                onDismiss = actions::onDismissError,
+                onBackToMainScreen = actions::onBackToMainScreen,
+                showMessage = showMessage
+            )
+        } else {
+            // Debug crash testing section (only show when not in results mode)
+            DebugCrashTestingSection()
+        }
     }
-} 
+}
+
+/**
+ * Debug crash testing section - only shown in debug builds
+ * Allows manual testing of crash handling and monitoring systems
+ */
+@Composable
+fun DebugCrashTestingSection() {
+    val context = LocalContext.current
+    
+    Log.d("DebugCrashSection", "DebugCrashTestingSection called, BuildConfig.DEBUG = ${BuildConfig.DEBUG}")
+    
+    if (BuildConfig.DEBUG) {
+        Log.d("DebugCrashSection", "Showing debug crash testing UI")
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 8.dp)
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
+                Text(
+                    text = "Debug Crash Testing",
+                    style = MaterialTheme.typography.titleMedium
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = "Test crash prevention and monitoring systems",
+                    style = MaterialTheme.typography.bodySmall
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                
+                Row(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Button(
+                        onClick = {
+                            StabilityTestUtils.testCrashHandler(
+                                CrashTestType.NULL_POINTER
+                            )
+                        },
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text("NPE Test")
+                    }
+                    Spacer(modifier = Modifier.width(8.dp))
+                    
+                    Button(
+                        onClick = {
+                            StabilityTestUtils.testCrashHandler(
+                                CrashTestType.OUT_OF_MEMORY
+                            )
+                        },
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text("OOM Test")
+                    }
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+                
+                Row(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Button(
+                        onClick = {
+                            StabilityTestUtils.testCrashHandler(
+                                CrashTestType.ARRAY_INDEX
+                            )
+                        },
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text("Array Test")
+                    }
+                    Spacer(modifier = Modifier.width(8.dp))
+                    
+                    Button(
+                        onClick = {
+                            StabilityTestUtils.testANRDetection()
+                        },
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text("ANR Test")
+                    }
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+                
+                Row(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Button(
+                        onClick = {
+                            StabilityTestUtils.testMemoryPressure(context)
+                        },
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text("Memory Test")
+                    }
+                    Spacer(modifier = Modifier.width(8.dp))
+                    
+                    Button(
+                        onClick = {
+                            StabilityTestUtils.validateStabilitySystems(context)
+                        },
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text("Validate")
+                    }
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+                
+                Text(
+                    text = "Crashlytics Testing",
+                    style = MaterialTheme.typography.titleSmall
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                
+                Row(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Button(
+                        onClick = {
+                            CrashlyticsTestHelper.sendTestNonFatalCrash("Debug UI Test")
+                        },
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text("Non-Fatal")
+                    }
+                    Spacer(modifier = Modifier.width(8.dp))
+                    
+                    Button(
+                        onClick = {
+                            CrashlyticsTestHelper.sendDiagnosticInfo(context)
+                        },
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text("Diagnostic")
+                    }
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+                
+                Row(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Button(
+                        onClick = {
+                            val report = CrashlyticsTestHelper.verifyCrashlyticsSetup(context)
+                            Log.d("DebugCrashTest", report)
+                        },
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text("Verify Setup")
+                    }
+                    Spacer(modifier = Modifier.width(8.dp))
+                    
+                    Button(
+                        onClick = {
+                            CrashlyticsTestHelper.sendDelayedTestCrash(2000, "Delayed UI Test")
+                        },
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text("Delayed Test")
+                    }
+                }
+            }
+        }
+    } else {
+        Log.d("DebugCrashSection", "Debug crash testing UI not shown - not a debug build")
+    }
+}

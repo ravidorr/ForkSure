@@ -27,7 +27,10 @@ This document explains how to set up Firebase Crashlytics for the crash preventi
 
 1. Download the `google-services.json` file
 2. Place it in your app module directory: `app/google-services.json`
-3. **Important**: Add this file to your `.gitignore` if it contains sensitive configuration
+3. **Decision**: Keep in Git for easier team collaboration (recommended for most projects)
+   - The file contains **public identifiers only** (project ID, app ID, public API keys)
+   - **No passwords or private keys** are in this file
+   - **Alternative**: Add to `.gitignore` if your organization requires it
 
 ### 4. Enable Crashlytics
 

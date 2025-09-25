@@ -33,6 +33,13 @@ class ForkSureApplication : Application() {
         // Initialize accessibility logging for the entire app
         AccessibilityTestHelper.logAccessibilityInfo(this, "ForkSure")
         
+        // Send a quick test crash on startup (only in debug builds)
+        if (BuildConfig.DEBUG) {
+            android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
+                CrashlyticsQuickTest.sendTestCrash()
+            }, 3000) // Wait 3 seconds after app startup
+        }
+        
         // Log app initialization
         Log.d(AppConstants.TAG_APPLICATION, "ForkSure application initialized with Hilt DI and crash monitoring")
     }
@@ -46,7 +53,8 @@ class ForkSureApplication : Application() {
             
             // Configure Crashlytics
             val crashlytics = FirebaseCrashlytics.getInstance()
-            crashlytics.setCrashlyticsCollectionEnabled(!BuildConfig.DEBUG)
+            // Enable Crashlytics in debug builds for testing (disable in production)
+            crashlytics.setCrashlyticsCollectionEnabled(true)
             
             // Set user identifier for crash reports (anonymized)
             crashlytics.setUserId("user_${System.currentTimeMillis().toString().takeLast(8)}")

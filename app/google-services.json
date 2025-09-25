@@ -1,36 +1,26 @@
 {
   "project_info": {
-    "project_number": "000000000000",
-    "project_id": "forksure-stub",
-    "storage_bucket": "forksure-stub.appspot.com"
+    "project_number": "588457140880",
+    "project_id": "forksure-74375",
+    "storage_bucket": "forksure-74375.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:000000000000:android:0000000000000000000000",
+        "mobilesdk_app_id": "1:588457140880:android:3c0548cb05674c6936ae15",
         "android_client_info": {
           "package_name": "com.ravidor.forksure"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "000000000000-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDummyKeyForBuildPurposesOnly"
+          "current_key": "AIzaSyDOrWkMJJMk5YaBpuO5Mp7h713y4TdaBhU"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "000000000000-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     }
