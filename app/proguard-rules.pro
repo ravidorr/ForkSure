@@ -110,13 +110,13 @@
 -keepattributes *Annotation*
 -keepattributes Signature
 
-# Gson - keep only what's needed for your RecipeCacheDataSource
+# Gson - keep only essential methods used in RecipeCacheDataSource
 -keepattributes Signature
 -keepattributes *Annotation*
 -keep class com.google.gson.Gson {
-    public <init>();
-    public java.lang.String toJson(java.lang.Object);
-    public java.lang.Object fromJson(java.lang.String, java.lang.Class);
+    public <init>(...);
+    public java.lang.String toJson(...);
+    public *** fromJson(...);
 }
 -keep class com.google.gson.annotations.SerializedName
 
