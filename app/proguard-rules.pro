@@ -20,60 +20,120 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
-# Keep Generative AI classes
--keep class com.google.ai.client.generativeai.** { *; }
+# Specific Generative AI classes (instead of entire package)
+-keep class com.google.ai.client.generativeai.GenerativeModel { *; }
+-keep class com.google.ai.client.generativeai.type.** { *; }
+-keepclassmembers class com.google.ai.client.generativeai.** {
+    public <methods>;
+    public <fields>;
+}
 -dontwarn com.google.ai.client.generativeai.**
 
-# Keep CameraX classes
--keep class androidx.camera.** { *; }
+# Specific CameraX classes (only what's needed)
+-keep class androidx.camera.core.ImageProxy { *; }
+-keep class androidx.camera.core.ImageCapture { *; }
+-keep class androidx.camera.core.Preview { *; }
+-keep class androidx.camera.lifecycle.ProcessCameraProvider { *; }
+-keepclassmembers class androidx.camera.** {
+    public <methods>;
+}
 -dontwarn androidx.camera.**
 
-# Keep Compose classes
--keep class androidx.compose.** { *; }
+# Compose - keep only annotation-driven classes
+-keep @androidx.compose.runtime.Stable class *
+-keep @androidx.compose.runtime.Immutable class *
+-keepclassmembers class androidx.compose.** {
+    @androidx.compose.runtime.Composable <methods>;
+}
 -dontwarn androidx.compose.**
 
-# Keep Accompanist classes
--keep class com.google.accompanist.** { *; }
+# Accompanist permissions (only what's used)
+-keep class com.google.accompanist.permissions.** { *; }
 -dontwarn com.google.accompanist.**
 
-# Keep Kotlin coroutines
--keepclassmembers class kotlinx.coroutines.** { *; }
+# Kotlin coroutines - keep only essential classes
+-keepclassmembers class kotlinx.coroutines.CoroutineScope {
+    *;
+}
+-keepclassmembers class kotlinx.coroutines.flow.Flow {
+    *;
+}
 -dontwarn kotlinx.coroutines.**
 
-# Keep app-specific classes
--keep class com.ravidor.forksure.** { *; }
+# App-specific classes - targeted approach
+# Keep data models (likely serialized/deserialized)
+-keep class com.ravidor.forksure.data.model.** { *; }
 
-# Keep BuildConfig
--keep class com.ravidor.forksure.BuildConfig { *; }# Add to proguard-rules.pro for additional obfuscation
+# Keep repository interfaces (might be used with reflection)
+-keep interface com.ravidor.forksure.repository.** { *; }
 
-# Add more rules here as needed.
+# Keep Hilt components and modules
+-keep class com.ravidor.forksure.di.** { *; }
+-keep @dagger.hilt.** class *
 
-# Add to proguard-rules.pro for additional obfuscation
+# Keep Activities and Application class
+-keep public class * extends android.app.Activity
+-keep public class * extends android.app.Application
 
-# Enhanced Security: Obfuscate BuildConfig to make API key extraction harder
--keepclassmembers class **.BuildConfig {
+# Keep ViewModel classes and their public methods
+-keepclassmembers class com.ravidor.forksure.**ViewModel {
+    public <methods>;
+}
+
+# Keep classes with @Keep annotation
+-keep @androidx.annotation.Keep class * { *; }
+
+# BuildConfig - keep only essential fields
+-keep class com.ravidor.forksure.BuildConfig {
     public static final java.lang.String APPLICATION_ID;
     public static final java.lang.String BUILD_TYPE;
-    public static final java.lang.String FLAVOR;
     public static final boolean DEBUG;
     public static final int VERSION_CODE;
     public static final java.lang.String VERSION_NAME;
 }
 
-# Obfuscate API key field name (but keep the class accessible)
--keepclassmembers class **.BuildConfig {
-    !static final java.lang.String apiKey;
-}
+# Firebase/Crashlytics - keep specific classes
+-keep class com.google.firebase.crashlytics.** { *; }
+-keep class com.google.firebase.analytics.** { *; }
+-keepattributes *Annotation*
+-keepattributes Signature
+
+# Gson/JSON serialization (if used)
+-keepattributes Signature
+-keepattributes *Annotation*
+-keep class com.google.gson.** { *; }
+-keep class * implements com.google.gson.TypeAdapterFactory
+-keep class * implements com.google.gson.JsonSerializer
+-keep class * implements com.google.gson.JsonDeserializer
+
+# Navigation Component
+-keepnames class androidx.navigation.fragment.NavHostFragment
+-keepnames class * extends androidx.fragment.app.Fragment
+
+# Enhanced Security: Obfuscate sensitive strings
+-obfuscationdictionary obfuscation-dictionary.txt
+-classobfuscationdictionary obfuscation-dictionary.txt
+-packageobfuscationdictionary obfuscation-dictionary.txt
 
 # Additional string obfuscation
 -obfuscationdictionary obfuscation-dictionary.txt
 -classobfuscationdictionary obfuscation-dictionary.txt
 -packageobfuscationdictionary obfuscation-dictionary.txt
 
-# Make reverse engineering more difficult
+# Security optimizations
 -repackageclasses ''
 -allowaccessmodification
 -overloadaggressively
 
-# Optimize string constants
--optimizations !code/simplification/string
+# Optimization settings - be specific about what to optimize
+-optimizations !code/simplification/arithmetic,!code/simplification/cast,!field/*,!class/merging/*
+-optimizationpasses 5
+
+# Additional security measures for sensitive classes
+-keep,allowshrinking class com.ravidor.forksure.data.** {
+    <fields>;
+}
+
+# Keep line numbers for better crash reporting
+-renamesourcefileattribute SourceFile
+-keepattributes SourceFile,LineNumberTable
