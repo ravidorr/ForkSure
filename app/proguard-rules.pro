@@ -24,8 +24,7 @@
 -keep class com.google.ai.client.generativeai.GenerativeModel { *; }
 -keep class com.google.ai.client.generativeai.type.** { *; }
 -keepclassmembers class com.google.ai.client.generativeai.** {
-    public <methods>;
-    public <fields>;
+    public *;
 }
 -dontwarn com.google.ai.client.generativeai.**
 
@@ -35,7 +34,7 @@
 -keep class androidx.camera.core.Preview { *; }
 -keep class androidx.camera.lifecycle.ProcessCameraProvider { *; }
 -keepclassmembers class androidx.camera.** {
-    public <methods>;
+    public *;
 }
 -dontwarn androidx.camera.**
 
@@ -43,7 +42,7 @@
 -keep @androidx.compose.runtime.Stable class *
 -keep @androidx.compose.runtime.Immutable class *
 -keepclassmembers class androidx.compose.** {
-    @androidx.compose.runtime.Composable <methods>;
+    @androidx.compose.runtime.Composable *;
 }
 -dontwarn androidx.compose.**
 
@@ -82,7 +81,7 @@
 
 # Keep ViewModel classes and their public methods
 -keepclassmembers class com.ravidor.forksure.**ViewModel {
-    public <methods>;
+    public *;
 }
 
 # Keep classes with @Keep annotation
@@ -97,19 +96,34 @@
     public static final java.lang.String VERSION_NAME;
 }
 
-# Firebase/Crashlytics - keep specific classes
--keep class com.google.firebase.crashlytics.** { *; }
--keep class com.google.firebase.analytics.** { *; }
+# Firebase - keep only classes you actually use
+-keep class com.google.firebase.FirebaseApp { *; }
+-keep class com.google.firebase.crashlytics.FirebaseCrashlytics {
+    public static com.google.firebase.crashlytics.FirebaseCrashlytics getInstance();
+    public void log(java.lang.String);
+    public void setCustomKey(java.lang.String, java.lang.String);
+    public void setCustomKey(java.lang.String, boolean);
+    public void setCrashlyticsCollectionEnabled(boolean);
+    public void setUserId(java.lang.String);
+    public void recordException(java.lang.Throwable);
+}
 -keepattributes *Annotation*
 -keepattributes Signature
 
-# Gson/JSON serialization (if used)
+# Gson - keep only what's needed for your RecipeCacheDataSource
 -keepattributes Signature
 -keepattributes *Annotation*
--keep class com.google.gson.** { *; }
--keep class * implements com.google.gson.TypeAdapterFactory
--keep class * implements com.google.gson.JsonSerializer
--keep class * implements com.google.gson.JsonDeserializer
+-keep class com.google.gson.Gson {
+    public <init>();
+    public java.lang.String toJson(java.lang.Object);
+    public <T> T fromJson(java.lang.String, java.lang.Class<T>);
+}
+-keep class com.google.gson.annotations.SerializedName
+
+# Keep your data classes that are serialized with Gson
+-keep class com.ravidor.forksure.data.source.local.RecipeCacheDataSource$CachedRecipe { *; }
+-keep class com.ravidor.forksure.data.source.local.RecipeCacheDataSource$PersistedCache { *; }
+-keep class com.ravidor.forksure.data.source.local.RecipeCacheDataSource$CacheData { *; }
 
 # Navigation Compose Component
 -keep class androidx.navigation.compose.** { *; }
@@ -132,7 +146,7 @@
 
 # Additional security measures for sensitive classes
 -keep,allowshrinking class com.ravidor.forksure.data.** {
-    <fields>;
+    *;
 }
 
 # Keep line numbers for better crash reporting
