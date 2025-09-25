@@ -138,8 +138,8 @@ The app includes `AccessibilityTestHelper` for automated validation:
 
 2. **Use semantic roles**:
    ```kotlin
-   import androidx.compose.foundation.semantics.Role
-   // Role.Button, Role.Image, Role.TextInput, etc.
+   // Use appropriate semantic roles
+   role = Role.Button // or Role.Image, Role.TextInput, etc.
    ```
 
 3. **Implement state descriptions**:
