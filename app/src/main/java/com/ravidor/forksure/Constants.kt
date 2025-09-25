@@ -29,6 +29,10 @@ object AppConstants {
     const val TAG_ENHANCED_ERROR_HANDLER = "EnhancedErrorHandler"
     const val TAG_CONTENT_REPORTING = "ContentReporting"
     const val TAG_SECURITY_STATUS = "SecurityStatusIndicator"
+    const val TAG_CRASH_HANDLER = "CrashHandler"
+    const val TAG_MEMORY_MANAGER = "MemoryManager"
+    const val TAG_ANR_WATCHDOG = "ANRWatchdog"
+    const val TAG_STABILITY_TEST = "StabilityTest"
 }
 
 /**
