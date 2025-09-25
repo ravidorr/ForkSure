@@ -13,7 +13,7 @@ git pull origin main
 
 ### 2. **Create Feature Branch**
 ```bash
-# Create and switch to feature branch
+# Create and switch to a feature branch
 git checkout -b feature/your-feature-name
 
 # Examples:
@@ -28,7 +28,7 @@ git checkout -b feature/your-feature-name
 # Write tests
 # Update documentation
 
-# Commit frequently with meaningful messages
+# Commit frequently with meaningful messages,
 git add .
 git commit -m "feat: implement user authentication system"
 
@@ -47,8 +47,8 @@ git push origin feature/your-feature-name
 ```
 
 ### 5. **Create Pull Request**
-1. Visit the URL provided by git push output
-2. Or go to GitHub and create PR manually
+1. Visit the URL provided by the git push output
+2. Or go to GitHub and create a PR manually
 3. Fill out PR template with:
    - **Description**: What does this change?
    - **Testing**: How was it tested?
@@ -73,7 +73,7 @@ git push origin --delete feature/your-feature-name
 
 ## 📝 **Commit Message Format**
 
-Use conventional commits for clear history:
+Use conventional commits for a clear history:
 
 ```
 type(scope): brief description
@@ -175,7 +175,7 @@ git push origin hotfix/critical-issue-description
 - Deploy immediately
 
 ### 4. **Follow-Up**
-- Create proper feature branch for comprehensive fix
+- Create a proper feature branch for a comprehensive fix
 - Add tests for the issue
 - Improve monitoring to prevent recurrence
 
@@ -190,7 +190,7 @@ Brief description of what this PR does.
 ## Type of Change
 - [ ] Bug fix (non-breaking change which fixes an issue)
 - [ ] New feature (non-breaking change which adds functionality)  
-- [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
+- [ ] Breaking change (fix or feature that would cause existing functionality not to work as expected)
 - [ ] Documentation update
 
 ## Testing

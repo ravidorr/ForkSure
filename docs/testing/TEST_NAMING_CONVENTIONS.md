@@ -77,8 +77,8 @@ Use for specific testing concerns that don't fit standard component testing.
 ### ✅ Good Names:
 - `PerformanceTestSuite.kt` - Clear purpose (performance testing)
 - `SecurityManagerAdvancedTest.kt` - Component and complexity level clear
-- `AccessibilityComplianceTest.kt` - Specific testing focus clear
-- `TestStrategyValidationSuite.kt` - Meta-testing purpose clear
+- `AccessibilityComplianceTest.kt` - Specific testing focus is clear
+- `TestStrategyValidationSuite.kt` - Meta-testing purpose is clear
 
 ### ❌ Bad Names:
 - `Phase3TestSuite.kt` - Timeline-based, unclear purpose
@@ -108,13 +108,13 @@ Tests should be organized by:
 **Examples:**
 ```kotlin
 @Test
-fun `should validate performance under high load conditions`()
+fun validatePerformanceUnderHighLoadConditions() // should validate performance under high load conditions
 
 @Test
-fun `accessibility compliance should meet WCAG 2.1 AA standards`()
+fun accessibilityComplianceMeetStandards() // `accessibility compliance should meet WCAG 2.1 AA standards`
 
 @Test
-fun `navigation flow should handle back stack correctly`()
+fun handleBackStackNavigationFlow() // navigation flow should handle back stack correctly
 ```
 
 ## Consistency Check

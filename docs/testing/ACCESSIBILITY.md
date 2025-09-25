@@ -12,7 +12,7 @@ ForkSure has been designed with comprehensive accessibility features to ensure a
 - **Proper heading hierarchy**: Main title uses heading level 1, section titles use heading level 2
 - **Meaningful content descriptions**: All interactive elements have descriptive labels
 - **Live regions**: Dynamic content updates are announced to screen readers
-- **Role assignments**: Buttons, images, text inputs are properly identified
+- **Role assignments**: Buttons, images, and text inputs are properly identified
 
 #### Content Descriptions
 - **Images**: All images have descriptive content descriptions
@@ -89,7 +89,7 @@ The app includes `AccessibilityTestHelper` for automated validation:
 - [ ] All interactive elements are at least 48dp
 - [ ] Touch targets don't overlap
 - [ ] Haptic feedback works consistently
-- [ ] Long press actions are accessible
+- [ ] Long-press actions are accessible
 
 #### Keyboard/Switch Navigation Testing
 - [ ] All functionality accessible via keyboard

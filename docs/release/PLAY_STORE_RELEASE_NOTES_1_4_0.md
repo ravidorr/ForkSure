@@ -24,7 +24,7 @@
 
 ### Key Features
 - Firebase Crashlytics integration for proactive crash detection
-- Modernized navigation replacing legacy UI components
+- Modernized navigation, replacing legacy UI components
 - Enhanced caching with improved retention/eviction policies  
 - Comprehensive unit testing for critical components
 - Repository pattern refinements for cleaner architecture
