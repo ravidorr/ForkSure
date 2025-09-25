@@ -69,7 +69,12 @@
 
 # Keep Hilt components and modules
 -keep class com.ravidor.forksure.di.** { *; }
--keep @dagger.hilt.** class *
+-keep @dagger.hilt.android.HiltAndroidApp class *
+-keep @dagger.hilt.InstallIn class *
+-keep @dagger.Module class *
+-keep @dagger.Provides class *
+-keep class * extends dagger.hilt.android.internal.managers.ApplicationComponentManager
+-keep class dagger.hilt.android.internal.managers.**
 
 # Keep Activities and Application class
 -keep public class * extends android.app.Activity
@@ -106,16 +111,12 @@
 -keep class * implements com.google.gson.JsonSerializer
 -keep class * implements com.google.gson.JsonDeserializer
 
-# Navigation Component
--keepnames class androidx.navigation.fragment.NavHostFragment
--keepnames class * extends androidx.fragment.app.Fragment
+# Navigation Compose Component
+-keep class androidx.navigation.compose.** { *; }
+-keepnames class androidx.navigation.NavController
+-keepnames class androidx.navigation.NavHostController
 
 # Enhanced Security: Obfuscate sensitive strings
--obfuscationdictionary obfuscation-dictionary.txt
--classobfuscationdictionary obfuscation-dictionary.txt
--packageobfuscationdictionary obfuscation-dictionary.txt
-
-# Additional string obfuscation
 -obfuscationdictionary obfuscation-dictionary.txt
 -classobfuscationdictionary obfuscation-dictionary.txt
 -packageobfuscationdictionary obfuscation-dictionary.txt
