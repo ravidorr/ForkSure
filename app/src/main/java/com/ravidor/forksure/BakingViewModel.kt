@@ -180,6 +180,10 @@ class BakingViewModel @Inject constructor(
             _uiState.value = UiState.Initial
         }
     }
+    
+    fun clearState() {
+        _uiState.value = UiState.Initial
+    }
 
     suspend fun getSecurityStatus(): SecurityEnvironmentResult {
         return securityRepository.checkSecurityEnvironment()

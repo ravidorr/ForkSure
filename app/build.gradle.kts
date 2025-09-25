@@ -9,6 +9,9 @@ plugins {
     alias(libs.plugins.google.android.libraries.mapsplatform.secrets.gradle.plugin)
     id("com.google.dagger.hilt.android")
     id("jacoco")
+    // Firebase plugins for crash reporting
+    id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
 }
 
 // Load keystore properties
@@ -52,8 +55,9 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = true
-            isShrinkResources = true
+            // Temporarily disable minification to fix crash issues
+            isMinifyEnabled = false
+            isShrinkResources = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -91,7 +95,7 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
-    packagingOptions {
+    packaging {
         resources {
             pickFirsts += setOf("META-INF/LICENSE.md", "META-INF/LICENSE-notice.md")
         }
@@ -299,6 +303,15 @@ dependencies {
     
     // Markdown rendering for Compose
     implementation(libs.compose.markdown)
+    
+    // Firebase Crashlytics and Analytics
+    implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
+    implementation("com.google.firebase:firebase-crashlytics-ktx")
+    implementation("com.google.firebase:firebase-analytics-ktx")
+    
+    // Stability and Performance Monitoring
+    debugImplementation("com.squareup.leakcanary:leakcanary-android:2.12")
+    implementation("androidx.startup:startup-runtime:1.1.1")
     
     // Unit Testing
     testImplementation(libs.junit)

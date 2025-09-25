@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "588457140880",
+    "project_id": "forksure-74375",
+    "storage_bucket": "forksure-74375.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:588457140880:android:3c0548cb05674c6936ae15",
+        "android_client_info": {
+          "package_name": "com.ravidor.forksure"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDOrWkMJJMk5YaBpuO5Mp7h713y4TdaBhU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -32,6 +32,27 @@ class MainActivity : ComponentActivity() {
                 if (AccessibilityTestHelper.isScreenReaderEnabled(context)) {
                     android.util.Log.d("ForkSure", "Screen reader detected - enhanced accessibility features active")
                 }
+                
+                // Test our crash prevention system (DEBUG ONLY)
+                if (BuildConfig.DEBUG) {
+                    try {
+                        // Validate all stability systems are working
+                        val validation = StabilityTestUtils.validateStabilitySystems(context)
+                        android.util.Log.d("StabilityTest", validation.getReport())
+                        
+                        // Test Firebase Crashlytics integration
+                        com.google.firebase.crashlytics.FirebaseCrashlytics.getInstance().apply {
+                            log("ForkSure crash prevention system initialized")
+                            setCustomKey("stability_systems_active", validation.allPassed)
+                            setCustomKey("app_version", BuildConfig.VERSION_NAME)
+                        }
+                        
+                        android.util.Log.d("Firebase", "Crashlytics integration test completed")
+                        
+                    } catch (e: Exception) {
+                        android.util.Log.e("StabilityTest", "Error testing crash prevention system", e)
+                    }
+                }
             }
             
             ForkSureTheme {
