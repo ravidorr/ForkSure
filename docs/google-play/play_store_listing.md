@@ -4,12 +4,12 @@
 ForkSure - AI Baking Assistant
 
 ## Short Description (80 characters max)
-AI-powered baking assistant - snap photos, get instant recipes!
+AI-powered baking assistant - snap photos and get instant recipes!
 
 ## Full Description (4000 characters max)
 🍴 **ForkSure - Your AI Baking Companion**
 
-Transform your baking experience with ForkSure! Simply take a photo of any baked good and let our AI-powered assistant provide you with detailed recipes and baking tips.
+Transform your baking experience with ForkSure! Take a photo of any baked good and let our AI-powered assistant provide detailed recipes and baking tips.
 
 ✨ **Key Features:**
 • 📸 **Smart Camera Integration** - Capture photos of cupcakes, cookies, cakes, and more
@@ -17,7 +17,7 @@ Transform your baking experience with ForkSure! Simply take a photo of any baked
 • 🧁 **Comprehensive Recipe Guidance** - Detailed instructions for all your favorite treats
 • 🎨 **Beautiful, Intuitive Interface** - Easy-to-use design for bakers of all levels
 
-Whether you're a beginner baker or a seasoned pro, ForkSure helps you recreate delicious baked goods with confidence. Our AI analyzes your photos and provides step-by-step recipes, ingredient lists, and helpful baking tips.
+Whether you're a beginner baker or a seasoned pro, ForkSure helps you confidently recreate delicious baked goods. Our AI analyzes your photos and provides step-by-step recipes, ingredient lists, and helpful baking tips.
 
 **Perfect for:**
 • Home bakers wanting to recreate restaurant desserts

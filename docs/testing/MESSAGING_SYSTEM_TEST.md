@@ -1,6 +1,6 @@
 # Messaging System Test Checklist
 
-Test all the user feedback features we implemented across the 4 languages.
+Test all the user feedback features we implemented across the four languages.
 
 ## 🧪 **Manual Testing Checklist**
 
@@ -79,7 +79,7 @@ find app/src/main/res/values* -name "strings.xml" -exec grep -c "success_\|error
 
 - **Multiple Messages**: Ensure only one message shows at a time
 - **Orientation Changes**: Messages should survive screen rotation
-- **App Backgrounding**: Messages should not persist when app is backgrounded
+- **App Backgrounding**: Messages should not persist when the app is backgrounded
 - **Memory Leaks**: No retained references to Context in message callbacks
 
 ---
@@ -88,7 +88,7 @@ find app/src/main/res/values* -name "strings.xml" -exec grep -c "success_\|error
 
 ✅ **All manual tests pass**  
 ✅ **All automated tests pass**  
-✅ **All 4 languages work correctly**  
+✅ **All four languages work correctly**  
 ✅ **Accessibility features functional**  
 ✅ **No performance regressions**  
 ✅ **CI/CD pipeline validates changes**

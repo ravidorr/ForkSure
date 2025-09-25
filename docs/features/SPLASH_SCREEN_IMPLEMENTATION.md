@@ -28,7 +28,7 @@ Android 12+: Native Splash Screen API
 └── Dark Theme: Theme.ForkSure with dark splash config
 
 Pre-Android 12: Custom SplashActivity
-├── Light Theme: Theme.ForkSure.Splash with light background
+├── Light Theme: Theme.ForkSure.Splash with a light background
 └── Dark Theme: Theme.ForkSure.Splash with dark background
 ```
 
@@ -124,7 +124,7 @@ app/src/main/java/com/ravidor/forksure/
 
 ### Manual Testing
 1. **Light Mode**: Set device to light mode, launch app
-2. **Dark Mode**: Set device to dark mode, launch app
+2. **Dark Mode**: Set the device to dark mode, launch the app
 3. **Theme Switching**: Change theme while app is backgrounded
 4. **Different Android Versions**: Test on API 29-35
 
@@ -140,8 +140,11 @@ app/src/main/java/com/ravidor/forksure/
 ### Customizing Splash Duration
 ```kotlin
 // In SplashActivity.kt
-companion object {
-    private const val SPLASH_DISPLAY_LENGTH = 1500L // Adjust as needed
+class SplashActivity : ComponentActivity() {
+    // ...
+    companion object {
+        private const val SPLASH_DISPLAY_LENGTH = 1500L // Adjust as needed
+    }
 }
 ```
 

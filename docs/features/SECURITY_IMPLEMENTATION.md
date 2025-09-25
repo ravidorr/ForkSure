@@ -16,7 +16,7 @@ This document outlines the comprehensive security measures implemented in the Fo
 #### Features:
 - **Persistent Storage**: Rate limit data survives app restarts
 - **Automatic Cleanup**: Old timestamps are automatically removed
-- **Thread-Safe**: Uses mutex for concurrent access protection
+- **Thread-Safe**: Uses a mutex for concurrent access protection
 - **User-Friendly Messages**: Clear explanations when limits are exceeded
 
 #### Implementation:
@@ -100,7 +100,7 @@ suspend fun checkRateLimit(context: Context, identifier: String = "default"): Ra
 ## 🛡️ Security Architecture
 
 ### Request Flow with Security:
-1. **Environment Check** → Verify app is running in secure environment
+1. **Environment Check** → Verify app is running in a secure environment
 2. **Input Validation** → Sanitize and validate user input
 3. **Rate Limiting** → Check if user has exceeded limits
 4. **AI Request** → Make secure request to AI service
@@ -133,15 +133,15 @@ Environment    Sanitization    Quota Check    Secure API    Safety Check    Safe
 
 ### Rate Limiting Configuration:
 ```kotlin
-private const val MAX_REQUESTS_PER_MINUTE = 2
-private const val MAX_REQUESTS_PER_HOUR = 20
-private const val MAX_REQUESTS_PER_DAY = 80
+private const val maxRequestsPerMinute = 2
+private const val maxRequestsPerHour = 20
+private const val maxRequestsPerDay = 80
 ```
 
 ### Input Validation Configuration:
 ```kotlin
-private const val MAX_PROMPT_LENGTH = 1000
-private const val MAX_RESPONSE_LENGTH = 10000
+private const val maxPromptLength = 1000
+private const val maxResponseLength = 10000
 ```
 
 ### Security Patterns:
@@ -235,4 +235,4 @@ private const val MAX_RESPONSE_LENGTH = 10000
 
 ---
 
-**Note**: This security implementation provides comprehensive protection while maintaining excellent user experience. All security measures are designed to be transparent to users while providing robust protection against threats and ensuring safe AI interactions. 
+**Note**: This security implementation provides comprehensive protection while maintaining an excellent user experience. All security measures are designed to be transparent to users while providing robust protection against threats and ensuring safe AI interactions. 

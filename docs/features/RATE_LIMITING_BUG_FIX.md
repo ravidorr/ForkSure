@@ -7,7 +7,7 @@
 2. "Requests: 0 left" (after a few seconds)
 3. "Requests: Blocked" (after more seconds)
 
-This happened **without any user interaction** - just by opening the app and the SecurityStatusIndicator checking the rate limit status.
+This happened **without user interaction** by opening the app and the SecurityStatusIndicator checking the rate limit status.
 
 ## 🔍 **Root Cause Analysis**
 
@@ -15,18 +15,18 @@ The problem was in the `SecurityManager.checkRateLimit()` function:
 
 ### **Before Fix (Buggy Behavior)**
 ```kotlin
-// SecurityStatusIndicator was calling this for status display:
-rateLimitStatus = SecurityManager.checkRateLimit(context, "ai_requests")
-
-// But checkRateLimit() was RECORDING each call as an actual request:
-else -> {
-    recordRequest(identifier, currentTime)  // ❌ BUG: Recording status checks as requests!
-    saveRateLimitData(prefs, identifier, currentTime)
+when {
+    // ...
+    // But checkRateLimit() was RECORDING each call as an actual request:
+    else -> {
+        recordRequest(identifier, currentTime)  // ❌ BUG: Recording status checks as requests!
+        saveRateLimitData(prefs, identifier, currentTime)
     
-    RateLimitResult.Allowed(
-        requestsRemaining = MAX_REQUESTS_PER_MINUTE - minuteCount - 1,
-        resetTimeSeconds = 60
-    )
+        RateLimitResult.Allowed(
+            requestsRemaining = MAX_REQUESTS_PER_MINUTE - minuteCount - 1,
+            resetTimeSeconds = 60
+        )
+    }
 }
 ```
 
@@ -82,7 +82,7 @@ rateLimitStatus = SecurityManager.getRateLimitStatus(context, "ai_requests")  //
 ### **Added Comprehensive Tests**
 ```kotlin
 @Test
-fun `getRateLimitStatus should not consume requests`() = runTest {
+fun getRateLimitStatus() = runTest { // getRateLimitStatus should not consume requests
     val status1 = SecurityManager.getRateLimitStatus(mockContext, testId)
     val status2 = SecurityManager.getRateLimitStatus(mockContext, testId)
     val status3 = SecurityManager.getRateLimitStatus(mockContext, testId)
@@ -93,7 +93,7 @@ fun `getRateLimitStatus should not consume requests`() = runTest {
 }
 
 @Test
-fun `checkRateLimit should consume requests`() = runTest {
+fun checkRateLimit() = runTest { // checkRateLimit should consume requests
     val request1 = SecurityManager.checkRateLimit(mockContext, testId)
     val request2 = SecurityManager.checkRateLimit(mockContext, testId)
     
@@ -108,7 +108,7 @@ fun `checkRateLimit should consume requests`() = runTest {
 ### **Before Fix**
 - ❌ App would show "Blocked" status immediately after opening
 - ❌ Users couldn't make AI requests without waiting
-- ❌ Status indicator was consuming actual request quota
+- ❌ Status indicator was consuming the actual request quota
 - ❌ Poor user experience on app startup
 
 ### **After Fix**
@@ -149,7 +149,7 @@ fun `checkRateLimit should consume requests`() = runTest {
 
 ## 🚀 **Result**
 
-The rate limiting system now works correctly:
+The rate-limiting system now works correctly:
 - **Status checks** (for UI display) don't consume request quota
 - **Actual AI requests** properly consume and track quota
 - **Users get accurate status information** without penalty

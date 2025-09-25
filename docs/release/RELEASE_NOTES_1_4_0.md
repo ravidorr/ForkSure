@@ -103,4 +103,4 @@ This release represents significant engineering efforts focused on reliability a
 
 ---
 
-*ForkSure v1.4.0 - Your AI baking assistant, now more reliable than ever! 🧁*
+*ForkSure v1.4.0 - Your AI baking assistant is now more reliable than ever! 🧁*
