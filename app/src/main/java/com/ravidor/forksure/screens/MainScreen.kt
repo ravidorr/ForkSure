@@ -142,7 +142,8 @@ fun MainScreen(
                     }
                 },
                 onRetry = { bakingViewModel.retryLastRequest() },
-                onDismissError = { bakingViewModel.clearError() }
+                onDismissError = { bakingViewModel.clearError() },
+                onClearState = { bakingViewModel.clearState() }
             )
         }
         
@@ -321,11 +322,7 @@ private fun MainScreenContent(
                 onReportSubmitted = actions::onReportSubmitted,
                 onRetry = actions::onRetryAnalysis,
                 onDismiss = actions::onDismissError,
-                onTakeAnotherPhoto = {
-                    // Reset state and navigate back to camera for a new photo
-                    state.resetToInitialState()
-                    bakingViewModel.clearState()
-                },
+                onBackToMainScreen = actions::onBackToMainScreen,
                 showMessage = showMessage
             )
         } else {
