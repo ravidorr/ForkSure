@@ -18,6 +18,8 @@ jobs:
         with:
           distribution: temurin
           java-version: "17"
+          # Explicitly disable dependency graph submission to prevent timeouts
+          dependency-graph: disabled
 
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3

@@ -19,6 +19,8 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
+        # Explicitly disable dependency graph submission to prevent timeouts
+        dependency-graph: disabled
         
     - name: Cache Gradle packages
       uses: actions/cache@v4
@@ -87,6 +89,8 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
+        # Explicitly disable dependency graph submission to prevent timeouts
+        dependency-graph: disabled
         
     - name: Cache Gradle packages
       uses: actions/cache@v4
