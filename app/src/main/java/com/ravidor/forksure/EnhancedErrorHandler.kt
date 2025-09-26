@@ -23,7 +23,7 @@ object EnhancedErrorHandler {
     /**
      * Processes and categorizes errors with security considerations
      */
-    fun handleError(
+    suspend fun handleError(
         context: Context,
         error: Throwable,
         userInput: String? = null,
