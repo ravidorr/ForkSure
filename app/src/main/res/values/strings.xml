@@ -47,7 +47,10 @@
     
     <!-- Security status -->
     <string name="security_requests_label">Requests: </string>
-    <string name="security_requests_used"> (%d used)</string>
+    <plurals name="security_requests_used">
+        <item quantity="one"> (%d used)</item>
+        <item quantity="other"> (%d used)</item>
+    </plurals>
     <string name="security_warning_title">Security Warning</string>
     <string name="security_issues_detected">The following security issues were detected:</string>
     <string name="security_disclaimer">For your security, some features may be limited. Please use the app in a secure environment.</string>

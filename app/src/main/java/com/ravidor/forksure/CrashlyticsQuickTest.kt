@@ -13,7 +13,7 @@ object CrashlyticsQuickTest {
     
     /**
      * Send a quick test crash to Firebase Crashlytics.
-     * This will appear in the "Non-fatals" section of Firebase Console.
+     * This will appear in the "Non-fatal" section of Firebase Console.
      */
     fun sendTestCrash() {
         try {

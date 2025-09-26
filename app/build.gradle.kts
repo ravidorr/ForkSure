@@ -276,7 +276,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    implementation("androidx.compose.material:material-icons-extended")
+    implementation(libs.androidx.material.icons.extended)
     implementation(libs.generativeai)
     
     // Splash Screen API
@@ -302,13 +302,11 @@ dependencies {
     // Navigation Compose
     implementation(libs.androidx.navigation.compose)
     
-    // Markdown rendering for Compose
-    implementation(libs.compose.markdown)
     
     // Firebase Crashlytics and Analytics
-    implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
-    implementation("com.google.firebase:firebase-crashlytics-ktx")
-    implementation("com.google.firebase:firebase-analytics-ktx")
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.crashlytics.ktx)
+    implementation(libs.firebase.analytics.ktx)
     
     // Stability and Performance Monitoring
     debugImplementation(libs.leakcanary.android)

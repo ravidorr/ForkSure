@@ -27,10 +27,12 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -54,25 +56,27 @@ fun SecurityStatusIndicator(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-    var securityStatus by remember { mutableStateOf<SecurityEnvironmentResult?>(null) }
+    
+    // Use reactive StateFlow from ViewModel (no more disk I/O on main thread!)
+    val securityStatus by viewModel.securityStatus.collectAsState()
     var rateLimitStatus by remember { mutableStateOf<RateLimitResult?>(null) }
     var requestCount by remember { mutableIntStateOf(0) }
 
-    // Initial status check
+    // Initial setup - trigger security check and get other status
     LaunchedEffect(viewModel) {
         delay(SecurityConstants.INITIAL_DELAY_MS)
-        securityStatus = viewModel.getSecurityStatus()
+        viewModel.refreshSecurityStatus() // Triggers background check
         rateLimitStatus = SecurityManager.getRateLimitStatus(context, "ai_requests")
         requestCount = viewModel.getRequestCount()
     }
 
-    // Periodic status updates with proper lifecycle management
+    // Periodic updates for rate limit and request count only
     LaunchedEffect(viewModel) {
         while (isActive) {
             delay(SecurityConstants.UPDATE_INTERVAL_MS)
             if (isActive) {
                 try {
-                    securityStatus = viewModel.getSecurityStatus()
+                    // Security status updates automatically via StateFlow
                     rateLimitStatus = SecurityManager.getRateLimitStatus(context, "ai_requests")
                     requestCount = viewModel.getRequestCount()
                 } catch (e: Exception) {
@@ -245,7 +249,7 @@ private fun RateLimitStatusItem(
 
         if (requestCount > 0) {
             Text(
-                text = stringResource(R.string.security_requests_used, requestCount),
+                text = pluralStringResource(R.plurals.security_requests_used, requestCount, requestCount),
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
                 maxLines = 1,
