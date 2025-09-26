@@ -47,7 +47,10 @@
     
     <!-- Security status -->
     <string name="security_requests_label">Solicitudes: </string>
-    <string name="security_requests_used"> (%d usadas)</string>
+    <plurals name="security_requests_used">
+        <item quantity="one"> (%d usada)</item>
+        <item quantity="other"> (%d usadas)</item>
+    </plurals>
     <string name="security_warning_title">Advertencia de Seguridad</string>
     <string name="security_issues_detected">Se detectaron los siguientes problemas de seguridad:</string>
     <string name="security_disclaimer">Por su seguridad, algunas funciones pueden estar limitadas. Por favor, use la aplicación en un entorno seguro.</string>

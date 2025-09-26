@@ -3,6 +3,7 @@ package com.ravidor.forksure
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import androidx.core.content.edit
 import android.os.Process
 import android.util.Log
 import androidx.compose.runtime.Stable
@@ -86,10 +87,10 @@ class CrashHandler(
             crashCount >= MAX_CRASHES_PER_HOUR
         } else {
             // Reset crash count if more than an hour has passed
-            crashPrefs.edit()
-                .putInt(PREF_CRASH_COUNT, 0)
-                .putLong(PREF_LAST_CRASH_TIME, currentTime)
-                .apply()
+            crashPrefs.edit {
+                putInt(PREF_CRASH_COUNT, 0)
+                putLong(PREF_LAST_CRASH_TIME, currentTime)
+            }
             false
         }
     }
@@ -101,10 +102,10 @@ class CrashHandler(
         Log.e(TAG, "Terminating app due to crash loop")
         
         // Clear crash count for next app start
-        crashPrefs.edit()
-            .putInt(PREF_CRASH_COUNT, 0)
-            .putLong(PREF_LAST_CRASH_TIME, 0)
-            .apply()
+        crashPrefs.edit {
+            putInt(PREF_CRASH_COUNT, 0)
+            putLong(PREF_LAST_CRASH_TIME, 0)
+        }
         
         // Force terminate
         Process.killProcess(Process.myPid())
@@ -118,10 +119,10 @@ class CrashHandler(
         val currentTime = System.currentTimeMillis()
         val crashCount = crashPrefs.getInt(PREF_CRASH_COUNT, 0)
         
-        crashPrefs.edit()
-            .putInt(PREF_CRASH_COUNT, crashCount + 1)
-            .putLong(PREF_LAST_CRASH_TIME, currentTime)
-            .apply()
+        crashPrefs.edit {
+            putInt(PREF_CRASH_COUNT, crashCount + 1)
+            putLong(PREF_LAST_CRASH_TIME, currentTime)
+        }
         
         Log.d(TAG, "Recorded crash #${crashCount + 1}")
     }

@@ -23,7 +23,6 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import dev.jeziellago.compose.markdowntext.MarkdownText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -47,7 +46,6 @@ import com.ravidor.forksure.UserMessage
 @Composable
 fun MainResultsSection(
     uiState: UiState,
-    result: String,
     showReportDialog: Boolean,
     onShowReportDialog: () -> Unit,
     onHideReportDialog: () -> Unit,
@@ -180,14 +178,15 @@ fun RecipeResultsSection(
                 contentDescription = resultsSectionDescription
             }
     ) {
-        MarkdownText(
-            markdown = outputText,
+        Text(
+            text = outputText,
             modifier = Modifier
                 .weight(1f)
                 .verticalScroll(rememberScrollState())
                 .semantics {
                     contentDescription = aiContentDescription
-                }
+                },
+            style = MaterialTheme.typography.bodyMedium
         )
         
         // Action buttons at the bottom
