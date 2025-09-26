@@ -57,7 +57,7 @@ coEvery { SecurityManager.checkRateLimit(ctx, any()) } returns RateLimitResult.A
     fun checkSecurityEnvironment_delegates() = runTest {
         mockkObject(SecurityManager)
         val ctx = mockk<Context>(relaxed = true)
-        every { SecurityManager.checkSecurityEnvironment(ctx) } returns SecurityEnvironmentResult.Secure
+        coEvery { SecurityManager.checkSecurityEnvironment(ctx) } returns SecurityEnvironmentResult.Secure
         val prefs = mockk<SharedPreferences>(relaxed = true)
         val repo = SecurityRepositoryImpl(ctx, prefs)
 

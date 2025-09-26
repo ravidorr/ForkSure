@@ -3,9 +3,11 @@ package com.ravidor.forksure
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import io.mockk.MockKAnnotations
+import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockkObject
 import io.mockk.unmockkAll
+import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -31,8 +33,8 @@ class EnhancedErrorHandlerTest {
     }
 
     @Test
-    fun handleError_returnsCritical_whenSecurityEnvironmentInsecure() {
-        every { SecurityManager.checkSecurityEnvironment(any()) } returns SecurityEnvironmentResult.Insecure(
+    fun handleError_returnsCritical_whenSecurityEnvironmentInsecure() = runTest {
+        coEvery { SecurityManager.checkSecurityEnvironment(any()) } returns SecurityEnvironmentResult.Insecure(
             reason = "Security concerns detected",
             details = "Root detected"
         )
@@ -46,8 +48,8 @@ class EnhancedErrorHandlerTest {
     }
 
     @Test
-    fun handleError_networkException_returnsRecoverable() {
-        every { SecurityManager.checkSecurityEnvironment(any()) } returns SecurityEnvironmentResult.Secure
+    fun handleError_networkException_returnsRecoverable() = runTest {
+        coEvery { SecurityManager.checkSecurityEnvironment(any()) } returns SecurityEnvironmentResult.Secure
         val result = EnhancedErrorHandler.handleError(context, java.net.UnknownHostException("dns"))
         assertThat(result).isInstanceOf(EnhancedErrorResult.Recoverable::class.java)
         val rec = result as EnhancedErrorResult.Recoverable

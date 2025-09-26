@@ -24,6 +24,8 @@ This document outlines the comprehensive security measures implemented in the Fo
 suspend fun checkRateLimit(context: Context, identifier: String = "default"): RateLimitResult
 ```
 
+**StrictMode Compliance**: All rate limit operations use `Dispatchers.IO` to ensure disk I/O operations (SharedPreferences access) occur on background threads, preventing main thread violations.
+
 ### 2. Input Validation & Sanitization
 **File**: `SecurityManager.kt`
 
@@ -78,6 +80,7 @@ suspend fun checkRateLimit(context: Context, identifier: String = "default"): Ra
 - **Debug Build Detection**: Identifies development builds
 - **Root Access Detection**: Basic root detection for security awareness
 - **Security Status Reporting**: Comprehensive security assessment
+- **StrictMode Compliance**: All security checks run on background threads to prevent main thread violations
 
 ### 6. Real-Time Security Status Display
 **File**: `SecurityStatusIndicator.kt`
@@ -183,12 +186,19 @@ private const val maxResponseLength = 10000
 - **Caching**: Rate limit data caching for performance
 - **Async Processing**: Non-blocking security checks
 - **Memory Management**: Efficient cleanup and garbage collection
+- **StrictMode Compliance**: All I/O operations properly dispatched to background threads
 
 ### Performance Metrics:
 - **Input Validation**: < 10ms average processing time
 - **Rate Limiting**: < 5ms average check time
 - **Response Validation**: < 20ms average processing time
 - **Memory Usage**: Minimal impact on app memory footprint
+
+### StrictMode Compliance:
+- **Thread Safety**: All disk I/O operations moved to background threads using `Dispatchers.IO`
+- **Main Thread Protection**: Security operations never block the UI thread
+- **Performance**: No impact on UI responsiveness from security checks
+- **Coroutine Integration**: Proper suspend function integration for async operations
 
 ## 🔄 Maintenance & Updates
 
