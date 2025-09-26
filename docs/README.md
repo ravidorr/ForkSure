@@ -8,6 +8,7 @@ If you're new to the project, the main [README.md](../README.md) file is a good 
 
 ## Documentation Categories
 
+- **[Setup](setup/README.md)**: Development setup guides, including Firebase configuration, signing certificates, and project setup.
 - **[Architecture](architecture/README.md)**: Detailed information about the project's architecture, including state management, dependency injection, and navigation.
 - **[Assets](assets/README.md)**: Guidelines for creating and using visual assets, such as icons and feature graphics.
 - **[Features](features/README.md)**: In-depth explanations of implementing key features, such as dark mode, security, and webhooks.
