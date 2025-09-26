@@ -55,9 +55,9 @@ android {
 
     buildTypes {
         release {
-            // Temporarily disable minification to fix crash issues
-            isMinifyEnabled = false
-            isShrinkResources = false
+            // Enable minification and resource shrinking for smaller APK size
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -69,6 +69,14 @@ android {
             
             // Generate debug symbols for crash reporting
             isDebuggable = false
+            
+            // Generate mapping files for deobfuscation (fixes warning 2)
+            // This creates mapping.txt for R8/ProGuard deobfuscation
+            
+            // Enable native debug symbols (fixes warning 3) 
+            ndk {
+                debugSymbolLevel = "FULL"
+            }
             ndk {
                 debugSymbolLevel = "FULL"
             }
