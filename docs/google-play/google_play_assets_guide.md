@@ -36,7 +36,7 @@
   - Not age-restricted
   - Embeddable
 - **Recommendations:**
-  - Show actual app experience in first 10 seconds
+  - Show actual app experience in the first 10 seconds
   - Keep under 30 seconds for autoplay
   - 80% should be actual app footage
 
@@ -77,7 +77,7 @@ Both feature graphics follow the "AI-Powered Baking Magic" concept:
 1. Go to **Google Play Console**
 2. Select your app
 3. Navigate to **Grow users** > **Store presence** > **Main store listing**
-4. Scroll to **Graphics** section
+4. Scroll to the **Graphics** section
 5. Upload your chosen feature graphic (1024×500 PNG)
 
 ### App Icon Upload
@@ -90,7 +90,7 @@ Both feature graphics follow the "AI-Powered Baking Magic" concept:
 ### ✅ Content Guidelines Met
 - No promotional language ("Best," "#1," "Free")
 - No time-sensitive content
-- Suitable for general audience
+- Suitable for a general audience
 - Focuses on app functionality
 - Uses vibrant, contrasting colors
 - Avoids pure white/black backgrounds

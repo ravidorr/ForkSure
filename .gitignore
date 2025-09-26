@@ -94,3 +94,6 @@ lint/tmp/
 # Temporary files
 *.tmp
 *.temp
+
+# Release assets
+release-assets/checksums.txt

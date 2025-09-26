@@ -27,34 +27,34 @@ An Android app that uses AI to analyze photos of baked goods and provide instant
 
 ## Documentation
 
-Comprehensive guides and documentation are organized by category in the [`docs/`](docs/) folder:
+Comprehensive guides and documentation are organized by category in the [`docs/`](docs/README.md) folder:
 
 ### Architecture
-- **[`docs/architecture/`](docs/architecture/)** - Technical architecture guides and design patterns
+- **[`docs/architecture/`](docs/architecture/README.md)** - Technical architecture guides and design patterns
   - State management, repository patterns, dependency injection, navigation
 
 ### Features  
-- **[`docs/features/`](docs/features/)** - Feature implementation details
+- **[`docs/features/`](docs/features/README.md)** - Feature implementation details
   - Security, dark mode, splash screen, rate limiting, webhooks
 
 ### Testing
-- **[`docs/testing/`](docs/testing/)** - Testing strategies and accessibility guides
+- **[`docs/testing/`](docs/testing/README.md)** - Testing strategies and accessibility guides
   - Comprehensive testing, accessibility compliance, and implementation
 
 ### Release
-- **[`docs/release/`](docs/release/)** - Release management and processes
+- **[`docs/release/`](docs/release/README.md)** - Release management and processes
   - Release checklists, artifacts, and deployment procedures
 
 ### Google Play
-- **[`docs/google-play/`](docs/google-play/)** - Google Play Store documentation
+- **[`docs/google-play/`](docs/google-play/README.md)** - Google Play Store documentation
   - Store listing, data safety, compliance, and asset guidelines
 
 ### Legal
-- **[`docs/legal/`](docs/legal/)** - Legal and privacy documentation  
+- **[`docs/legal/`](docs/legal/README.md)** - Legal and privacy documentation  
   - Privacy policies and legal compliance
 
 ### Assets
-- **[`docs/assets/`](docs/assets/)** - Design and asset guidelines
+- **[`docs/assets/`](docs/assets/README.md)** - Design and asset guidelines
   - Visual branding and asset creation specifications
 
 ## Getting Started

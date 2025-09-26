@@ -44,7 +44,7 @@ CrashlyticsQuickTest: Test crash sent successfully! Check Firebase Console in 2-
 2. **Select your project**: "forksure-74375"
 3. **Navigate to Crashlytics**: Left sidebar → Quality → Crashlytics
 4. **Check sections**:
-   - **Non-fatals**: Test crashes appear here (RuntimeException)
+   - **Non-fatal**: Test crashes appear here (RuntimeException)
    - **Crashes**: Real app crashes appear here
 
 ### 3. Expected Timeline
@@ -66,11 +66,11 @@ CrashlyticsQuickTest: Test crash sent successfully! Check Firebase Console in 2-
 
 ### No Crashes in Firebase
 
-**Problem**: Sent test crashes but don't see them in Firebase Console
+**Problem**: Sent test crashes, but don't see them in Firebase Console
 **Solutions**:
 1. **Wait longer**: Can take up to 15 minutes
-2. **Check correct section**: Non-fatal exceptions go to "Non-fatals", not "Crashes"
-3. **Verify setup**: Use "Verify Setup" button and check logcat
+2. **Check correct section**: Non-fatal exceptions go to "Non-fatal", not "Crashes"
+3. **Verify setup**: Use the "Verify Setup" button and check the logcat
 4. **Check internet**: Device needs internet connection
 5. **Force close app**: Close and reopen the app to trigger upload
 
@@ -99,7 +99,7 @@ Enable verbose logging by checking logcat for these tags:
 4. **View Reports**:
    - **Dashboard**: Overview of crashes
    - **Crashes**: Fatal crashes that crash the app
-   - **Non-fatals**: Handled exceptions (test crashes go here)
+   - **Non-fatal**: Handled exceptions (test crashes go here)
    - **ANRs**: App Not Responding events
 
 ## Test Crash Types

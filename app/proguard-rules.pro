@@ -20,60 +20,135 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
-# Keep Generative AI classes
--keep class com.google.ai.client.generativeai.** { *; }
+# Specific Generative AI classes (instead of entire package)
+-keep class com.google.ai.client.generativeai.GenerativeModel { *; }
+-keep class com.google.ai.client.generativeai.type.** { *; }
+-keepclassmembers class com.google.ai.client.generativeai.** {
+    public *;
+}
 -dontwarn com.google.ai.client.generativeai.**
 
-# Keep CameraX classes
--keep class androidx.camera.** { *; }
+# Specific CameraX classes (only what's needed)
+-keep class androidx.camera.core.ImageProxy { *; }
+-keep class androidx.camera.core.ImageCapture { *; }
+-keep class androidx.camera.core.Preview { *; }
+-keep class androidx.camera.lifecycle.ProcessCameraProvider { *; }
+-keepclassmembers class androidx.camera.** {
+    public *;
+}
 -dontwarn androidx.camera.**
 
-# Keep Compose classes
--keep class androidx.compose.** { *; }
+# Compose - keep only annotation-driven classes
+-keep @androidx.compose.runtime.Stable class *
+-keep @androidx.compose.runtime.Immutable class *
+-keepclassmembers class androidx.compose.** {
+    @androidx.compose.runtime.Composable *;
+}
 -dontwarn androidx.compose.**
 
-# Keep Accompanist classes
--keep class com.google.accompanist.** { *; }
+# Accompanist permissions (only what's used)
+-keep class com.google.accompanist.permissions.** { *; }
 -dontwarn com.google.accompanist.**
 
-# Keep Kotlin coroutines
--keepclassmembers class kotlinx.coroutines.** { *; }
+# Kotlin coroutines - keep only essential classes
+-keepclassmembers class kotlinx.coroutines.CoroutineScope {
+    *;
+}
+-keepclassmembers class kotlinx.coroutines.flow.Flow {
+    *;
+}
 -dontwarn kotlinx.coroutines.**
 
-# Keep app-specific classes
--keep class com.ravidor.forksure.** { *; }
+# App-specific classes - targeted approach
+# Keep data models (likely serialized/deserialized)
+-keep class com.ravidor.forksure.data.model.** { *; }
 
-# Keep BuildConfig
--keep class com.ravidor.forksure.BuildConfig { *; }# Add to proguard-rules.pro for additional obfuscation
+# Keep repository interfaces (might be used with reflection)
+-keep interface com.ravidor.forksure.repository.** { *; }
 
-# Add more rules here as needed.
+# Keep Hilt components and modules
+-keep class com.ravidor.forksure.di.** { *; }
+-keep @dagger.hilt.android.HiltAndroidApp class *
+-keep @dagger.hilt.InstallIn class *
+-keep @dagger.Module class *
+-keep @dagger.Provides class *
+-keep class * extends dagger.hilt.android.internal.managers.ApplicationComponentManager
+-keep class dagger.hilt.android.internal.managers.**
 
-# Add to proguard-rules.pro for additional obfuscation
+# Keep Activities and Application class
+-keep public class * extends android.app.Activity
+-keep public class * extends android.app.Application
 
-# Enhanced Security: Obfuscate BuildConfig to make API key extraction harder
--keepclassmembers class **.BuildConfig {
+# Keep ViewModel classes and their public methods
+-keepclassmembers class com.ravidor.forksure.**ViewModel {
+    public *;
+}
+
+# Keep classes with @Keep annotation
+-keep @androidx.annotation.Keep class * { *; }
+
+# BuildConfig - keep only essential fields
+-keep class com.ravidor.forksure.BuildConfig {
     public static final java.lang.String APPLICATION_ID;
     public static final java.lang.String BUILD_TYPE;
-    public static final java.lang.String FLAVOR;
     public static final boolean DEBUG;
     public static final int VERSION_CODE;
     public static final java.lang.String VERSION_NAME;
 }
 
-# Obfuscate API key field name (but keep the class accessible)
--keepclassmembers class **.BuildConfig {
-    !static final java.lang.String apiKey;
+# Firebase - keep only classes you actually use
+-keep class com.google.firebase.FirebaseApp { *; }
+-keep class com.google.firebase.crashlytics.FirebaseCrashlytics {
+    public static com.google.firebase.crashlytics.FirebaseCrashlytics getInstance();
+    public void log(java.lang.String);
+    public void setCustomKey(java.lang.String, java.lang.String);
+    public void setCustomKey(java.lang.String, boolean);
+    public void setCrashlyticsCollectionEnabled(boolean);
+    public void setUserId(java.lang.String);
+    public void recordException(java.lang.Throwable);
 }
+-keepattributes *Annotation*
+-keepattributes Signature
 
-# Additional string obfuscation
+# Gson - keep only essential methods used in RecipeCacheDataSource
+-keepattributes Signature
+-keepattributes *Annotation*
+-keep class com.google.gson.Gson {
+    public <init>(...);
+    public java.lang.String toJson(...);
+    public *** fromJson(...);
+}
+-keep class com.google.gson.annotations.SerializedName
+
+# Keep your data classes that are serialized with Gson
+-keep class com.ravidor.forksure.data.source.local.RecipeCacheDataSource$CachedRecipe { *; }
+-keep class com.ravidor.forksure.data.source.local.RecipeCacheDataSource$PersistedCache { *; }
+-keep class com.ravidor.forksure.data.source.local.RecipeCacheDataSource$CacheData { *; }
+
+# Navigation Compose Component
+-keep class androidx.navigation.compose.** { *; }
+-keepnames class androidx.navigation.NavController
+-keepnames class androidx.navigation.NavHostController
+
+# Enhanced Security: Obfuscate sensitive strings
 -obfuscationdictionary obfuscation-dictionary.txt
 -classobfuscationdictionary obfuscation-dictionary.txt
 -packageobfuscationdictionary obfuscation-dictionary.txt
 
-# Make reverse engineering more difficult
+# Security optimizations
 -repackageclasses ''
 -allowaccessmodification
 -overloadaggressively
 
-# Optimize string constants
--optimizations !code/simplification/string
+# Optimization settings - be specific about what to optimize
+-optimizations !code/simplification/arithmetic,!code/simplification/cast,!field/*,!class/merging/*
+-optimizationpasses 5
+
+# Additional security measures for sensitive classes
+-keep,allowshrinking class com.ravidor.forksure.data.** {
+    *;
+}
+
+# Keep line numbers for better crash reporting
+-renamesourcefileattribute SourceFile
+-keepattributes SourceFile,LineNumberTable

@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -63,7 +64,7 @@ fun CameraSection(
     
     // Photo picker launcher
     val photoPickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
+        contract = ActivityResultContracts.PickVisualMedia()
     ) { uri: Uri? ->
         uri?.let {
             try {
@@ -121,7 +122,9 @@ fun CameraSection(
         // Upload Photo Button
         OutlinedButton(
             onClick = { 
-                photoPickerLauncher.launch("image/*")
+                photoPickerLauncher.launch(
+                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                )
                 AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.CLICK)
             },
             modifier = Modifier

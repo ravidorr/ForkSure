@@ -20,11 +20,6 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         
-    - name: Create local.properties
-      run: |
-        echo "sdk.dir=$ANDROID_HOME" > local.properties
-        echo "apiKey=${{ secrets.GEMINI_API_KEY }}" >> local.properties
-        
     - name: Cache Gradle packages
       uses: actions/cache@v4
       with:
@@ -34,6 +29,11 @@ jobs:
         key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
         restore-keys: |
           ${{ runner.os }}-gradle-
+          
+    - name: Create local.properties
+      run: |
+        echo "sdk.dir=$ANDROID_HOME" > local.properties
+        echo "apiKey=${{ secrets.GEMINI_API_KEY }}" >> local.properties
           
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
@@ -88,11 +88,6 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         
-    - name: Create local.properties
-      run: |
-        echo "sdk.dir=$ANDROID_HOME" > local.properties
-        echo "apiKey=${{ secrets.GEMINI_API_KEY }}" >> local.properties
-        
     - name: Cache Gradle packages
       uses: actions/cache@v4
       with:
@@ -102,6 +97,11 @@ jobs:
         key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
         restore-keys: |
           ${{ runner.os }}-gradle-
+          
+    - name: Create local.properties
+      run: |
+        echo "sdk.dir=$ANDROID_HOME" > local.properties
+        echo "apiKey=${{ secrets.GEMINI_API_KEY }}" >> local.properties
           
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew

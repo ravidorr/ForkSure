@@ -62,10 +62,10 @@ Transform your baking experience with ForkSure, the intelligent app that turns p
 • Regular updates with new features
 • Developed with privacy and security in mind
 
-Download ForkSure today and discover the joy of AI-assisted baking! Whether you're recreating a bakery favorite or learning new techniques, ForkSure is your perfect kitchen companion.
+Download ForkSure today and discover the joy of AI-assisted baking! Whether recreating a bakery favorite or learning new techniques, ForkSure is your perfect kitchen companion.
 
-📧 Support: ravidor@gmail.com
-🔗 Privacy Policy: [Link to privacy policy]
+📧 Support: [ravidor@gmail.com](mailto:ravidor@gmail.com)
+🔗 Privacy Policy: [privacy policy](../legal/PRIVACY_POLICY.md)
 
 Transform your baking journey with ForkSure - where AI meets the art of baking! 🧁✨
 ```
@@ -123,7 +123,7 @@ Transform your baking journey with ForkSure - where AI meets the art of baking! 
 
 🔧 IMPROVEMENTS
 • ⚡ Faster Performance: Migrated to KSP for 25% faster builds
-• 🛡️ Enhanced Security: Updated to latest Android security standards
+• 🛡️ Enhanced Security: Updated to the latest Android security standards
 • ♿ Better Accessibility: Improved screen reader support
 • 🧪 Quality Assurance: 99+ automated tests ensure reliability
 
@@ -143,9 +143,8 @@ Download now and experience the best version of ForkSure yet! 🧁✨
 
 ### Developer Information
 - **Developer Name**: Raanan Avidor
-- **Email**: ravidor@gmail.com
-- **Website**: [Optional - if you have one]
-- **Privacy Policy**: Link to privacy_policy.md hosted online
+- **Email**: [ravidor@gmail.com](mailto:ravidor@gmail.com)
+- **Privacy Policy**: [privacy policy](../legal/PRIVACY_POLICY.md)
 
 ### Content Rating Questionnaire
 **Target Age Group**: Everyone
