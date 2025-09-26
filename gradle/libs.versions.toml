@@ -22,7 +22,6 @@ accompanist = "0.37.3"
 lifecycleCompose = "2.9.4"
 navigationCompose = "2.9.5"
 navigationTesting = "2.9.5"
-composeMarkdown = "0.5.7"
 coroutinesTest = "1.10.2"
 archCoreTesting = "2.2.0"
 mockk = "1.14.5"
@@ -34,7 +33,8 @@ androidxTestExt = "1.3.0"
 androidxTestRunner = "1.7.0"
 androidxTestRules = "1.7.0"
 
-# Monitoring (keeping Firebase hardcoded for now due to BOM resolution issues)
+# Monitoring and Firebase
+firebaseBom = "32.7.0"
 leakcanary = "2.14"
 startupRuntime = "1.2.0"
 
@@ -80,8 +80,9 @@ androidx-lifecycle-runtime-compose = { group = "androidx.lifecycle", name = "lif
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 androidx-navigation-testing = { group = "androidx.navigation", name = "navigation-testing", version.ref = "navigationTesting" }
 
-# Markdown
-compose-markdown = { group = "com.github.jeziellago", name = "compose-markdown", version.ref = "composeMarkdown" }
+
+# Material Icons Extended (uses Compose BOM version)
+androidx-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended" }
 
 # Testing libraries
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutinesTest" }
@@ -91,6 +92,11 @@ mockk-android = { group = "io.mockk", name = "mockk-android", version.ref = "moc
 turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
 truth = { group = "com.google.truth", name = "truth", version.ref = "truth" }
 robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectric" }
+
+# Firebase
+firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
+firebase-crashlytics-ktx = { group = "com.google.firebase", name = "firebase-crashlytics-ktx" }
+firebase-analytics-ktx = { group = "com.google.firebase", name = "firebase-analytics-ktx" }
 
 # Monitoring
 leakcanary-android = { group = "com.squareup.leakcanary", name = "leakcanary-android", version.ref = "leakcanary" }
