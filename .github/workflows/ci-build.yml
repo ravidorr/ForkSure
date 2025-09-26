@@ -6,6 +6,11 @@ on:
   pull_request:
     branches: [ main ]
 
+permissions:
+  contents: read
+  actions: read
+  security-events: write
+
 jobs:
   assemble-debug:
     runs-on: ubuntu-latest
@@ -18,8 +23,6 @@ jobs:
         with:
           distribution: temurin
           java-version: "17"
-          # Explicitly disable dependency graph submission to prevent timeouts
-          dependency-graph: disabled
 
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
@@ -44,3 +47,9 @@ jobs:
 
       - name: Assemble Debug
         run: ./gradlew --no-daemon :app:assembleDebug
+        
+      - name: Generate and submit dependency graph
+        uses: gradle/actions/dependency-submission@v3
+        if: github.ref == 'refs/heads/main'
+        with:
+          gradle-executable: ./gradlew
