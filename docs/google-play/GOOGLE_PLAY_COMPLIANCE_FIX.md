@@ -1,8 +1,8 @@
 # Google Play AI-Generated Content Policy Compliance Fix
 
 ## Issue Description
-ForkSure app was rejected by Google Play due to violation of the AI-Generated Content policy:
-> Apps that generate content using AI must contain in-app user reporting or flagging features that allow users to report or flag offensive content to developers without needing to exit the app.
+Google Play rejected the ForkSure app due to a violation of the AI-Generated Content policy:
+> Apps that generate AI content must contain in-app user reporting or flagging features that allow users to report or flag offensive content to developers without needing to exit the app.
 
 ## Solution Implemented
 
@@ -29,7 +29,7 @@ Implemented a comprehensive content reporting system that allows users to report
 
 #### BakingScreen.kt Updates
 - Added 🚩 "Report Content" button prominently displayed when AI content is shown
-- Integrated reporting dialog that appears when button is pressed
+- Integrated reporting dialog that appears when the button is pressed
 - Coroutine-based submission handling
 - Error-styled button to draw attention
 
@@ -62,7 +62,7 @@ Since the app doesn't have a backend API, reports are sent via email:
 ✅ **In-app reporting** - Users can report content without leaving the app
 ✅ **User-friendly interface** - Clear, accessible reporting dialog
 ✅ **Multiple report categories** - Covers various types of offensive content
-✅ **Developer notification** - Reports sent directly to developer email
+✅ **Developer notification** - Reports sent directly to the developer email
 ✅ **No exit required** - Entire process happens within the app
 ✅ **Professional implementation** - Follows Material Design guidelines
 
@@ -70,8 +70,8 @@ Since the app doesn't have a backend API, reports are sent via email:
 
 1. User generates AI content using the app
 2. AI-generated content is displayed with a prominent "🚩 Report Content" button
-3. User taps the report button if they find content inappropriate
-4. A dialog appears with report reason options and optional details field
+3. User taps the report button if they find the content inappropriate
+4. A dialog appears with report reason options and an optional details field
 5. User selects reason and optionally adds details
 6. User taps "Submit Report"
 7. Android email intent opens with pre-filled report to ravidor@gmail.com
@@ -93,7 +93,7 @@ Since the app doesn't have a backend API, reports are sent via email:
 ## Next Steps
 
 1. ✅ Build successful - Release APK generated
-2. 📱 Test the reporting feature on device
+2. 📱 Test the reporting feature on the device
 3. 🚀 Upload version 1.1.3 to Google Play Console
 4. 📝 Submit for review with compliance fix
 
@@ -107,5 +107,5 @@ Since the app doesn't have a backend API, reports are sent via email:
 6. Verify email app opens with pre-filled report
 7. Send the email to confirm the flow works
 
-This implementation fully satisfies Google Play's AI-Generated Content policy requirements and should resolve the rejection issue.
+This implementation satisfies Google Play's AI-Generated Content policy requirements and should resolve the rejection issue.
 

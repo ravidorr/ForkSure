@@ -16,13 +16,15 @@ This document outlines the comprehensive security measures implemented in the Fo
 #### Features:
 - **Persistent Storage**: Rate limit data survives app restarts
 - **Automatic Cleanup**: Old timestamps are automatically removed
-- **Thread-Safe**: Uses mutex for concurrent access protection
+- **Thread-Safe**: Uses a mutex for concurrent access protection
 - **User-Friendly Messages**: Clear explanations when limits are exceeded
 
 #### Implementation:
 ```kotlin
 suspend fun checkRateLimit(context: Context, identifier: String = "default"): RateLimitResult
 ```
+
+**StrictMode Compliance**: All rate limit operations use `Dispatchers.IO` to ensure disk I/O operations (SharedPreferences access) occur on background threads, preventing main thread violations.
 
 ### 2. Input Validation & Sanitization
 **File**: `SecurityManager.kt`
@@ -78,6 +80,7 @@ suspend fun checkRateLimit(context: Context, identifier: String = "default"): Ra
 - **Debug Build Detection**: Identifies development builds
 - **Root Access Detection**: Basic root detection for security awareness
 - **Security Status Reporting**: Comprehensive security assessment
+- **StrictMode Compliance**: All security checks run on background threads to prevent main thread violations
 
 ### 6. Real-Time Security Status Display
 **File**: `SecurityStatusIndicator.kt`
@@ -100,7 +103,7 @@ suspend fun checkRateLimit(context: Context, identifier: String = "default"): Ra
 ## 🛡️ Security Architecture
 
 ### Request Flow with Security:
-1. **Environment Check** → Verify app is running in secure environment
+1. **Environment Check** → Verify app is running in a secure environment
 2. **Input Validation** → Sanitize and validate user input
 3. **Rate Limiting** → Check if user has exceeded limits
 4. **AI Request** → Make secure request to AI service
@@ -133,15 +136,15 @@ Environment    Sanitization    Quota Check    Secure API    Safety Check    Safe
 
 ### Rate Limiting Configuration:
 ```kotlin
-private const val MAX_REQUESTS_PER_MINUTE = 2
-private const val MAX_REQUESTS_PER_HOUR = 20
-private const val MAX_REQUESTS_PER_DAY = 80
+private const val maxRequestsPerMinute = 2
+private const val maxRequestsPerHour = 20
+private const val maxRequestsPerDay = 80
 ```
 
 ### Input Validation Configuration:
 ```kotlin
-private const val MAX_PROMPT_LENGTH = 1000
-private const val MAX_RESPONSE_LENGTH = 10000
+private const val maxPromptLength = 1000
+private const val maxResponseLength = 10000
 ```
 
 ### Security Patterns:
@@ -183,12 +186,19 @@ private const val MAX_RESPONSE_LENGTH = 10000
 - **Caching**: Rate limit data caching for performance
 - **Async Processing**: Non-blocking security checks
 - **Memory Management**: Efficient cleanup and garbage collection
+- **StrictMode Compliance**: All I/O operations properly dispatched to background threads
 
 ### Performance Metrics:
 - **Input Validation**: < 10ms average processing time
 - **Rate Limiting**: < 5ms average check time
 - **Response Validation**: < 20ms average processing time
 - **Memory Usage**: Minimal impact on app memory footprint
+
+### StrictMode Compliance:
+- **Thread Safety**: All disk I/O operations moved to background threads using `Dispatchers.IO`
+- **Main Thread Protection**: Security operations never block the UI thread
+- **Performance**: No impact on UI responsiveness from security checks
+- **Coroutine Integration**: Proper suspend function integration for async operations
 
 ## 🔄 Maintenance & Updates
 
@@ -235,4 +245,4 @@ private const val MAX_RESPONSE_LENGTH = 10000
 
 ---
 
-**Note**: This security implementation provides comprehensive protection while maintaining excellent user experience. All security measures are designed to be transparent to users while providing robust protection against threats and ensuring safe AI interactions. 
+**Note**: This security implementation provides comprehensive protection while maintaining an excellent user experience. All security measures are designed to be transparent to users while providing robust protection against threats and ensuring safe AI interactions. 

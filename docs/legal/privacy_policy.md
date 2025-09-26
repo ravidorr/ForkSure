@@ -27,7 +27,7 @@ ForkSure is designed with privacy in mind:
 ForkSure uses Google's Gemini AI service for image analysis. Please review [Google's Privacy Policy](https://policies.google.com/privacy) for information about how Google handles data.
 
 ## Children's Privacy
-ForkSure does not knowingly collect any information from children under 13 years of age.
+ForkSure does not knowingly collect any information from children under 13.
 
 ## Changes to This Policy
 We may update this Privacy Policy from time to time. Any changes will be posted in the app and on this page.
@@ -49,7 +49,7 @@ As a user of ForkSure, you have the following rights:
 ## International Users
 ForkSure is available worldwide. When you use our app:
 - Photos may be processed by Google's Gemini AI service in Google's data centers
-- Google's data processing is governed by their privacy policy and data processing agreements
+- Google's data processing is governed by its privacy policy and data processing agreements
 - No personal data is transferred internationally by ForkSure itself
 
 ## App Permissions Explained
@@ -63,7 +63,7 @@ ForkSure is available worldwide. When you use our app:
 - **Purpose**: To send photos to Google's Gemini AI for recipe analysis
 - **Usage**: Only when processing photos for recipes
 - **Data sent**: Only the photo you choose to analyze
-- **Control**: App requires internet connection to function
+- **Control**: App requires an internet connection to function
 
 ## Content Reporting
 ForkSure includes an in-app content reporting system:
@@ -73,7 +73,7 @@ ForkSure includes an in-app content reporting system:
 - Reporting helps improve the service for all users
 
 ## Contact Us
-If you have any questions about this Privacy Policy, please contact us at:
+If you have any questions about this Privacy Policy, please get in touch with us at:
 - **Developer**: Raanan Avidor
 - **Email**: raanan@avidor.org
 

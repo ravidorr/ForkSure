@@ -37,6 +37,8 @@ class ForkSureApplication : Application()
 #### AndroidManifest.xml
 ```xml
 <application android:name=".ForkSureApplication">
+    <!-- app content -->
+</application>
 ```
 - **Purpose**: Registers the custom Application class
 
@@ -224,7 +226,10 @@ kapt {
 ### Before Hilt
 ```kotlin
 class BakingViewModel : ViewModel() {
-    private val generativeModel = GenerativeModel(...)
+    private val generativeModel = GenerativeModel(
+        modelName = "gemini-pro",
+        apiKey = BuildConfig.API_KEY
+    )
     
     fun sendPrompt(bitmap: Bitmap, prompt: String, context: Context) {
         // Direct SecurityManager calls

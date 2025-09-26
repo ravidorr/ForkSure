@@ -29,22 +29,22 @@
 - **Use Case**: Direct installation, beta testing, sideloading
 - **Benefits**:
   - Universal compatibility
-  - Direct installation without Play Store
+  - Direct installation without the Play Store
   - Beta testing distribution
 
 ## 🔐 Security & Signing
-- ✅ **Signed**: Both AAB and APK are signed with release keystore
+- ✅ **Signed**: Both AAB and APK are signed with the release keystore
 - ✅ **Minified**: Code obfuscation and resource shrinking enabled
 - ✅ **Optimized**: ProGuard optimization applied
 - ✅ **Debug Symbols**: Full debug symbols generated for crash reporting
 
 ## 📊 Size Comparison
-| Format | Size | Reduction |
-|--------|------|-----------|
-| APK    | 12MB | Baseline  |
+| Format | Size  | Reduction    |
+|--------|-------|--------------|
+| APK    | 12MB  | Baseline     |
 | AAB    | 8.7MB | ~27% smaller |
 
-*Note: AAB generates even smaller APKs (typically 6-8MB) when distributed through Google Play due to dynamic delivery.*
+*Note: Due to dynamic delivery, AAB generates even smaller APKs (typically 6-8MB) when distributed through Google Play.*
 
 ## 🚀 Distribution Recommendations
 
@@ -82,11 +82,11 @@
 ### AAB (Google Play):
 1. Upload to Google Play Console
 2. Create internal/alpha/beta track
-3. Distribute to testers via Play Store
+3. Distribute to testers via the Play Store
 
 ### APK (Direct):
 1. Enable "Install from Unknown Sources"
-2. Download APK to device
+2. Download the APK to the device
 3. Tap to install
 4. Grant necessary permissions
 

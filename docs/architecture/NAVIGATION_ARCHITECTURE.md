@@ -109,17 +109,17 @@ LaunchedEffect(Unit) {
 var showCamera by remember { mutableStateOf(false) }
 
 if (showCamera) {
-    CameraCapture(...)
+    CameraCapture() // CameraCapture(...)
 } else {
-    BakingMainContent(...)
+    BakingMainContent() // BakingMainContent(...)
 }
 ```
 
 ### After (Navigation Compose)
 ```kotlin
 NavHost(navController, startDestination = ROUTE_MAIN) {
-    composable(ROUTE_MAIN) { MainScreen(...) }
-    composable(ROUTE_CAMERA) { CameraCapture(...) }
+    composable(ROUTE_MAIN) { MainScreen() } // MainScreen(...)
+    composable(ROUTE_CAMERA) { CameraCapture() } // CameraCapture(...)
 }
 ```
 
@@ -159,7 +159,7 @@ composable(
     route = "camera",
     deepLinks = listOf(navDeepLink { uriPattern = "forksure://camera" })
 ) {
-    CameraCapture(...)
+    CameraCapture() // CameraCapture(...)
 }
 ```
 

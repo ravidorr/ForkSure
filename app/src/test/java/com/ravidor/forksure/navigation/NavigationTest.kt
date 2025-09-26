@@ -17,7 +17,6 @@ import org.robolectric.annotation.Config
  * Tests navigation logic, route handling, and state management
  */
 @RunWith(RobolectricTestRunner::class)
-@Config(sdk = [34])
 class NavigationTest {
 
     private lateinit var mockNavController: NavHostController

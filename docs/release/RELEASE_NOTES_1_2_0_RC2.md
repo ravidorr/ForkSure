@@ -25,7 +25,7 @@ This release candidate focuses entirely on project structure improvements and do
 ### 🔧 **Improvements**
 
 #### 📁 **File Organization**
-- Eliminated root directory clutter (moved 7 image files)
+- Eliminated root directory clutter (moved seven image files)
 - Created structured `public/` and `docs/assets/images/` directories  
 - Updated all file references to new locations
 - Maintained backward compatibility for all assets
@@ -85,4 +85,4 @@ This release contains no functional changes to the app itself. All improvements 
 
 ---
 
-*This release continues the 1.2.0 series focusing on project maturity and maintainability improvements.* 
+*This release continues the 1.2.0 series, focusing on project maturity and maintainability improvements.* 

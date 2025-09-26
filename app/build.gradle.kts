@@ -276,6 +276,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation("androidx.compose.material:material-icons-extended")
     implementation(libs.generativeai)
     
     // Splash Screen API
@@ -310,8 +311,8 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics-ktx")
     
     // Stability and Performance Monitoring
-    debugImplementation("com.squareup.leakcanary:leakcanary-android:2.12")
-    implementation("androidx.startup:startup-runtime:1.1.1")
+    debugImplementation(libs.leakcanary.android)
+    implementation(libs.androidx.startup.runtime)
     
     // Unit Testing
     testImplementation(libs.junit)

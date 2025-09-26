@@ -45,7 +45,8 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }  # Added KSP plugi
 ```kotlin
 plugins {
     // ... other plugins
-    alias(libs.plugins.ksp) apply false  # Added KSP plugin declaration
+    // Added KSP plugin declaration
+    alias(libs.plugins.ksp) apply false
 }
 ```
 
@@ -55,19 +56,19 @@ plugins {
 ```kotlin
 plugins {
     // ... other plugins
-    alias(libs.plugins.ksp)  # Added KSP plugin
-    # id("kotlin-kapt")     # Removed KAPT plugin
+    alias(libs.plugins.ksp)  // Added KSP plugin
+    // id("kotlin-kapt")     // Removed KAPT plugin
 }
 ```
 
 **Dependency Changes:**
 ```kotlin
-# Before (KAPT)
+// Before (KAPT)
 kapt("com.google.dagger:hilt-compiler:2.48")
 kaptTest("com.google.dagger:hilt-android-compiler:2.48")
 kaptAndroidTest("com.google.dagger:hilt-android-compiler:2.48")
 
-# After (KSP)
+// After (KSP)
 ksp("com.google.dagger:hilt-compiler:2.48")
 kspTest("com.google.dagger:hilt-android-compiler:2.48")
 kspAndroidTest("com.google.dagger:hilt-android-compiler:2.48")
@@ -75,12 +76,12 @@ kspAndroidTest("com.google.dagger:hilt-android-compiler:2.48")
 
 **Configuration Changes:**
 ```kotlin
-# Before (KAPT)
+// Before (KAPT)
 kapt {
     correctErrorTypes = true
 }
 
-# After (KSP)
+// After (KSP)
 ksp {
     arg("dagger.hilt.android.internal.disableAndroidSuperclassValidation", "true")
 }

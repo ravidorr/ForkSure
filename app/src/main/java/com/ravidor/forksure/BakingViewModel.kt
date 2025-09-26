@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
 // Centralized constants imports
@@ -34,8 +35,20 @@ class BakingViewModel @Inject constructor(
     private var lastPrompt: String? = null
     private var requestCount = 0
 
+    // Security status with caching and background execution
+    private val _securityStatus = MutableStateFlow<SecurityEnvironmentResult?>(null)
+    val securityStatus: StateFlow<SecurityEnvironmentResult?> = _securityStatus.asStateFlow()
+    
+    private var lastSecurityCheckTime = 0L
+    private val SECURITY_CACHE_DURATION = 30_000L // 30 seconds
+
     companion object {
         private const val TAG = AppConstants.TAG_BAKING_VIEW_MODEL
+    }
+    
+    init {
+        // Initialize security status check on ViewModel creation
+        refreshSecurityStatus()
     }
 
     fun sendPrompt(
@@ -109,7 +122,9 @@ class BakingViewModel @Inject constructor(
             _uiState.value = UiState.Loading
 
             // 4. Make AI request through repository
+            Log.d(TAG, "Starting AI request through repository")
             val responseValidation = aiRepository.generateContent(bitmap, sanitizedPrompt)
+            Log.d(TAG, "AI request completed, result type: ${responseValidation::class.simpleName}")
             handleAIResponse(responseValidation)
             
         } catch (e: Exception) {
@@ -119,8 +134,10 @@ class BakingViewModel @Inject constructor(
     }
 
     private fun handleAIResponse(responseValidation: AIResponseProcessingResult) {
+        Log.d(TAG, "Handling AI response: ${responseValidation::class.simpleName}")
         when (responseValidation) {
             is AIResponseProcessingResult.Success -> {
+                Log.d(TAG, "Success response - setting UI state to Success")
                 _uiState.value = UiState.Success(responseValidation.response)
             }
             is AIResponseProcessingResult.SuccessWithWarning -> {
@@ -141,6 +158,7 @@ class BakingViewModel @Inject constructor(
                 )
             }
             is AIResponseProcessingResult.Error -> {
+                Log.e(TAG, "AI response error: ${responseValidation.message}")
                 _uiState.value = UiState.Error(
                     "AI response error: ${responseValidation.message}",
                     ErrorType.SERVER_ERROR,
@@ -184,9 +202,34 @@ class BakingViewModel @Inject constructor(
     fun clearState() {
         _uiState.value = UiState.Initial
     }
-
-    suspend fun getSecurityStatus(): SecurityEnvironmentResult {
-        return securityRepository.checkSecurityEnvironment()
+    
+    fun refreshSecurityStatus() {
+        val currentTime = System.currentTimeMillis()
+        
+        // Use cached result if recent enough
+        if (_securityStatus.value != null && 
+            currentTime - lastSecurityCheckTime < SECURITY_CACHE_DURATION) {
+            return
+        }
+        
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val result = securityRepository.checkSecurityEnvironment()
+                lastSecurityCheckTime = currentTime
+                _securityStatus.value = result
+            } catch (e: Exception) {
+                Log.w(TAG, "Error checking security status", e)
+                // Keep previous value if check fails
+            }
+        }
+    }
+    
+    // Legacy method for compatibility - now uses cached value
+    suspend fun getSecurityStatus(): SecurityEnvironmentResult? {
+        // Trigger refresh if needed
+        refreshSecurityStatus()
+        // Return cached value or null if not available
+        return _securityStatus.value
     }
 
     fun getRequestCount(): Int = requestCount

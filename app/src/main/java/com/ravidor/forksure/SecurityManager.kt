@@ -8,6 +8,8 @@ import androidx.compose.runtime.Stable
 import androidx.core.content.edit
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.security.MessageDigest
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicInteger
@@ -52,74 +54,76 @@ object SecurityManager {
     )
     
     private val dangerousInstructions = listOf(
-        Pattern.compile("(?i)\\b(poison|toxic|dangerous|harmful)\\b"),
-        Pattern.compile("(?i)\\b(raw|undercooked|unsafe|contaminated)\\b"),
-        Pattern.compile("(?i)\\b(allergy|allergen)\\s+(?!warning|information|note)"),
-        Pattern.compile("(?i)\\b(temperature|heat|burn|fire)\\s+(?!control|safety)")
+        Pattern.compile("(?i)\\b(poison|toxic|deadly|lethal)\\b"),
+        Pattern.compile("(?i)\\b(contaminated|spoiled|rotten)\\b"),
+        Pattern.compile("(?i)\\b(eat\\s+raw|consume\\s+raw)\\s+(meat|chicken|fish|pork|beef)\\b"),
+        Pattern.compile("(?i)\\b(leave\\s+out|room\\s+temperature)\\s+.*\\b(overnight|hours)\\b.*\\b(meat|dairy|eggs)\\b")
     )
 
     /**
      * Rate limiting implementation - actually records a request
      */
     suspend fun checkRateLimit(context: Context, identifier: String = "default"): RateLimitResult {
-        return rateLimitMutex.withLock {
-            val currentTime = System.currentTimeMillis()
-            val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-            
-            // Load existing data from SharedPreferences on first access
-            loadRateLimitData(prefs, identifier)
-            
-            // Clean old timestamps
-            cleanOldTimestamps(identifier, currentTime)
-            
-            // Check different time windows
-            val minuteCount = getRequestCount(identifier, currentTime, 60 * 1000) // 1 minute
-            val hourCount = getRequestCount(identifier, currentTime, 60 * 60 * 1000) // 1 hour
-            val dayCount = getRequestCount(identifier, currentTime, 24 * 60 * 60 * 1000) // 1 day
-            
-            when {
-                minuteCount >= MAX_REQUESTS_PER_MINUTE -> {
-                    Log.w(TAG, "Rate limit exceeded: $minuteCount requests in last minute")
-                    RateLimitResult.Blocked(
-                        reason = "Too many requests. Please wait a minute before trying again.",
-                        retryAfterSeconds = 60,
-                        requestsRemaining = 0
-                    )
-                }
-                hourCount >= MAX_REQUESTS_PER_HOUR -> {
-                    Log.w(TAG, "Rate limit exceeded: $hourCount requests in last hour")
-                    RateLimitResult.Blocked(
-                        reason = "Hourly limit reached. Please try again later.",
-                        retryAfterSeconds = 3600,
-                        requestsRemaining = 0
-                    )
-                }
-                dayCount >= MAX_REQUESTS_PER_DAY -> {
-                    Log.w(TAG, "Rate limit exceeded: $dayCount requests in last day")
-                    RateLimitResult.Blocked(
-                        reason = "Daily limit reached. Please try again tomorrow.",
-                        retryAfterSeconds = 86400,
-                        requestsRemaining = 0
-                    )
-                }
-                else -> {
-                    // Record this request atomically
-                    recordRequest(identifier, currentTime)
-                    
-                    // Save to persistent storage within the same lock
-                    try {
-                        saveRateLimitData(prefs, identifier, currentTime)
-                    } catch (e: Exception) {
-                        Log.e(TAG, "Failed to save rate limit data", e)
-                        // Rollback the in-memory change if persistence fails
-                        val timestamps = requestTimestamps[identifier]
-                        timestamps?.removeLastOrNull()
+        return withContext(Dispatchers.IO) {
+            rateLimitMutex.withLock {
+                val currentTime = System.currentTimeMillis()
+                val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+                
+                // Load existing data from SharedPreferences on first access
+                loadRateLimitData(prefs, identifier)
+                
+                // Clean old timestamps
+                cleanOldTimestamps(identifier, currentTime)
+                
+                // Check different time windows
+                val minuteCount = getRequestCount(identifier, currentTime, 60 * 1000) // 1 minute
+                val hourCount = getRequestCount(identifier, currentTime, 60 * 60 * 1000) // 1 hour
+                val dayCount = getRequestCount(identifier, currentTime, 24 * 60 * 60 * 1000) // 1 day
+                
+                when {
+                    minuteCount >= MAX_REQUESTS_PER_MINUTE -> {
+                        Log.w(TAG, "Rate limit exceeded: $minuteCount requests in last minute")
+                        RateLimitResult.Blocked(
+                            reason = "Too many requests. Please wait a minute before trying again.",
+                            retryAfterSeconds = 60,
+                            requestsRemaining = 0
+                        )
                     }
-                    
-                    RateLimitResult.Allowed(
-                        requestsRemaining = MAX_REQUESTS_PER_MINUTE - minuteCount - 1,
-                        resetTimeSeconds = 60
-                    )
+                    hourCount >= MAX_REQUESTS_PER_HOUR -> {
+                        Log.w(TAG, "Rate limit exceeded: $hourCount requests in last hour")
+                        RateLimitResult.Blocked(
+                            reason = "Hourly limit reached. Please try again later.",
+                            retryAfterSeconds = 3600,
+                            requestsRemaining = 0
+                        )
+                    }
+                    dayCount >= MAX_REQUESTS_PER_DAY -> {
+                        Log.w(TAG, "Rate limit exceeded: $dayCount requests in last day")
+                        RateLimitResult.Blocked(
+                            reason = "Daily limit reached. Please try again tomorrow.",
+                            retryAfterSeconds = 86400,
+                            requestsRemaining = 0
+                        )
+                    }
+                    else -> {
+                        // Record this request atomically
+                        recordRequest(identifier, currentTime)
+                        
+                        // Save to persistent storage within the same lock
+                        try {
+                            saveRateLimitData(prefs, identifier, currentTime)
+                        } catch (e: Exception) {
+                            Log.e(TAG, "Failed to save rate limit data", e)
+                            // Rollback the in-memory change if persistence fails
+                            val timestamps = requestTimestamps[identifier]
+                            timestamps?.removeLastOrNull()
+                        }
+                        
+                        RateLimitResult.Allowed(
+                            requestsRemaining = MAX_REQUESTS_PER_MINUTE - minuteCount - 1,
+                            resetTimeSeconds = 60
+                        )
+                    }
                 }
             }
         }
@@ -130,49 +134,51 @@ object SecurityManager {
      * Use this for status display purposes
      */
     suspend fun getRateLimitStatus(context: Context, identifier: String = "default"): RateLimitResult {
-        return rateLimitMutex.withLock {
-            val currentTime = System.currentTimeMillis()
-            val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-            
-            // Load existing data from SharedPreferences on first access
-            loadRateLimitData(prefs, identifier)
-            
-            // Clean old timestamps
-            cleanOldTimestamps(identifier, currentTime)
-            
-            // Check different time windows
-            val minuteCount = getRequestCount(identifier, currentTime, 60 * 1000) // 1 minute
-            val hourCount = getRequestCount(identifier, currentTime, 60 * 60 * 1000) // 1 hour
-            val dayCount = getRequestCount(identifier, currentTime, 24 * 60 * 60 * 1000) // 1 day
-            
-            when {
-                minuteCount >= MAX_REQUESTS_PER_MINUTE -> {
-                    RateLimitResult.Blocked(
-                        reason = "Too many requests. Please wait a minute before trying again.",
-                        retryAfterSeconds = 60,
-                        requestsRemaining = 0
-                    )
-                }
-                hourCount >= MAX_REQUESTS_PER_HOUR -> {
-                    RateLimitResult.Blocked(
-                        reason = "Hourly limit reached. Please try again later.",
-                        retryAfterSeconds = 3600,
-                        requestsRemaining = 0
-                    )
-                }
-                dayCount >= MAX_REQUESTS_PER_DAY -> {
-                    RateLimitResult.Blocked(
-                        reason = "Daily limit reached. Please try again tomorrow.",
-                        retryAfterSeconds = 86400,
-                        requestsRemaining = 0
-                    )
-                }
-                else -> {
-                    // DON'T record this request - just return status
-                    RateLimitResult.Allowed(
-                        requestsRemaining = MAX_REQUESTS_PER_MINUTE - minuteCount,
-                        resetTimeSeconds = 60
-                    )
+        return withContext(Dispatchers.IO) {
+            rateLimitMutex.withLock {
+                val currentTime = System.currentTimeMillis()
+                val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+                
+                // Load existing data from SharedPreferences on first access
+                loadRateLimitData(prefs, identifier)
+                
+                // Clean old timestamps
+                cleanOldTimestamps(identifier, currentTime)
+                
+                // Check different time windows
+                val minuteCount = getRequestCount(identifier, currentTime, 60 * 1000) // 1 minute
+                val hourCount = getRequestCount(identifier, currentTime, 60 * 60 * 1000) // 1 hour
+                val dayCount = getRequestCount(identifier, currentTime, 24 * 60 * 60 * 1000) // 1 day
+                
+                when {
+                    minuteCount >= MAX_REQUESTS_PER_MINUTE -> {
+                        RateLimitResult.Blocked(
+                            reason = "Too many requests. Please wait a minute before trying again.",
+                            retryAfterSeconds = 60,
+                            requestsRemaining = 0
+                        )
+                    }
+                    hourCount >= MAX_REQUESTS_PER_HOUR -> {
+                        RateLimitResult.Blocked(
+                            reason = "Hourly limit reached. Please try again later.",
+                            retryAfterSeconds = 3600,
+                            requestsRemaining = 0
+                        )
+                    }
+                    dayCount >= MAX_REQUESTS_PER_DAY -> {
+                        RateLimitResult.Blocked(
+                            reason = "Daily limit reached. Please try again tomorrow.",
+                            retryAfterSeconds = 86400,
+                            requestsRemaining = 0
+                        )
+                    }
+                    else -> {
+                        // DON'T record this request - just return status
+                        RateLimitResult.Allowed(
+                            requestsRemaining = MAX_REQUESTS_PER_MINUTE - minuteCount,
+                            resetTimeSeconds = 60
+                        )
+                    }
                 }
             }
         }
@@ -305,41 +311,43 @@ object SecurityManager {
     /**
      * Checks if the app is running in a secure environment
      */
-    fun checkSecurityEnvironment(context: Context): SecurityEnvironmentResult {
-        val issues = mutableListOf<String>()
+    suspend fun checkSecurityEnvironment(context: Context): SecurityEnvironmentResult {
+        return withContext(Dispatchers.IO) {
+            val issues = mutableListOf<String>()
 
-        // Check if debugging is enabled
-        if (android.os.Build.TYPE == "eng" || android.os.Build.TYPE == "userdebug") {
-            issues.add("Running on debug build")
-        }
-
-        // Check for root access (basic check)
-        val rootPaths = arrayOf(
-            "/system/app/Superuser.apk",
-            "/sbin/su",
-            "/system/bin/su",
-            "/system/xbin/su",
-            "/data/local/xbin/su",
-            "/data/local/bin/su",
-            "/system/sd/xbin/su",
-            "/system/bin/failsafe/su",
-            "/data/local/su"
-        )
-
-        for (path in rootPaths) {
-            if (java.io.File(path).exists()) {
-                issues.add("Potential root access detected")
-                break
+            // Check if debugging is enabled
+            if (android.os.Build.TYPE == "eng" || android.os.Build.TYPE == "userdebug") {
+                issues.add("Running on debug build")
             }
-        }
 
-        return if (issues.isEmpty()) {
-            SecurityEnvironmentResult.Secure
-        } else {
-            SecurityEnvironmentResult.Insecure(
-                reason = "Security concerns detected",
-                details = issues.joinToString(", ")
+            // Check for root access (basic check)
+            val rootPaths = arrayOf(
+                "/system/app/Superuser.apk",
+                "/sbin/su",
+                "/system/bin/su",
+                "/system/xbin/su",
+                "/data/local/xbin/su",
+                "/data/local/bin/su",
+                "/system/sd/xbin/su",
+                "/system/bin/failsafe/su",
+                "/data/local/su"
             )
+
+            for (path in rootPaths) {
+                if (java.io.File(path).exists()) {
+                    issues.add("Potential root access detected")
+                    break
+                }
+            }
+
+            if (issues.isEmpty()) {
+                SecurityEnvironmentResult.Secure
+            } else {
+                SecurityEnvironmentResult.Insecure(
+                    reason = "Security concerns detected",
+                    details = issues.joinToString(", ")
+                )
+            }
         }
     }
     

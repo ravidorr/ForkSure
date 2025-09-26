@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document outlines the comprehensive testing strategy implemented for the ForkSure Android app. The testing suite includes unit tests, integration tests, UI tests, and performance tests to ensure code quality, reliability, and maintainability.
+This document outlines the comprehensive testing strategy implemented for the ForkSure Android app. The testing suite includes unit, integration, UI, and performance tests to ensure code quality, reliability, and maintainability.
 
 ## Testing Architecture
 
@@ -127,16 +127,16 @@ class FakeSecurityRepository @Inject constructor() : SecurityRepository {
 **Key Test Cases**:
 ```kotlin
 @Test
-fun `sendPrompt with valid input should return success`()
+fun sendPrompt() // sendPrompt with valid input should return success
 
 @Test
-fun `sendPrompt with insecure environment should return error`()
+fun sendPromptWithNetworkError() // sendPrompt with insecure environment should return error
 
 @Test
-fun `sendPrompt with rate limit should return error`()
+fun sendPromptWithRateLimit() // sendPrompt with rate limit should return error 
 
 @Test
-fun `retryLastRequest should resend last request`()
+fun retryLastRequest() // retryLastRequest should resend last request
 ```
 
 #### MainScreenStateTest.kt
@@ -176,16 +176,16 @@ fun `retryLastRequest should resend last request`()
 **Key Test Scenarios**:
 ```kotlin
 @Test
-fun mainScreen_analyzeWithSuccess_showsResults()
+fun mainScreenAnalyzeWithSuccessShowsResults() //  mainScreen analyze with success shows results
 
 @Test
-fun mainScreen_analyzeWithError_showsErrorMessage()
+fun mainScreenAnalyzeWithErrorShowsErrorMessage() // mainScreen analyze with error shows error message
 
 @Test
-fun mainScreen_analyzeWithRateLimit_showsRateLimitError()
+fun mainScreenAnalyzeWithRateLimitShowsRateLimitError() // mainScreen analyze with rate limit shows rate limit error
 
 @Test
-fun mainScreen_retryAfterError_worksCorrectly()
+fun mainScreenRetryAfterErrorWorksCorrectly() // mainScreen retry after error works correctly
 ```
 
 ### 3. Repository Tests
@@ -366,4 +366,4 @@ The comprehensive testing implementation provides:
 4. **Quality Assurance**: Multiple testing layers catch different types of issues
 5. **Documentation**: Tests serve as living documentation of expected behavior
 
-This testing strategy ensures the ForkSure app maintains high quality standards while supporting continuous development and feature additions. 
+This testing strategy ensures the ForkSure app maintains high-quality standards while supporting continuous development and feature additions. 

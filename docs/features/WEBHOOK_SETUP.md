@@ -1,6 +1,6 @@
 # Webhook Setup for Silent Content Reporting
 
-To enable silent content reporting without opening the email client, you need to set up a webhook endpoint. Here are several free options:
+You must set up a webhook endpoint to enable silent content reporting without opening the email client. Here are several free options:
 
 ## Option 1: Make.com (Recommended)
 
@@ -28,7 +28,7 @@ To enable silent content reporting without opening the email client, you need to
 
 ## Option 4: Simple Cloud Function
 
-If you have Google Cloud, AWS, or Vercel account:
+If you have a Google Cloud, AWS, or Vercel account:
 
 ```javascript
 // Example Vercel function
@@ -86,5 +86,5 @@ The app currently:
 }
 ```
 
-This provides much better user experience while maintaining Google Play compliance!
+This provides a much better user experience while maintaining Google Play compliance!
 

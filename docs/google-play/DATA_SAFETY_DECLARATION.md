@@ -8,56 +8,56 @@ This document provides the information needed to complete the Data Safety sectio
 ### Personal Information
 **Does your app collect or share any of the following user data types?**
 
-| Data Type | Collected | Shared | Purpose | Required/Optional |
-|-----------|-----------|---------|---------|-------------------|
-| Name | ❌ No | ❌ No | N/A | N/A |
-| Email address | ❌ No | ❌ No | N/A | N/A |
-| User IDs | ❌ No | ❌ No | N/A | N/A |
-| Address | ❌ No | ❌ No | N/A | N/A |
-| Phone number | ❌ No | ❌ No | N/A | N/A |
-| Race and ethnicity | ❌ No | ❌ No | N/A | N/A |
-| Political or religious beliefs | ❌ No | ❌ No | N/A | N/A |
-| Sexual orientation | ❌ No | ❌ No | N/A | N/A |
-| Other personal info | ❌ No | ❌ No | N/A | N/A |
+| Data Type                      | Collected | Shared | Purpose | Required/Optional |
+|--------------------------------|-----------|--------|---------|-------------------|
+| Name                           | ❌ No      | ❌ No   | N/A     | N/A               |
+| Email address                  | ❌ No      | ❌ No   | N/A     | N/A               |
+| User IDs                       | ❌ No      | ❌ No   | N/A     | N/A               |
+| Address                        | ❌ No      | ❌ No   | N/A     | N/A               |
+| Phone number                   | ❌ No      | ❌ No   | N/A     | N/A               |
+| Race and ethnicity             | ❌ No      | ❌ No   | N/A     | N/A               |
+| Political or religious beliefs | ❌ No      | ❌ No   | N/A     | N/A               |
+| Sexual orientation             | ❌ No      | ❌ No   | N/A     | N/A               |
+| Other personal info            | ❌ No      | ❌ No   | N/A     | N/A               |
 
 ### Financial Information
 **Does your app collect or share any financial information?**
 
-| Data Type | Collected | Shared | Purpose | Required/Optional |
-|-----------|-----------|---------|---------|-------------------|
-| User payment info | ❌ No | ❌ No | N/A | N/A |
-| Purchase history | ❌ No | ❌ No | N/A | N/A |
-| Credit score | ❌ No | ❌ No | N/A | N/A |
-| Other financial info | ❌ No | ❌ No | N/A | N/A |
+| Data Type            | Collected | Shared | Purpose | Required/Optional |
+|----------------------|-----------|--------|---------|-------------------|
+| User payment info    | ❌ No      | ❌ No   | N/A     | N/A               |
+| Purchase history     | ❌ No      | ❌ No   | N/A     | N/A               |
+| Credit score         | ❌ No      | ❌ No   | N/A     | N/A               |
+| Other financial info | ❌ No      | ❌ No   | N/A     | N/A               |
 
 ### Health and Fitness
 **Does your app collect or share any health and fitness information?**
 
-| Data Type | Collected | Shared | Purpose | Required/Optional |
-|-----------|-----------|---------|---------|-------------------|
-| Health info | ❌ No | ❌ No | N/A | N/A |
-| Fitness info | ❌ No | ❌ No | N/A | N/A |
+| Data Type    | Collected | Shared | Purpose | Required/Optional |
+|--------------|-----------|--------|---------|-------------------|
+| Health info  | ❌ No      | ❌ No   | N/A     | N/A               |
+| Fitness info | ❌ No      | ❌ No   | N/A     | N/A               |
 
 ### Messages
 **Does your app collect or share any messages?**
 
-| Data Type | Collected | Shared | Purpose | Required/Optional |
-|-----------|-----------|---------|---------|-------------------|
-| Emails | ❌ No | ❌ No | N/A | N/A |
-| SMS or MMS | ❌ No | ❌ No | N/A | N/A |
-| Other in-app messages | ❌ No | ❌ No | N/A | N/A |
+| Data Type             | Collected | Shared | Purpose | Required/Optional |
+|-----------------------|-----------|--------|---------|-------------------|
+| Emails                | ❌ No      | ❌ No   | N/A     | N/A               |
+| SMS or MMS            | ❌ No      | ❌ No   | N/A     | N/A               |
+| Other in-app messages | ❌ No      | ❌ No   | N/A     | N/A               |
 
 ### Photos and Videos
 **Does your app collect or share photos and videos?**
 
-| Data Type | Collected | Shared | Purpose | Required/Optional |
-|-----------|-----------|---------|---------|-------------------|
-| Photos | ✅ Yes | ✅ Yes | App functionality - AI recipe analysis | Required |
-| Videos | ❌ No | ❌ No | N/A | N/A |
+| Data Type | Collected | Shared | Purpose                                | Required/Optional |
+|-----------|-----------|--------|----------------------------------------|-------------------|
+| Photos    | ✅ Yes     | ✅ Yes  | App functionality - AI recipe analysis | Required          |
+| Videos    | ❌ No      | ❌ No   | N/A                                    | N/A               |
 
 **Details for Photos:**
 - **Collection**: Photos are captured via camera for recipe analysis
-- **Sharing**: Photos are sent to Google Gemini AI service for processing
+- **Sharing**: Photos are sent to the Google Gemini AI service for processing
 - **Storage**: Photos are NOT stored permanently - only held in memory during processing
 - **User Control**: Users actively choose to take photos for analysis
 - **Required**: Yes - core app functionality requires photo analysis
@@ -65,66 +65,66 @@ This document provides the information needed to complete the Data Safety sectio
 ### Audio Files
 **Does your app collect or share any audio files?**
 
-| Data Type | Collected | Shared | Purpose | Required/Optional |
-|-----------|-----------|---------|---------|-------------------|
-| Voice or sound recordings | ❌ No | ❌ No | N/A | N/A |
-| Music files | ❌ No | ❌ No | N/A | N/A |
-| Other audio files | ❌ No | ❌ No | N/A | N/A |
+| Data Type                 | Collected | Shared | Purpose | Required/Optional |
+|---------------------------|-----------|--------|---------|-------------------|
+| Voice or sound recordings | ❌ No      | ❌ No   | N/A     | N/A               |
+| Music files               | ❌ No      | ❌ No   | N/A     | N/A               |
+| Other audio files         | ❌ No      | ❌ No   | N/A     | N/A               |
 
 ### Files and Docs
 **Does your app collect or share any files and docs?**
 
-| Data Type | Collected | Shared | Purpose | Required/Optional |
-|-----------|-----------|---------|---------|-------------------|
-| Files and docs | ❌ No | ❌ No | N/A | N/A |
+| Data Type      | Collected | Shared | Purpose | Required/Optional |
+|----------------|-----------|--------|---------|-------------------|
+| Files and docs | ❌ No      | ❌ No   | N/A     | N/A               |
 
 ### Calendar
 **Does your app collect or share any calendar information?**
 
-| Data Type | Collected | Shared | Purpose | Required/Optional |
-|-----------|-----------|---------|---------|-------------------|
-| Calendar events | ❌ No | ❌ No | N/A | N/A |
+| Data Type       | Collected | Shared | Purpose | Required/Optional |
+|-----------------|-----------|--------|---------|-------------------|
+| Calendar events | ❌ No      | ❌ No   | N/A     | N/A               |
 
 ### Contacts
-**Does your app collect or share any contacts information?**
+**Does your app collect or share any contact information?**
 
 | Data Type | Collected | Shared | Purpose | Required/Optional |
-|-----------|-----------|---------|---------|-------------------|
-| Contacts | ❌ No | ❌ No | N/A | N/A |
+|-----------|-----------|--------|---------|-------------------|
+| Contacts  | ❌ No      | ❌ No   | N/A     | N/A               |
 
 ### App Activity
 **Does your app collect or share any app activity information?**
 
-| Data Type | Collected | Shared | Purpose | Required/Optional |
-|-----------|-----------|---------|---------|-------------------|
-| App interactions | ❌ No | ❌ No | N/A | N/A |
-| In-app search history | ❌ No | ❌ No | N/A | N/A |
-| Installed apps | ❌ No | ❌ No | N/A | N/A |
-| Other user-generated content | ❌ No | ❌ No | N/A | N/A |
-| Other actions | ❌ No | ❌ No | N/A | N/A |
+| Data Type                    | Collected | Shared | Purpose | Required/Optional |
+|------------------------------|-----------|--------|---------|-------------------|
+| App interactions             | ❌ No      | ❌ No   | N/A     | N/A               |
+| In-app search history        | ❌ No      | ❌ No   | N/A     | N/A               |
+| Installed apps               | ❌ No      | ❌ No   | N/A     | N/A               |
+| Other user-generated content | ❌ No      | ❌ No   | N/A     | N/A               |
+| Other actions                | ❌ No      | ❌ No   | N/A     | N/A               |
 
 ### Web Browsing
 **Does your app collect or share any web browsing information?**
 
-| Data Type | Collected | Shared | Purpose | Required/Optional |
-|-----------|-----------|---------|---------|-------------------|
-| Web browsing history | ❌ No | ❌ No | N/A | N/A |
+| Data Type            | Collected | Shared | Purpose | Required/Optional |
+|----------------------|-----------|--------|---------|-------------------|
+| Web browsing history | ❌ No      | ❌ No   | N/A     | N/A               |
 
 ### App Info and Performance
 **Does your app collect or share any app info and performance data?**
 
-| Data Type | Collected | Shared | Purpose | Required/Optional |
-|-----------|-----------|---------|---------|-------------------|
-| Crash logs | ❌ No | ❌ No | N/A | N/A |
-| Diagnostics | ❌ No | ❌ No | N/A | N/A |
-| Other app performance data | ❌ No | ❌ No | N/A | N/A |
+| Data Type                  | Collected | Shared | Purpose | Required/Optional |
+|----------------------------|-----------|--------|---------|-------------------|
+| Crash logs                 | ❌ No      | ❌ No   | N/A     | N/A               |
+| Diagnostics                | ❌ No      | ❌ No   | N/A     | N/A               |
+| Other app performance data | ❌ No      | ❌ No   | N/A     | N/A               |
 
 ### Device or Other IDs
 **Does your app collect or share any device or other identifiers?**
 
-| Data Type | Collected | Shared | Purpose | Required/Optional |
-|-----------|-----------|---------|---------|-------------------|
-| Device or other IDs | ❌ No | ❌ No | N/A | N/A |
+| Data Type           | Collected | Shared | Purpose | Required/Optional |
+|---------------------|-----------|--------|---------|-------------------|
+| Device or other IDs | ❌ No      | ❌ No   | N/A     | N/A               |
 
 ## Data Security
 
@@ -144,7 +144,7 @@ This document provides the information needed to complete the Data Safety sectio
 
 ### Photos Data Handling
 - **Purpose**: Core app functionality - AI analysis of baked goods for recipe suggestions
-- **Data Type**: Photos taken by user via camera
+- **Data Type**: Photos taken by the user via the camera
 - **Collection Method**: User actively takes photos within the app
 - **Sharing**: Sent to Google Gemini AI service for analysis
 - **Storage**: NOT stored - only held in memory during processing
@@ -173,4 +173,4 @@ This document provides the information needed to complete the Data Safety sectio
 7. **No analytics or tracking** - no user behavior tracking
 
 **Data Safety Summary:**
-ForkSure is a privacy-focused app that only processes photos temporarily for AI recipe analysis. No personal information is collected, and no data is stored permanently on device or servers. 
+ForkSure is a privacy-focused app that only processes photos temporarily for AI recipe analysis. No personal information is collected, and no data is stored permanently on the device or servers. 

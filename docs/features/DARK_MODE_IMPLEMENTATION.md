@@ -8,7 +8,7 @@ ForkSure now supports automatic dark/light mode switching that follows the devic
 
 ### Automatic Theme Detection
 - **System Integration**: Automatically detects and follows device dark/light mode setting
-- **Real-time Switching**: Instantly adapts when user changes system theme
+- **Real-time Switching**: Instantly adapts when the user changes the system theme
 - **Dynamic Colors**: Supports Android 12+ dynamic color system when available
 - **Fallback Support**: Uses custom ForkSure brand colors on older Android versions
 
@@ -82,10 +82,10 @@ SideEffect {
     // Set status bar appearance based on theme (modern approach)
     insetsController.isAppearanceLightStatusBars = !darkTheme
     
-    // Use edge-to-edge display for modern Android experience
+    // Use edge-to-edge display for a modern Android experience
     WindowCompat.setDecorFitsSystemWindows(window, false)
     
-    // Transparent status bar with proper content padding
+    // A transparent status bar with proper content padding
     window.statusBarColor = android.graphics.Color.TRANSPARENT
 }
 ```
@@ -94,7 +94,7 @@ SideEffect {
 
 ### Automatic Behavior
 1. **App Launch**: Automatically detects system theme and applies appropriate colors
-2. **Theme Change**: Instantly adapts when user switches system dark/light mode
+2. **Theme Change**: Instantly adapts when the user switches system dark/light mode
 3. **No Settings**: No in-app theme settings needed - follows system preference
 4. **Consistent Branding**: Maintains ForkSure identity in both themes
 
@@ -189,4 +189,4 @@ val customColor = if (isSystemInDarkTheme()) {
 
 **Implementation Status**: ✅ Complete and Production Ready
 
-The dark mode implementation is fully functional, tested, and ready for production use. Users will automatically benefit from improved visual experience that adapts to their system preferences. 
+The dark mode implementation is fully functional, tested, and ready for production use. Users will automatically benefit from an improved visual experience that adapts to their system preferences. 
