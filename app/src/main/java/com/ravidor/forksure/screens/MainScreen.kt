@@ -255,7 +255,6 @@ private fun MainScreenContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
             .semantics { 
                 contentDescription = mainScreenDescription
             }
@@ -315,7 +314,6 @@ private fun MainScreenContent(
         if (uiState is UiState.Success || uiState is UiState.Loading || uiState is UiState.Error) {
             MainResultsSection(
                 uiState = uiState,
-                result = state.result,
                 showReportDialog = state.showReportDialog,
                 onShowReportDialog = actions::onShowReportDialog,
                 onHideReportDialog = actions::onHideReportDialog,
