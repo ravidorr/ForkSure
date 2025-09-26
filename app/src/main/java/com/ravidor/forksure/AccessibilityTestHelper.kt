@@ -161,21 +161,21 @@ object AccessibilityConstants {
     // WCAG 2.1 AA compliance
     const val MIN_CONTRAST_RATIO_NORMAL = 4.5
     const val MIN_CONTRAST_RATIO_LARGE = 3.0
-    
+
     // Touch target sizes
     val MIN_TOUCH_TARGET_SIZE = 48.dp
     val RECOMMENDED_TOUCH_TARGET_SIZE = 56.dp
-    
+
     // Text sizes
     val MIN_TEXT_SIZE = 14.dp
     val LARGE_TEXT_SIZE = 18.dp
-    
+
     // Animation durations (reduced for accessibility)
     const val SHORT_ANIMATION_DURATION = 200L
     const val MEDIUM_ANIMATION_DURATION = 300L
-    const val LONG_ANIMATION_DURATION = 500L
-    
+    // --Commented out by Inspection (25/09/2025, 16:53):const val LONG_ANIMATION_DURATION = 500L
+
     // Content description guidelines
     const val MIN_CONTENT_DESCRIPTION_LENGTH = 3
     const val MAX_CONTENT_DESCRIPTION_LENGTH = 500
-} 
+}

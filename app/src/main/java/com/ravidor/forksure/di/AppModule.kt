@@ -25,8 +25,9 @@ object AppModule {
     @Provides
     @Singleton
     fun provideGenerativeModel(): GenerativeModel {
+        android.util.Log.d("AppModule", "Creating GenerativeModel with API key: ${BuildConfig.apiKey.take(10)}...")
         return GenerativeModel(
-            modelName = "gemini-1.5-flash",
+            modelName = "gemini-2.0-flash",
             apiKey = BuildConfig.apiKey
         )
     }
