@@ -49,6 +49,7 @@
     <string name="security_requests_label">Solicitudes: </string>
     <plurals name="security_requests_used">
         <item quantity="one"> (%d usada)</item>
+        <item quantity="many">(%d usadas)</item>
         <item quantity="other"> (%d usadas)</item>
     </plurals>
     <string name="security_warning_title">Advertencia de Seguridad</string>
