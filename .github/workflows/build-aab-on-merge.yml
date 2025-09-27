@@ -28,7 +28,7 @@ jobs:
         
     - name: Create local.properties
       run: |
-        echo "sdk.dir=$ANDROID_HOME" > local.properties
+        echo "sdk.dir=$ANDROID_SDK_ROOT" > local.properties
         echo "apiKey=${{ secrets.GEMINI_API_KEY }}" >> local.properties
       working-directory: ${{ github.workspace }}
 
