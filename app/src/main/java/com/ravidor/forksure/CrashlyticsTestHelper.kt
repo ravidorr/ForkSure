@@ -21,31 +21,31 @@ object CrashlyticsTestHelper {
     /**
      * Test Firebase Crashlytics connectivity and configuration
      */
-    fun testCrashlyticsConnectivity(): CrashlyticsTestResult {
-        return try {
-            val crashlytics = FirebaseCrashlytics.getInstance()
-            
-            // Note: isCrashlyticsCollectionEnabled is not always available
-            // We'll proceed with the test and let any errors surface
-            
-            // Send a test log message
-            crashlytics.log("Crashlytics connectivity test - ${System.currentTimeMillis()}")
-            
-            // Send a non-fatal test exception
-            val testException = RuntimeException("Crashlytics connectivity test - non-fatal")
-            crashlytics.recordException(testException)
-            
-            // Force send any pending reports
-            crashlytics.sendUnsentReports()
-            
-            Log.d(TAG, "Crashlytics test completed successfully")
-            CrashlyticsTestResult.SUCCESS
-            
-        } catch (e: Exception) {
-            Log.e(TAG, "Crashlytics test failed", e)
-            CrashlyticsTestResult.ERROR
-        }
-    }
+//    fun testCrashlyticsConnectivity(): CrashlyticsTestResult {
+//        return try {
+//            val crashlytics = FirebaseCrashlytics.getInstance()
+//
+//            // Note: isCrashlyticsCollectionEnabled is not always available
+//            // We'll proceed with the test and let any errors surface
+//
+//            // Send a test log message
+//            crashlytics.log("Crashlytics connectivity test - ${System.currentTimeMillis()}")
+//
+//            // Send a non-fatal test exception
+//            val testException = RuntimeException("Crashlytics connectivity test - non-fatal")
+//            crashlytics.recordException(testException)
+//
+//            // Force send any pending reports
+//            crashlytics.sendUnsentReports()
+//
+//            Log.d(TAG, "Crashlytics test completed successfully")
+//            CrashlyticsTestResult.SUCCESS
+//
+//        } catch (e: Exception) {
+//            Log.e(TAG, "Crashlytics test failed", e)
+//            CrashlyticsTestResult.ERROR
+//        }
+//    }
     
     /**
      * Send a test non-fatal crash to verify reporting is working
@@ -77,31 +77,31 @@ object CrashlyticsTestHelper {
      * Test fatal crash (this will actually crash the app)
      * Use with caution - only for testing crash reporting
      */
-    fun sendTestFatalCrash(testType: String = "Fatal Test") {
-        Log.w(TAG, "Sending FATAL test crash: $testType")
-        
-        try {
-            val crashlytics = FirebaseCrashlytics.getInstance()
-            
-            // Add test metadata before crashing
-            crashlytics.setCustomKey("test_type", testType)
-            crashlytics.setCustomKey("test_timestamp", System.currentTimeMillis())
-            crashlytics.setCustomKey("test_fatal", true)
-            crashlytics.log("About to send fatal test crash: $testType")
-            
-            // Force immediate sending of pending data
-            crashlytics.sendUnsentReports()
-            
-            // Wait a moment for the data to be queued
-            Thread.sleep(100)
-            
-        } catch (e: Exception) {
-            Log.e(TAG, "Error preparing fatal crash test", e)
-        }
-        
-        // Now cause the actual crash
-        throw RuntimeException("TEST FATAL CRASH - $testType - ${System.currentTimeMillis()}")
-    }
+//    fun sendTestFatalCrash(testType: String = "Fatal Test") {
+//        Log.w(TAG, "Sending FATAL test crash: $testType")
+//
+//        try {
+//            val crashlytics = FirebaseCrashlytics.getInstance()
+//
+//            // Add test metadata before crashing
+//            crashlytics.setCustomKey("test_type", testType)
+//            crashlytics.setCustomKey("test_timestamp", System.currentTimeMillis())
+//            crashlytics.setCustomKey("test_fatal", true)
+//            crashlytics.log("About to send fatal test crash: $testType")
+//
+//            // Force immediate sending of pending data
+//            crashlytics.sendUnsentReports()
+//
+//            // Wait a moment for the data to be queued
+//            Thread.sleep(100)
+//
+//        } catch (e: Exception) {
+//            Log.e(TAG, "Error preparing fatal crash test", e)
+//        }
+//
+//        // Now cause the actual crash
+//        throw RuntimeException("TEST FATAL CRASH - $testType - ${System.currentTimeMillis()}")
+//    }
     
     /**
      * Send comprehensive diagnostic information to Crashlytics
@@ -169,7 +169,7 @@ object CrashlyticsTestHelper {
         val report = StringBuilder()
         
         try {
-            val crashlytics = FirebaseCrashlytics.getInstance()
+            FirebaseCrashlytics.getInstance()
             
             report.appendLine("=== Crashlytics Configuration Report ===")
             report.appendLine("Crashlytics Instance: Available")
@@ -181,6 +181,7 @@ object CrashlyticsTestHelper {
             val googleServicesExists = try {
                 context.assets.open("google-services.json").use { true }
             } catch (e: Exception) {
+                e.printStackTrace()
                 false
             }
             report.appendLine("Google Services Config: ${if (googleServicesExists) "Found" else "Missing"}")
@@ -190,6 +191,7 @@ object CrashlyticsTestHelper {
                 com.google.firebase.FirebaseApp.getInstance()
                 true
             } catch (e: Exception) {
+                e.printStackTrace()
                 false
             }
             report.appendLine("Firebase Initialized: $firebaseInitialized")
@@ -210,8 +212,8 @@ object CrashlyticsTestHelper {
 /**
  * Result of Crashlytics connectivity test
  */
-enum class CrashlyticsTestResult {
-    SUCCESS,
-    DISABLED,
-    ERROR
-}
+//enum class CrashlyticsTestResult {
+//    SUCCESS,
+//    DISABLED,
+//    ERROR
+//}

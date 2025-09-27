@@ -17,7 +17,6 @@
 
     <!-- Splash Screen Theme for older Android versions -->
     <style name="Theme.ForkSure.Splash" parent="Theme.ForkSure">
-        <item name="android:windowBackground">@drawable/splash_background_light</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowActionBar">false</item>
         <item name="android:windowFullscreen">false</item>
