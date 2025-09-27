@@ -25,6 +25,7 @@ jobs:
       run: |
         echo "sdk.dir=$ANDROID_HOME" > local.properties
         echo "apiKey=${{ secrets.GEMINI_API_KEY }}" >> local.properties
+      working-directory: ${{ github.workspace }}
         
     - name: Cache Gradle packages
       uses: actions/cache@v4
@@ -69,6 +70,7 @@ jobs:
       run: |
         echo "sdk.dir=$ANDROID_HOME" > local.properties
         echo "apiKey=${{ secrets.GEMINI_API_KEY }}" >> local.properties
+      working-directory: ${{ github.workspace }}
         
     - name: Cache Gradle packages
       uses: actions/cache@v4
