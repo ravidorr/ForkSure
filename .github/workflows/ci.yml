@@ -29,7 +29,13 @@ jobs:
         key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
         restore-keys: |
           ${{ runner.os }}-gradle-
-          
+
+    - name: Set up local.properties
+      run: |
+        echo "sdk.dir=$ANDROID_HOME" > local.properties
+        echo "apiKey=${{ 'fake-api-key-for-ci' }}" >> local.properties
+      working-directory: ${{ github.workspace }}
+
     - name: Create local.properties
       run: |
         echo "sdk.dir=$ANDROID_HOME" > local.properties
