@@ -12,14 +12,30 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.lifecycleScope
 import com.ravidor.forksure.navigation.ForkSureNavigation
 import com.ravidor.forksure.ui.theme.ForkSureTheme
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        var isLoading = true // Example flag for background work
+        // 1. Install the splash screen
+        val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
+
+        // 2. (Optional) Keep the splash screen visible while loading
+        splashScreen.setKeepOnScreenCondition {
+            isLoading
+        }
+
+        // Simulate a network call or data loading
+        lifecycleScope.launch {
+            isLoading = false // Mark loading as complete
+        }
         
         // Initialize accessibility logging
         AccessibilityTestHelper.logAccessibilityInfo(this, "ForkSure")
@@ -34,25 +50,22 @@ class MainActivity : ComponentActivity() {
                 }
                 
                 // Test our crash prevention system (DEBUG ONLY)
-                if (BuildConfig.DEBUG) {
-                    try {
-                        // Validate all stability systems are working
-                        val validation = StabilityTestUtils.validateStabilitySystems(context)
-                        android.util.Log.d("StabilityTest", validation.getReport())
-                        
-                        // Test Firebase Crashlytics integration
-                        com.google.firebase.crashlytics.FirebaseCrashlytics.getInstance().apply {
-                            log("ForkSure crash prevention system initialized")
-                            setCustomKey("stability_systems_active", validation.allPassed)
-                            setCustomKey("app_version", BuildConfig.VERSION_NAME)
-                        }
-                        
-                        android.util.Log.d("Firebase", "Crashlytics integration test completed")
-                        
-                    } catch (e: Exception) {
-                        android.util.Log.e("StabilityTest", "Error testing crash prevention system", e)
-                    }
-                }
+//                if (BuildConfig.DEBUG) {
+//                    try {
+//                        // Validate all stability systems are working
+//                        val validation = StabilityTestUtils.validateStabilitySystems(context)
+//                        android.util.Log.d("StabilityTest", validation.getReport())
+//                        // Test Firebase Crashlytics integration
+//                        com.google.firebase.crashlytics.FirebaseCrashlytics.getInstance().apply {
+//                            log("ForkSure crash prevention system initialized")
+//                            setCustomKey("stability_systems_active", validation.allPassed)
+//                            setCustomKey("app_version", BuildConfig.VERSION_NAME)
+//                        }
+//                        android.util.Log.d("Firebase", "Crashlytics integration test completed")
+//                    } catch (e: Exception) {
+//                        android.util.Log.e("StabilityTest", "Error testing crash prevention system", e)
+//                    }
+//                }
             }
             
             ForkSureTheme {

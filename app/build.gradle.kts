@@ -292,6 +292,8 @@ dependencies {
     
     // Hilt dependencies
     implementation(libs.hilt.android)
+    implementation(libs.google.firebase.crashlytics.ktx)
+    implementation(libs.google.firebase.analytics.ktx)
     ksp(libs.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
     

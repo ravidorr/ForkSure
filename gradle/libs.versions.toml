@@ -37,6 +37,8 @@ androidxTestRules = "1.7.0"
 firebaseBom = "34.3.0"
 leakcanary = "2.14"
 startupRuntime = "1.2.0"
+firebaseCrashlyticsKtx = "19.4.4"
+firebaseAnalyticsKtx = "22.5.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -106,6 +108,8 @@ androidx-startup-runtime = { group = "androidx.startup", name = "startup-runtime
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidxTestExt" }
 androidx-test-runner = { group = "androidx.test", name = "runner", version.ref = "androidxTestRunner" }
 androidx-test-rules = { group = "androidx.test", name = "rules", version.ref = "androidxTestRules" }
+google-firebase-crashlytics-ktx = { group = "com.google.firebase", name = "firebase-crashlytics-ktx", version.ref = "firebaseCrashlyticsKtx" }
+google-firebase-analytics-ktx = { group = "com.google.firebase", name = "firebase-analytics-ktx", version.ref = "firebaseAnalyticsKtx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
