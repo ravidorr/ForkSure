@@ -9,7 +9,6 @@ import android.graphics.Rect
 import android.graphics.YuvImage
 import androidx.core.graphics.createBitmap
 import androidx.camera.core.CameraSelector
-import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.ImageProxy
@@ -42,7 +41,6 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -51,7 +49,6 @@ import com.google.accompanist.permissions.rememberPermissionState
 import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
 import java.util.concurrent.Executors
-import com.ravidor.forksure.R
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
@@ -164,7 +161,7 @@ private fun CameraPreview(
         try {
             val cameraProvider = cameraProviderFuture.get()
             val preview = Preview.Builder().build().also {
-                it.setSurfaceProvider(previewView.surfaceProvider)
+                it.surfaceProvider = previewView.surfaceProvider
             }
 
             val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
