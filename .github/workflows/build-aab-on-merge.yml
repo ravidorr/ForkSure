@@ -7,44 +7,34 @@ on:
 
 jobs:
   build-aab:
-    # Only run when PR is actually merged (not just closed)
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: 🎉 PR Merged - Building AAB
       run: echo "🎉 PR ${{ github.event.pull_request.number }} merged! Building Android App Bundle..."
-      
+
     - name: Checkout merged code
       uses: actions/checkout@v4
       with:
         ref: main
-        
+
     - name: Set up JDK 17
       uses: actions/setup-java@v4
       with:
         java-version: '17'
         distribution: 'temurin'
-        
+        cache: 'gradle'
+
     - name: Create local.properties
       run: |
         echo "sdk.dir=$ANDROID_SDK_ROOT" > local.properties
         echo "apiKey=${{ secrets.GEMINI_API_KEY }}" >> local.properties
       working-directory: ${{ github.workspace }}
 
-    - name: Cache Gradle packages
-      uses: actions/cache@v4
-      with:
-        path: |
-          ~/.gradle/caches
-          ~/.gradle/wrapper
-        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-        restore-keys: |
-          ${{ runner.os }}-gradle-
-          
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
-      
+
     - name: 🔢 Auto-bump version numbers
       id: bump_version
       run: |
@@ -80,7 +70,7 @@ jobs:
         echo "old_version_code=$CURRENT_VERSION_CODE" >> $GITHUB_OUTPUT
         echo "version_name=$NEW_VERSION_NAME" >> $GITHUB_OUTPUT
         echo "version_code=$NEW_VERSION_CODE" >> $GITHUB_OUTPUT
-        
+
     - name: 📝 Commit version bump
       run: |
         git config --local user.email "action@github.com"
@@ -90,23 +80,23 @@ jobs:
 
         Triggered by PR #${{ github.event.pull_request.number }}: ${{ github.event.pull_request.title }}
         Previous version: ${{ steps.bump_version.outputs.old_version_name }} (build ${{ steps.bump_version.outputs.old_version_code }})"
-        
+
     - name: 🚀 Push version bump to main
       uses: ad-m/github-push-action@v0.6.0
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         branch: main
-      
+
     - name: 🏗️ Build release AAB
       run: ./gradlew bundleRelease
-      
+
     - name: 📦 Upload AAB artifact
       uses: actions/upload-artifact@v4
       with:
         name: release-aab-${{ github.event.pull_request.number }}-${{ steps.bump_version.outputs.version_name }}
         path: app/build/outputs/bundle/release/*.aab
         retention-days: 90
-        
+
     - name: 📋 Build Summary
       run: |
         echo "## 🎉 AAB Build Complete!" >> $GITHUB_STEP_SUMMARY
@@ -121,4 +111,4 @@ jobs:
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "📦 **Artifact**: \`release-aab-${{ github.event.pull_request.number }}-${{ steps.bump_version.outputs.version_name }}\`" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
-        echo "🚀 Ready for Google Play Console upload!" >> $GITHUB_STEP_SUMMARY 
+        echo "🚀 Ready for Google Play Console upload!" >> $GITHUB_STEP_SUMMARY
