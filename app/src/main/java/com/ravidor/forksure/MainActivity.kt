@@ -3,6 +3,7 @@ package com.ravidor.forksure
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.MaterialTheme
@@ -26,6 +27,8 @@ class MainActivity : ComponentActivity() {
         // 1. Install the splash screen
         val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
+        // 1.5 Enable modern edge-to-edge behavior (back-compat via Activity 1.8+)
+        enableEdgeToEdge()
 
         // 2. (Optional) Keep the splash screen visible while loading
         splashScreen.setKeepOnScreenCondition {
