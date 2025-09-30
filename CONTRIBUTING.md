@@ -37,7 +37,7 @@ There are many ways to contribute to ForkSure:
 ## Pull Request Process
 
 1. **Ensure that your code builds** and that all tests pass.
-2. **Update the documentation** if your changes require it.
+2. **Documentation rule (new): Before creating a new commit, check whether any documentation needs to be updated. If applicable, update docs in the same PR.
 3. **Follow the coding style** and conventions used throughout the project.
 4. **Your pull request will be reviewed** by one of the project maintainers. We'll provide feedback and may ask for changes before merging.
 
