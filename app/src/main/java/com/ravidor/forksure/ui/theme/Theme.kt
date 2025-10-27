@@ -8,7 +8,11 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import com.ravidor.forksure.AppColors
 
 private val DarkColorScheme = darkColorScheme(
@@ -56,6 +60,23 @@ fun ForkSureTheme(
 
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
+    }
+
+    val view = LocalView.current
+    if (!view.isInEditMode) {
+        SideEffect {
+            val window = (view.context as Activity).window
+            val controller = WindowInsetsControllerCompat(window, window.decorView)
+
+            // Modern system bar icon appearance (avoid deprecated color APIs)
+            controller.isAppearanceLightStatusBars = !darkTheme
+            controller.isAppearanceLightNavigationBars = !darkTheme
+
+            // Enable edge-to-edge drawing (content behind system bars)
+            WindowCompat.setDecorFitsSystemWindows(window, false)
+            // Note: Do NOT set statusBarColor or navigationBarColor programmatically.
+            // Theme XML already sets transparent status bar where appropriate.
+        }
     }
 
     MaterialTheme(
