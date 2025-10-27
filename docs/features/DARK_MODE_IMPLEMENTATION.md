@@ -73,23 +73,26 @@ tint = ThemeColors.successColor()
 
 ### System UI Integration
 
-### Modern Edge-to-Edge System UI
+#### Modern Edge-to-Edge System UI (Android 15 Compatible)
 ```kotlin
-// In your Activity's onCreate, after super.onCreate and before setContent
-import android.graphics.Color
-import androidx.activity.SystemBarStyle
-import androidx.activity.enableEdgeToEdge
+// In Activity.onCreate() before setContent (recommended approach)
+enabledEdgeToEdge()
 
-enableEdgeToEdge(
-    statusBarStyle = SystemBarStyle.auto(
-        lightScrim = Color.TRANSPARENT,
-        darkScrim = Color.TRANSPARENT
-    ),
-    navigationBarStyle = SystemBarStyle.auto(
-        lightScrim = Color.TRANSPARENT,
-        darkScrim = Color.TRANSPARENT
-    )
-)
+// In Compose theme or Activity for system UI configuration
+SideEffect {
+    val window = (view.context as Activity).window
+    val controller = WindowInsetsControllerCompat(window, window.decorView)
+    
+    // Modern system bar icon appearance (avoid deprecated color APIs)
+    controller.isAppearanceLightStatusBars = !darkTheme
+    controller.isAppearanceLightNavigationBars = !darkTheme
+    
+    // Enable edge-to-edge drawing (content behind system bars)
+    WindowCompat.setDecorFitsSystemWindows(window, false)
+    
+    // Note: Do NOT set statusBarColor or navigationBarColor programmatically.
+    // Theme XML already sets transparent status bar where appropriate.
+}
 ```
 
 ## 📱 User Experience
