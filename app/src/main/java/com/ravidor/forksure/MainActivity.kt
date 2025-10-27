@@ -1,7 +1,9 @@
 package com.ravidor.forksure
 
+import android.graphics.Color
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
@@ -29,6 +31,18 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         // 1.5 Enable modern edge-to-edge behavior (back-compat via Activity 1.8+)
         enableEdgeToEdge()
+
+        // Configure modern edge-to-edge system bars before composing UI
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.auto(
+                lightScrim = Color.TRANSPARENT,
+                darkScrim = Color.TRANSPARENT
+            ),
+            navigationBarStyle = SystemBarStyle.auto(
+                lightScrim = Color.TRANSPARENT,
+                darkScrim = Color.TRANSPARENT
+            )
+        )
 
         // 2. (Optional) Keep the splash screen visible while loading
         splashScreen.setKeepOnScreenCondition {
