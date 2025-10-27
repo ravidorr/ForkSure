@@ -29,6 +29,8 @@ class MainActivity : ComponentActivity() {
         // 1. Install the splash screen
         val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
+        // 1.5 Enable modern edge-to-edge behavior (back-compat via Activity 1.8+)
+        enableEdgeToEdge()
 
         // Configure modern edge-to-edge system bars before composing UI
         enableEdgeToEdge(

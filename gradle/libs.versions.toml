@@ -24,8 +24,8 @@ navigationCompose = "2.9.5"
 navigationTesting = "2.9.5"
 coroutinesTest = "1.10.2"
 archCoreTesting = "2.2.0"
-mockk = "1.14.5"
-mockkAndroid = "1.14.5"
+mockk = "1.14.6"
+mockkAndroid = "1.14.6"
 turbine = "1.2.1"
 truth = "1.4.5"
 robolectric = "4.16"
@@ -42,6 +42,7 @@ firebaseAnalyticsKtx = "22.5.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-activity-ktx = { group = "androidx.activity", name = "activity-ktx", version.ref = "activityCompose" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
