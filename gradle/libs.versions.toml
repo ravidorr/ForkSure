@@ -34,7 +34,7 @@ androidxTestRunner = "1.7.0"
 androidxTestRules = "1.7.0"
 
 # Monitoring and Firebase
-firebaseBom = "34.3.0"
+firebaseBom = "34.5.0"
 leakcanary = "2.14"
 startupRuntime = "1.2.0"
 firebaseCrashlyticsKtx = "19.4.4"
