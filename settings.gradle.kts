@@ -22,3 +22,7 @@ dependencyResolutionManagement {
 
 rootProject.name = "ForkSure"
 include(":app")
+
+// The secrets plugin fails configuration when the gitignored local.properties is
+// missing (e.g. GitHub's automatic dependency submission), so make sure it exists.
+file("local.properties").let { if (!it.exists()) it.createNewFile() }
