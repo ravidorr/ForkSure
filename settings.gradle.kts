@@ -22,3 +22,10 @@ dependencyResolutionManagement {
 
 rootProject.name = "ForkSure"
 include(":app")
+
+// The secrets plugin fails configuration when the gitignored local.properties is missing.
+// GitHub's automatic dependency submission has none, so create it there only; elsewhere a
+// missing file should still fail loudly instead of building without the API key.
+if (System.getenv("GITHUB_ACTIONS") == "true") {
+    file("local.properties").let { if (!it.exists()) it.createNewFile() }
+}
