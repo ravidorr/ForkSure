@@ -273,6 +273,27 @@ tasks.named("check") {
     dependsOn("jacocoCoverageVerification")
 }
 
+// Force patched versions of vulnerable transitives pulled in by test tooling
+// (AGP's unified test platform brings netty/ktor/protobuf, Robolectric brings BouncyCastle).
+configurations.configureEach {
+    resolutionStrategy.eachDependency {
+        when {
+            requested.group == "io.netty" && requested.name.startsWith("netty-") ->
+                useVersion("4.1.137.Final")
+            requested.group == "org.bouncycastle" && requested.name.endsWith("-jdk18on") ->
+                useVersion("1.85")
+            requested.group == "com.google.guava" && requested.name == "guava" &&
+                requested.version == "31.1-android" ->
+                useVersion("33.4.8-android")
+            requested.group == "com.google.protobuf" &&
+                requested.name in listOf("protobuf-java", "protobuf-kotlin") ->
+                useVersion("3.25.5")
+            requested.group == "io.ktor" && requested.version == "2.3.2" ->
+                useVersion("2.3.13")
+        }
+    }
+}
+
 dependencies {
 
     implementation(libs.androidx.core.ktx)
