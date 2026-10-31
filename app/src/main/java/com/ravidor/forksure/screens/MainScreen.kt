@@ -53,6 +53,9 @@ import com.ravidor.forksure.CrashlyticsTestHelper
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.ui.unit.dp
 
+// Toggle flag for debug crash testing section in UI (set to true to show in debug builds)
+private const val SHOW_DEBUG_CRASH_TESTING = false
+
 /**
  * Main screen of the ForkSure app with proper state hoisting
  * All state is managed through MainScreenState and actions through MainScreenActions
@@ -324,8 +327,10 @@ private fun MainScreenContent(
                 showMessage = showMessage
             )
         } else {
-            // Debug crash testing section (only show when not in results mode)
-            DebugCrashTestingSection()
+            // Debug crash testing section (only show when enabled via SHOW_DEBUG_CRASH_TESTING flag)
+            if (SHOW_DEBUG_CRASH_TESTING) {
+                DebugCrashTestingSection()
+            }
         }
     }
 }
