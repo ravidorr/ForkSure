@@ -18,9 +18,9 @@ buildscript {
             classpath("org.apache.commons:commons-compress:1.28.0")
             classpath("org.bitbucket.b_c:jose4j:0.9.7")
             classpath("org.jdom:jdom2:2.0.6.1")
-            classpath("com.google.protobuf:protobuf-java:4.36.2")
-            classpath("com.google.protobuf:protobuf-kotlin:4.36.2")
-            classpath("io.ktor:ktor-client-core-jvm:3.6.1")
+            classpath("com.google.protobuf:protobuf-java:3.25.5")
+            classpath("com.google.protobuf:protobuf-kotlin:3.25.5")
+            classpath("io.ktor:ktor-client-core-jvm:2.3.13")
             classpath("io.opentelemetry:opentelemetry-api:1.67.0")
         }
     }
