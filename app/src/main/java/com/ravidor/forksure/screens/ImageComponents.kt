@@ -30,6 +30,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
@@ -57,6 +58,7 @@ fun CameraSection(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
+    val resources = LocalResources.current
     val takePhotoDescription = stringResource(R.string.accessibility_take_photo_description)
     val uploadPhotoDescription = stringResource(R.string.accessibility_upload_photo_description)
     val takePhotoText = stringResource(R.string.take_photo)
@@ -75,17 +77,17 @@ fun CameraSection(
                 if (bitmap != null) {
                     onPhotoUploaded(bitmap)
                     AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.SUCCESS)
-                    ToastHelper.showSuccess(context, context.getString(R.string.success_photo_uploaded))
+                    ToastHelper.showSuccess(context, resources.getString(R.string.success_photo_uploaded))
                 } else {
                     AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.ERROR)
-                    ToastHelper.showError(context, context.getString(R.string.error_invalid_image_format))
+                    ToastHelper.showError(context, resources.getString(R.string.error_invalid_image_format))
                 }
             } catch (e: Exception) {
                 AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.ERROR)
-                ToastHelper.showError(context, context.getString(R.string.error_photo_upload_failed))
+                ToastHelper.showError(context, resources.getString(R.string.error_photo_upload_failed))
             }
         } ?: run {
-            ToastHelper.showError(context, context.getString(R.string.error_no_photo_selected))
+            ToastHelper.showError(context, resources.getString(R.string.error_no_photo_selected))
         }
     }
     

@@ -3,7 +3,6 @@ package com.ravidor.forksure.screens
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Log
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,6 +23,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -51,8 +51,6 @@ import com.ravidor.forksure.StabilityTestUtils
 import com.ravidor.forksure.CrashTestType
 import com.ravidor.forksure.CrashlyticsTestHelper
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.ui.unit.dp
 
 /**
@@ -71,6 +69,7 @@ fun MainScreen(
     val placeholderResult = stringResource(R.string.results_placeholder)
     val uiState by bakingViewModel.uiState.collectAsState()
     val context = LocalContext.current
+    val resources = LocalResources.current
     val coroutineScope = rememberCoroutineScope()
     
     // Centralized state management
@@ -127,14 +126,14 @@ fun MainScreen(
                             ContentReportingHelper.submitReport(context, report)
                             showMessage(
                                 UserMessage(
-                                    text = context.getString(R.string.success_report_submitted),
+                                    text = resources.getString(R.string.success_report_submitted),
                                     type = MessageType.SUCCESS
                                 )
                             )
                         } catch (e: Exception) {
                             showMessage(
                                 UserMessage(
-                                    text = context.getString(R.string.error_report_submission_failed),
+                                    text = resources.getString(R.string.error_report_submission_failed),
                                     type = MessageType.ERROR
                                 )
                             )
@@ -142,7 +141,7 @@ fun MainScreen(
                     }
                 },
                 onRetry = { bakingViewModel.retryLastRequest() },
-                onDismissError = { bakingViewModel.clearError() },
+                onDismissErrorAction = { bakingViewModel.clearError() },
                 onClearState = { bakingViewModel.clearState() }
             )
         }
@@ -152,7 +151,7 @@ fun MainScreen(
             if (uiState is UiState.Success) {
                 showMessage(
                     UserMessage(
-                        text = context.getString(R.string.success_recipe_generated),
+                        text = resources.getString(R.string.success_recipe_generated),
                         type = MessageType.SUCCESS
                     )
                 )
@@ -182,6 +181,7 @@ private fun MainScreenContent(
     showMessage: suspend (UserMessage) -> Unit
 ) {
     val context = LocalContext.current
+    val resources = LocalResources.current
     val mainScreenDescription = stringResource(R.string.accessibility_main_screen)
     
     // Announce image selection changes for accessibility and show user feedback
@@ -190,7 +190,7 @@ private fun MainScreenContent(
             state.hasSelectedCapturedImage -> {
                 showMessage(
                     UserMessage(
-                        text = context.getString(R.string.success_image_selected),
+                        text = resources.getString(R.string.success_image_selected),
                         type = MessageType.INFO
                     )
                 )
@@ -204,14 +204,14 @@ private fun MainScreenContent(
             state.hasSelectedSampleImage -> {
                 showMessage(
                     UserMessage(
-                        text = context.getString(R.string.success_image_selected),
+                        text = resources.getString(R.string.success_image_selected),
                         type = MessageType.INFO
                     )
                 )
                 if (AccessibilityHelper.isScreenReaderEnabled(context)) {
                     val imageDescriptions = SampleDataConstants.IMAGE_DESCRIPTIONS
                     if (state.selectedImageIndex < imageDescriptions.size) {
-                        val description = context.getString(imageDescriptions[state.selectedImageIndex])
+                        val description = resources.getString(imageDescriptions[state.selectedImageIndex])
                         AccessibilityHelper.announceForAccessibility(
                             context, 
                             "$description sample image selected for analysis"
@@ -239,7 +239,7 @@ private fun MainScreenContent(
                 }
             } else if (state.hasSelectedSampleImage && state.selectedImageIndex >= 0 && state.selectedImageIndex < SampleDataConstants.SAMPLE_IMAGES.size) {
                 val bitmap = BitmapFactory.decodeResource(
-                    context.resources,
+                    resources,
                     SampleDataConstants.SAMPLE_IMAGES[state.selectedImageIndex]
                 )
                 bitmap?.let {

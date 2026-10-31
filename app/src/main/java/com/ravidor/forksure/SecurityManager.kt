@@ -10,11 +10,9 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.security.MessageDigest
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.regex.Pattern
-import java.util.concurrent.TimeUnit
 
 // Centralized constants imports
 import com.ravidor.forksure.AppConstants
@@ -35,7 +33,6 @@ object SecurityManager {
     private const val MAX_RESPONSE_LENGTH = SecurityConstants.MAX_RESPONSE_LENGTH
     
     // Rate limiting storage
-    private val requestCounts = ConcurrentHashMap<String, AtomicInteger>()
     private val requestTimestamps = ConcurrentHashMap<String, MutableList<Long>>()
     private val rateLimitMutex = Mutex()
     
@@ -191,7 +188,7 @@ object SecurityManager {
         // Check length
         if (input.length > MAX_PROMPT_LENGTH) {
             return InputValidationResult.Invalid(
-                "Input too long. Maximum ${MAX_PROMPT_LENGTH} characters allowed."
+                "Input too long. Maximum $MAX_PROMPT_LENGTH characters allowed."
             )
         }
         
@@ -297,15 +294,6 @@ object SecurityManager {
         }
 
         return AIResponseValidationResult.Valid(response)
-    }
-    
-    /**
-     * Generates a secure hash for request tracking
-     */
-    fun generateSecureHash(input: String): String {
-        val digest = MessageDigest.getInstance("SHA-256")
-        val hashBytes = digest.digest(input.toByteArray())
-        return hashBytes.joinToString("") { "%02x".format(it) }
     }
     
     /**

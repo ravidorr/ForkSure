@@ -5,8 +5,6 @@ import android.util.Log
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import javax.net.ssl.SSLException
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 
@@ -56,9 +54,9 @@ object EnhancedErrorHandler {
         return when (errorCategory) {
             ErrorCategory.NETWORK -> handleNetworkError(context, error)
             ErrorCategory.AUTHENTICATION -> handleSecurityError(context, error)
-            ErrorCategory.RATE_LIMIT -> handleRateLimitError(context, error)
+            ErrorCategory.RATE_LIMIT -> handleRateLimitError(context)
             ErrorCategory.INPUT_VALIDATION -> handleInputValidationError(context, error, userInput)
-            ErrorCategory.SERVER_ERROR -> handleAIResponseError(context, error, aiResponse)
+            ErrorCategory.SERVER_ERROR -> handleAIResponseError(context, error)
             ErrorCategory.CLIENT_ERROR -> handleSystemError(context, error)
             ErrorCategory.UNKNOWN -> handleUnknownError(context, error)
         }
@@ -69,9 +67,7 @@ object EnhancedErrorHandler {
      */
     fun processAIResponse(context: Context, response: String): AIResponseProcessingResult {
         // Validate response safety
-        val validationResult = SecurityManager.validateAIResponse(response)
-        
-        return when (validationResult) {
+        return when (val validationResult = SecurityManager.validateAIResponse(response)) {
             is AIResponseValidationResult.Valid -> {
                 AIResponseProcessingResult.Success(validationResult.response)
             }
@@ -107,9 +103,7 @@ object EnhancedErrorHandler {
      * Validates user input before processing
      */
     fun validateUserInput(input: String): UserInputValidationResult {
-        val validationResult = SecurityManager.validateInput(input)
-        
-        return when (validationResult) {
+        return when (val validationResult = SecurityManager.validateInput(input)) {
             is InputValidationResult.Valid -> {
                 UserInputValidationResult.Valid(validationResult.sanitizedInput)
             }
@@ -175,7 +169,7 @@ object EnhancedErrorHandler {
         )
     }
     
-    private fun handleRateLimitError(context: Context, error: Throwable): EnhancedErrorResult {
+    private fun handleRateLimitError(context: Context): EnhancedErrorResult {
         return EnhancedErrorResult.Temporary(
             title = context.getString(R.string.error_title_rate_limit),
             message = context.getString(R.string.error_rate_limit_message),
@@ -199,7 +193,7 @@ object EnhancedErrorHandler {
         )
     }
     
-    private fun handleAIResponseError(context: Context, error: Throwable, aiResponse: String?): EnhancedErrorResult {
+    private fun handleAIResponseError(context: Context, error: Throwable): EnhancedErrorResult {
         return EnhancedErrorResult.ServiceError(
             title = context.getString(R.string.error_title_ai_service),
             message = context.getString(R.string.error_ai_service_issue),

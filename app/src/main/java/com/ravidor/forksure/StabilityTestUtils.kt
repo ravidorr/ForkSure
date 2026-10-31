@@ -1,16 +1,18 @@
 package com.ravidor.forksure
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import androidx.compose.runtime.Stable
+import androidx.core.graphics.createBitmap
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import kotlinx.coroutines.*
 import java.util.concurrent.atomic.AtomicInteger
+import kotlin.time.Duration.Companion.milliseconds
 
 // Centralized constants imports
-import com.ravidor.forksure.AppConstants
 
 /**
  * Testing and validation utilities for the crash prevention system.
@@ -166,9 +168,9 @@ object StabilityTestUtils {
         Log.d(TAG, "Testing network timeout scenarios")
         
         try {
-            withTimeout(NETWORK_TIMEOUT_TEST_DURATION) {
+            withTimeout(NETWORK_TIMEOUT_TEST_DURATION.milliseconds) {
                 // Simulate long-running network operation
-                delay(NETWORK_TIMEOUT_TEST_DURATION + 1000)
+                delay((NETWORK_TIMEOUT_TEST_DURATION + 1000).milliseconds)
             }
         } catch (e: TimeoutCancellationException) {
             Log.d(TAG, "Network timeout test completed successfully")
@@ -246,12 +248,9 @@ object StabilityTestUtils {
     /**
      * Create sample bitmap for memory testing
      */
-    fun createTestBitmap(width: Int = 2048, height: Int = 2048): android.graphics.Bitmap? {
+    fun createTestBitmap(width: Int = 2048, height: Int = 2048): Bitmap? {
         return try {
-            android.graphics.Bitmap.createBitmap(
-                width, height, 
-                android.graphics.Bitmap.Config.ARGB_8888
-            )
+            createBitmap(width, height)
         } catch (e: OutOfMemoryError) {
             Log.w(TAG, "Failed to create test bitmap due to memory constraints")
             null

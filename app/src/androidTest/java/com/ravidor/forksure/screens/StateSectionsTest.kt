@@ -21,11 +21,6 @@ class StateSectionsTest {
 
     @Test
     fun loadingSection_shouldDisplayLoadingIndicatorAndText() {
-        // Given - localThis pattern
-        val localThis = object {
-            // No state needed for loading section
-        }
-
         // When
         composeTestRule.setContent {
             LoadingSection()
@@ -366,11 +361,6 @@ class StateSectionsTest {
 
     @Test
     fun loadingSection_shouldHaveProperAccessibilityFeatures() {
-        // Given - localThis pattern
-        val localThis = object {
-            // No state needed for loading section
-        }
-
         // When
         composeTestRule.setContent {
             LoadingSection()

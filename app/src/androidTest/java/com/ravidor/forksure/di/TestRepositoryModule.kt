@@ -6,7 +6,6 @@ import com.ravidor.forksure.repository.FakeAIRepository
 import com.ravidor.forksure.repository.FakeSecurityRepository
 import com.ravidor.forksure.repository.UserPreferencesRepository
 import com.ravidor.forksure.repository.RecipeRepository
-import com.ravidor.forksure.repository.PreferencesCacheManager
 import io.mockk.mockk
 import dagger.Binds
 import dagger.Module
@@ -14,8 +13,6 @@ import dagger.hilt.components.SingletonComponent
 import dagger.hilt.testing.TestInstallIn
 import javax.inject.Singleton
 import dagger.Provides
-import android.content.Context
-import com.ravidor.forksure.di.PreferencesCacheManagerModule
 
 /**
  * Test module that replaces RepositoryModule for Android integration testing

@@ -27,7 +27,7 @@ class ForkSureApplication : Application() {
     private fun initializeFirebase() {
         try {
             val crashlytics = FirebaseCrashlytics.getInstance()
-            crashlytics.setCrashlyticsCollectionEnabled(true)
+            crashlytics.isCrashlyticsCollectionEnabled = true
             crashlytics.setUserId("user_${System.currentTimeMillis().toString().takeLast(8)}")
 
             Log.d(AppConstants.TAG_APPLICATION, "Firebase initialized successfully")

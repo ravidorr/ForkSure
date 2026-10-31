@@ -8,7 +8,6 @@ import android.os.VibratorManager
 import android.view.View
 import android.view.accessibility.AccessibilityManager
 import androidx.compose.runtime.Stable
-import androidx.core.content.getSystemService
 
 @Stable
 object AccessibilityHelper {

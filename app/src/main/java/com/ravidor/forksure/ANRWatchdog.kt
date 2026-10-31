@@ -8,9 +8,7 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import kotlinx.coroutines.*
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
-
-// Centralized constants imports
-import com.ravidor.forksure.AppConstants
+import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * ANR (Application Not Responding) prevention system that monitors
@@ -89,11 +87,11 @@ class ANRWatchdog private constructor() {
                 // Post a task to main thread to check responsiveness
                 pingMainThread()
                 
-                delay(WATCHDOG_INTERVAL_MS)
+                delay(WATCHDOG_INTERVAL_MS.milliseconds)
                 
             } catch (e: Exception) {
                 Log.e(TAG, "Error in ANR monitoring loop", e)
-                delay(WATCHDOG_INTERVAL_MS)
+                delay(WATCHDOG_INTERVAL_MS.milliseconds)
             }
         }
     }

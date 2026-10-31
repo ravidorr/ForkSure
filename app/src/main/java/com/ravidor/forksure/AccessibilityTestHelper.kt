@@ -5,13 +5,10 @@ import android.view.accessibility.AccessibilityManager
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
-import androidx.core.content.getSystemService
 
 /**
  * Comprehensive accessibility testing helper for ForkSure app

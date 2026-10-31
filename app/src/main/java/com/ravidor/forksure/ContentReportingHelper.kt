@@ -2,7 +2,6 @@ package com.ravidor.forksure
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.util.Log
 import androidx.core.net.toUri
 import kotlinx.coroutines.Dispatchers

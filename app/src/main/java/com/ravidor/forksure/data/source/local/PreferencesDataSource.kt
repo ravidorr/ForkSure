@@ -131,7 +131,7 @@ class PreferencesDataSource @Inject constructor(
                 favoriteRecipeIds = sharedPreferences.getStringSet(KEY_FAVORITE_RECIPE_IDS, emptySet()) ?: emptySet()
             )
         } catch (e: Exception) {
-            sharedPreferences.edit().clear().apply()
+            sharedPreferences.edit { clear() }
             UserPreferences()
         }
         return if (isPrefsValid(prefs)) prefs else UserPreferences()
@@ -152,7 +152,7 @@ class PreferencesDataSource @Inject constructor(
             )
         } catch (e: Exception) {
             // Handle corruption, reset to defaults
-            sharedPreferences.edit().clear().apply()
+            sharedPreferences.edit { clear() }
             AppUsageStats()
         }
     }

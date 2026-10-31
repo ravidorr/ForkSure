@@ -5,6 +5,7 @@ import com.ravidor.forksure.AIResponseProcessingResult
 import kotlinx.coroutines.delay
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * Fake implementation of AIRepository for Android integration testing
@@ -23,7 +24,7 @@ class FakeAIRepository @Inject constructor() : AIRepository {
 
     override suspend fun generateContent(bitmap: Bitmap, prompt: String): AIResponseProcessingResult {
         if (delayMs > 0) {
-            delay(delayMs)
+            delay(delayMs.milliseconds)
         }
 
         return when {
@@ -70,7 +71,7 @@ class FakeAIRepository @Inject constructor() : AIRepository {
         shouldReturnBlocked = true
     }
 
-    fun setWarningResponse(response: String, warning: String) {
+    fun setWarningResponse(response: String) {
         reset()
         shouldReturnWarning = true
         customResponse = response

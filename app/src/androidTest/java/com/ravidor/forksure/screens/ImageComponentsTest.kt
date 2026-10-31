@@ -1,7 +1,6 @@
 package com.ravidor.forksure.screens
 
 import android.graphics.Bitmap
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -79,7 +78,6 @@ class ImageComponentsTest {
             val onImageClick = { 
                 clickCount++
                 isSelected = !isSelected
-                Unit
             }
         }
 
@@ -173,7 +171,6 @@ class ImageComponentsTest {
             val onImageClick = { 
                 clickCount++
                 isSelected = !isSelected
-                Unit
             }
         }
 

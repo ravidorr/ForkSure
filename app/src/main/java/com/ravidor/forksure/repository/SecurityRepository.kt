@@ -37,8 +37,7 @@ class SecurityRepositoryImpl @Inject constructor(
     }
 
     override suspend fun validateUserInput(input: String): UserInputValidationResult {
-        val validationResult = SecurityManager.validateInput(input)
-        return when (validationResult) {
+        return when (val validationResult = SecurityManager.validateInput(input)) {
             is com.ravidor.forksure.InputValidationResult.Valid -> {
                 UserInputValidationResult.Valid(validationResult.sanitizedInput)
             }

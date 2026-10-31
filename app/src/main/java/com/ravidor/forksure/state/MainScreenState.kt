@@ -7,7 +7,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import com.ravidor.forksure.ContentReportingHelper
 
@@ -154,7 +153,7 @@ class DefaultMainScreenActions(
     private val onAnalyze: (Bitmap, String) -> Unit,
     private val onSubmitReport: (ContentReportingHelper.ContentReport) -> Unit,
     private val onRetry: () -> Unit,
-    private val onDismissError: () -> Unit,
+    private val onDismissErrorAction: () -> Unit,
     private val onClearState: () -> Unit
 ) : MainScreenActions {
     
@@ -206,7 +205,7 @@ class DefaultMainScreenActions(
     }
     
     override fun onDismissError() {
-        onDismissError()
+        onDismissErrorAction()
     }
     
     override fun onBackToMainScreen() {

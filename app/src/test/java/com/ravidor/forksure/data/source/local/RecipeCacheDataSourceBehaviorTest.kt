@@ -6,7 +6,6 @@ import com.ravidor.forksure.data.model.Recipe
 import com.ravidor.forksure.data.model.RecipeAnalysisRequest
 import com.ravidor.forksure.data.model.RecipeAnalysisResponse
 import com.ravidor.forksure.data.model.RecipeSource
-import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
@@ -30,7 +29,7 @@ class RecipeCacheDataSourceBehaviorTest {
         every { filesDir } returns dir
     }
 
-    private fun recipe(id: String) = Recipe(
+    private fun recipe(id: String = "1") = Recipe(
         id = id,
         title = "T$id",
         description = "D$id",
@@ -49,11 +48,14 @@ fun cache_get_hit_and_miss_update_stats() = runTest {
 val ds = RecipeCacheDataSource(context())
         val req = RecipeAnalysisRequest(imageHash = "h", prompt = "p")
         val res = RecipeAnalysisResponse(recipe = recipe("1"), rawResponse = "raw", processingTime = 1, success = true)
-
         ds.cacheRecipe(req, res)
 
+        val req2 = RecipeAnalysisRequest(imageHash = "h2", prompt = "p2")
+        val res2 = RecipeAnalysisResponse(recipe = recipe("2"), rawResponse = "raw2", processingTime = 2, success = true)
+        ds.cacheRecipe(req2, res2)
+
         // Rely on isCached() rather than direct get to avoid environment-specific LruCache behavior
-        val miss = ds.getCachedRecipe(RecipeAnalysisRequest("h2","p2"))
+        val miss = ds.getCachedRecipe(RecipeAnalysisRequest("h3", "p3"))
         assertEquals(null, miss)
 
         val stats = ds.getCurrentCacheStatistics()

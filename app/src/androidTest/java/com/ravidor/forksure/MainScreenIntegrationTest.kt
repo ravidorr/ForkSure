@@ -4,7 +4,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsNotEnabled
-import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
@@ -15,7 +14,6 @@ import com.ravidor.forksure.repository.FakeAIRepository
 import com.ravidor.forksure.repository.FakeSecurityRepository
 import com.ravidor.forksure.repository.PreferencesCacheManager
 import com.ravidor.forksure.screens.MainScreen
-import com.ravidor.forksure.state.rememberMainScreenState
 import com.ravidor.forksure.ui.theme.ForkSureTheme
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest

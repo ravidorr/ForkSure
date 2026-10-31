@@ -5,6 +5,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -25,6 +26,7 @@ fun ShareButton(
     onShareComplete: ((Boolean) -> Unit)? = null
 ) {
     val context = LocalContext.current
+    val resources = LocalResources.current
     
     Button(
         onClick = { 
@@ -45,7 +47,7 @@ fun ShareButton(
             containerColor = MaterialTheme.colorScheme.tertiary
         ),
         modifier = modifier.semantics {
-            contentDescription = context.getString(R.string.accessibility_share_button)
+            contentDescription = resources.getString(R.string.accessibility_share_button)
         }
     ) {
         Text(
@@ -67,6 +69,7 @@ fun AdvancedShareButton(
     onShareComplete: ((Boolean) -> Unit)? = null
 ) {
     val context = LocalContext.current
+    val resources = LocalResources.current
     var showShareMenu by remember { mutableStateOf(false) }
     
     Box(modifier = modifier) {
@@ -77,7 +80,7 @@ fun AdvancedShareButton(
                 containerColor = MaterialTheme.colorScheme.tertiary
             ),
             modifier = Modifier.semantics {
-                contentDescription = context.getString(R.string.accessibility_share_button)
+                contentDescription = resources.getString(R.string.accessibility_share_button)
             }
         ) {
             Text(stringResource(R.string.action_share))
@@ -174,6 +177,7 @@ fun ShareToKeepButton(
     onShareComplete: ((Boolean) -> Unit)? = null
 ) {
     val context = LocalContext.current
+    val resources = LocalResources.current
     
     Button(
         onClick = { 
@@ -205,7 +209,7 @@ fun ShareToKeepButton(
             containerColor = MaterialTheme.colorScheme.tertiary
         ),
         modifier = modifier.semantics {
-            contentDescription = context.getString(R.string.accessibility_share_to_keep_button)
+            contentDescription = resources.getString(R.string.accessibility_share_to_keep_button)
         }
     ) {
         Text(stringResource(R.string.action_share_to_keep))

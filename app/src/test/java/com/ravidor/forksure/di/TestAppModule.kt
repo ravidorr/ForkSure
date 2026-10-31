@@ -10,7 +10,6 @@ import dagger.hilt.components.SingletonComponent
 import dagger.hilt.testing.TestInstallIn
 import io.mockk.mockk
 import javax.inject.Singleton
-import com.ravidor.forksure.repository.PreferencesCacheManager
 
 /**
  * Test module that replaces AppModule for unit testing
@@ -31,9 +30,7 @@ object TestAppModule {
 
     @Provides
     @Singleton
-    fun provideTestSharedPreferences(
-        @ApplicationContext context: Context
-    ): SharedPreferences {
+    fun provideTestSharedPreferences(): SharedPreferences {
         return mockk<SharedPreferences>(relaxed = true)
     }
 

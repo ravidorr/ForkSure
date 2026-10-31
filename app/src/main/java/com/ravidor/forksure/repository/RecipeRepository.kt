@@ -221,14 +221,12 @@ class RecipeRepositoryImpl @Inject constructor(
         val lines = response.split("\n").map { it.trim() }.filter { it.isNotEmpty() }
         
         var title = "Recipe Analysis"
-        var description = response
         val ingredients = mutableListOf<String>()
         val instructions = mutableListOf<String>()
         val tags = mutableListOf<String>()
         var prepTime: String? = null
         var cookTime: String? = null
         var servings: String? = null
-        var difficulty = DifficultyLevel.UNKNOWN
         
         // Extract title (usually first line or line with "Recipe" or similar)
         lines.firstOrNull { line ->
@@ -274,7 +272,7 @@ class RecipeRepositoryImpl @Inject constructor(
         }
         
         // Determine difficulty based on content
-        difficulty = when {
+        val difficulty = when {
             response.contains("easy", ignoreCase = true) || 
             response.contains("simple", ignoreCase = true) ||
             response.contains("beginner", ignoreCase = true) -> DifficultyLevel.BEGINNER
@@ -300,7 +298,7 @@ class RecipeRepositoryImpl @Inject constructor(
         return Recipe(
             id = UUID.randomUUID().toString(),
             title = title,
-            description = description,
+            description = response,
             ingredients = ingredients.ifEmpty { listOf("Ingredients not clearly identified") },
             instructions = instructions.ifEmpty { listOf("Instructions not clearly identified") },
             prepTime = prepTime,

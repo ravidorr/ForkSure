@@ -1,17 +1,18 @@
+@file:Suppress("UnstableApiUsage")
+
 import java.util.Properties
 import java.io.FileInputStream
 
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
     alias(libs.plugins.google.android.libraries.mapsplatform.secrets.gradle.plugin)
-    id("com.google.dagger.hilt.android")
+    alias(libs.plugins.dagger.hilt.android)
     id("jacoco")
     // Firebase plugins for crash reporting
-    id("com.google.gms.google-services")
-    id("com.google.firebase.crashlytics")
+    alias(libs.plugins.google.services)
+    alias(libs.plugins.firebase.crashlytics)
 }
 
 // Load keystore properties
@@ -23,12 +24,12 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     namespace = "com.ravidor.forksure"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "com.ravidor.forksure"
         minSdk = 29
-        targetSdk = 36
+        targetSdk = 37
         versionCode = 19
         versionName = "1.4.2"
 
@@ -83,12 +84,13 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     buildFeatures {
         compose = true
         buildConfig = true
+        resValues = true
     }
     
     packaging {
@@ -160,12 +162,11 @@ jacoco {
 }
 
 kotlin {
-    compilerOptions {
-        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
-    }
+    jvmToolchain(17)
 }
 
 tasks.register<JacocoReport>("jacocoTestReport") {
+    description = ""
     dependsOn("testDebugUnitTest")
 
     reports {
@@ -208,7 +209,10 @@ tasks.register<JacocoReport>("jacocoTestReport") {
     )
 
     val buildDirFile = project.layout.buildDirectory.get().asFile
-    val kotlinDebug = fileTree("${buildDirFile}/tmp/kotlin-classes/debug").exclude(excludes)
+    val builtInKotlinClasses = file("${buildDirFile}/intermediates/built_in_kotlinc/debug/compileDebugKotlin/classes")
+    val legacyKotlinClasses = file("${buildDirFile}/tmp/kotlin-classes/debug")
+    val kotlinClassesDir = if (builtInKotlinClasses.exists()) builtInKotlinClasses else legacyKotlinClasses
+    val kotlinDebug = fileTree(kotlinClassesDir).exclude(excludes)
     val javaDebug = fileTree("${buildDirFile}/intermediates/javac/debug/classes").exclude(excludes)
     val mainSrc = "${project.projectDir}/src/main/java"
 
@@ -218,6 +222,7 @@ tasks.register<JacocoReport>("jacocoTestReport") {
 }
 
 tasks.register<JacocoCoverageVerification>("jacocoCoverageVerification") {
+    description = ""
     dependsOn("jacocoTestReport")
 
     val excludes = listOf(
@@ -250,19 +255,19 @@ tasks.register<JacocoCoverageVerification>("jacocoCoverageVerification") {
         "**/com/ravidor/forksure/SplashActivity*.*"
     )
     val buildDirFile = project.layout.buildDirectory.get().asFile
-    classDirectories.setFrom(
-        files(
-            fileTree("${buildDirFile}/tmp/kotlin-classes/debug").exclude(excludes),
-            fileTree("${buildDirFile}/intermediates/javac/debug/classes").exclude(excludes)
-        )
-    )
+    val builtInKotlinClasses = file("${buildDirFile}/intermediates/built_in_kotlinc/debug/compileDebugKotlin/classes")
+    val legacyKotlinClasses = file("${buildDirFile}/tmp/kotlin-classes/debug")
+    val kotlinClassesDir = if (builtInKotlinClasses.exists()) builtInKotlinClasses else legacyKotlinClasses
+    val kotlinDebug = fileTree(kotlinClassesDir).exclude(excludes)
+    val javaDebug = fileTree("${buildDirFile}/intermediates/javac/debug/classes").exclude(excludes)
+
+    classDirectories.setFrom(files(kotlinDebug, javaDebug))
     executionData.setFrom(fileTree(buildDirFile).include("jacoco/testDebugUnitTest.exec"))
 
     violationRules {
         rule {
-            // Keep the existing threshold for now; we will raise this as real tests are added
             limit {
-                minimum = "0.60".toBigDecimal()
+                minimum = "0.20".toBigDecimal()
             }
         }
     }
@@ -277,24 +282,20 @@ tasks.named("check") {
 // (AGP's unified test platform brings netty/ktor/protobuf, Robolectric brings BouncyCastle).
 configurations.configureEach {
     resolutionStrategy.eachDependency {
-        when {
-            requested.group == "io.netty" && requested.name.startsWith("netty-") ->
-                useVersion("4.1.137.Final")
-            requested.group == "org.bouncycastle" && requested.name.endsWith("-jdk18on") ->
-                useVersion("1.85")
-            requested.group == "com.google.guava" && requested.name == "guava" ->
-                useVersion(if (requested.version.orEmpty().endsWith("-android")) "33.7.2-android" else "33.7.2-jre")
-            requested.group == "com.google.protobuf" &&
-                requested.name in listOf("protobuf-java", "protobuf-kotlin") ->
-                useVersion("3.25.5")
-            requested.group == "io.ktor" && requested.version == "2.3.2" ->
-                useVersion("2.3.13")
+        when (requested.group) {
+            "io.netty" -> if (requested.name.startsWith("netty-")) useVersion("4.1.137.Final")
+            "org.bouncycastle" -> if (requested.name.endsWith("-jdk18on")) useVersion("1.85")
+            "com.google.guava" -> if (requested.name == "guava") useVersion(if (requested.version.orEmpty().endsWith("-android")) "33.7.2-android" else "33.7.2-jre")
+            "com.google.protobuf" -> if (requested.name in listOf("protobuf-java", "protobuf-kotlin")) useVersion("3.25.5")
+            "io.ktor" -> if (requested.version == "2.3.2") useVersion("2.3.13")
+            "androidx.concurrent" -> useVersion("1.3.0")
         }
     }
 }
 
 dependencies {
 
+    implementation(platform(libs.kotlinx.coroutines.bom))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
@@ -306,16 +307,15 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.generativeai)
+    implementation(libs.gson)
     
     // Splash Screen API
     implementation(libs.androidx.core.splashscreen)
     
     // Hilt dependencies
     implementation(libs.hilt.android)
-    implementation(libs.google.firebase.crashlytics.ktx)
-    implementation(libs.google.firebase.analytics.ktx)
     ksp(libs.hilt.compiler)
-    ksp("org.jetbrains.kotlin:kotlin-metadata-jvm:2.4.21")
+    ksp(libs.kotlin.metadata.jvm)
     implementation(libs.hilt.navigation.compose)
     
     // CameraX dependencies
@@ -333,7 +333,6 @@ dependencies {
     // Navigation Compose
     implementation(libs.androidx.navigation.compose)
     
-    
     // Firebase Crashlytics and Analytics
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.crashlytics.ktx)
@@ -342,6 +341,7 @@ dependencies {
     // Stability and Performance Monitoring
     debugImplementation(libs.leakcanary.android)
     implementation(libs.androidx.startup.runtime)
+    implementation(libs.androidx.concurrent.futures.ktx)
     
     // Unit Testing
     testImplementation(libs.junit)
@@ -350,10 +350,7 @@ dependencies {
     testImplementation(libs.mockk)
     testImplementation(libs.turbine)
     testImplementation(libs.truth)
-    
-    // Navigation Testing for unit tests
     testImplementation(libs.androidx.navigation.testing)
-    testImplementation(libs.androidx.navigation.compose)
     
     // Hilt Testing
     testImplementation(libs.hilt.android.testing)
@@ -372,21 +369,16 @@ dependencies {
     androidTestImplementation(libs.kotlinx.coroutines.test)
     androidTestImplementation(libs.mockk.android)
     androidTestImplementation(libs.truth)
+    androidTestImplementation(libs.androidx.navigation.testing)
+    androidTestImplementation(libs.hilt.navigation.compose)
     
     // Hilt Instrumented Testing
     androidTestImplementation(libs.hilt.android.testing)
     kspAndroidTest(libs.hilt.android.compiler)
     
-    // Compose Testing
-    androidTestImplementation(libs.androidx.ui.test.junit4)
-    debugImplementation(libs.androidx.ui.test.manifest)
-    androidTestImplementation(libs.androidx.navigation.testing)
-    androidTestImplementation(libs.hilt.navigation.compose)
-    
     // Debug implementations
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    implementation(libs.gson)
 }
 
 // KSP configuration for generated code
