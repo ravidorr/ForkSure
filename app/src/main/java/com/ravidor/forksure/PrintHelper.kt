@@ -32,7 +32,13 @@ object PrintHelper {
             val printManager = context.getSystemService(PrintManager::class.java)!!
             
             // Create a WebView for printing
-            val webView = WebView(context)
+            val webView = WebView(context).apply {
+                settings.apply {
+                    allowContentAccess = false
+                    allowFileAccess = false
+                    javaScriptEnabled = false
+                }
+            }
             
             // Convert markdown to HTML
             val htmlContent = convertRecipeToHtml(recipeContent, recipeName)
