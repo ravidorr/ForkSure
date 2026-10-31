@@ -295,6 +295,7 @@ dependencies {
     implementation(libs.google.firebase.crashlytics.ktx)
     implementation(libs.google.firebase.analytics.ktx)
     ksp(libs.hilt.compiler)
+    ksp("org.jetbrains.kotlin:kotlin-metadata-jvm:2.4.21")
     implementation(libs.hilt.navigation.compose)
     
     // CameraX dependencies
