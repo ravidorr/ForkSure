@@ -9,7 +9,6 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 
 // Centralized constants imports
-import com.ravidor.forksure.AppConstants
 
 /**
  * Enhanced error handler with security integration

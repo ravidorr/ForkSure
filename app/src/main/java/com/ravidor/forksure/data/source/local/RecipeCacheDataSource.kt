@@ -63,7 +63,6 @@ class RecipeCacheDataSource @Inject constructor(
     
     private val gson = Gson()
     private val cacheFile: File by lazy { File(context.filesDir, "recipe_cache.json") }
-    private val CACHE_VERSION = 1
 
     init {
         loadCacheFromDisk()
@@ -427,4 +426,8 @@ class RecipeCacheDataSource @Inject constructor(
         @SerializedName("entries") val entries: Map<String, CachedRecipe>,
         @SerializedName("requestHistory") val requestHistory: Map<String, RecipeAnalysisRequest>
     )
-} 
+
+    private companion object {
+        const val CACHE_VERSION = 1
+    }
+}

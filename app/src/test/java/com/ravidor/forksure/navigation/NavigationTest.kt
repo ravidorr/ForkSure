@@ -1,7 +1,6 @@
 package com.ravidor.forksure.navigation
 
 import android.graphics.Bitmap
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.google.common.truth.Truth.assertThat
 import com.ravidor.forksure.NavigationConstants
@@ -10,7 +9,6 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
-import org.robolectric.annotation.Config
 
 /**
  * Unit tests for Navigation components
@@ -127,11 +125,7 @@ class NavigationTest {
         // Test sample image selection logic
         val sampleImageIndex = 2
         
-        // When
-        capturedBitmap = null
-        capturedError = null
-        
-        // Then
+        // Then - selecting a sample image leaves the captured state untouched
         assertThat(sampleImageIndex).isEqualTo(2)
         assertThat(capturedBitmap).isNull()
         assertThat(capturedError).isNull()

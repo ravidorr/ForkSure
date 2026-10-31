@@ -77,14 +77,6 @@ class MainScreenState(
         }
     }
     
-    fun clearCapturedImage() {
-        capturedImage = null
-        if (selectedImageIndex == -1) {
-            // Reset to no selection if captured image was selected
-            selectedImageIndex = -2
-        }
-    }
-    
     fun showReportDialog() {
         showReportDialog = true
     }

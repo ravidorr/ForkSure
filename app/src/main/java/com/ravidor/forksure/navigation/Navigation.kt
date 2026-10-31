@@ -2,10 +2,7 @@ package com.ravidor.forksure.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalResources
 import kotlinx.coroutines.Dispatchers
@@ -24,7 +21,6 @@ import com.ravidor.forksure.NavigationConstants.ACCESSIBILITY_NAVIGATION_TO_MAIN
 import com.ravidor.forksure.NavigationConstants.ROUTE_CAMERA
 import com.ravidor.forksure.NavigationConstants.ROUTE_MAIN
 import com.ravidor.forksure.screens.MainScreen
-import com.ravidor.forksure.state.NavigationState
 import com.ravidor.forksure.state.rememberNavigationState
 import com.ravidor.forksure.ToastHelper
 import com.ravidor.forksure.R

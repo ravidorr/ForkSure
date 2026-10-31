@@ -60,17 +60,6 @@ enum class FontSize {
 }
 
 /**
- * Analytics event data
- */
-@Immutable
-data class AnalyticsEvent(
-    val eventName: String,
-    val parameters: Map<String, Any> = emptyMap(),
-    val timestamp: Long = System.currentTimeMillis(),
-    val sessionId: String? = null
-)
-
-/**
  * App usage statistics
  */
 @Immutable

@@ -88,7 +88,7 @@ Transform your baking journey with ForkSure - where AI meets the art of baking! 
 
 #### Phone Screenshots (Required)
 1. **Main Screen** - Show camera interface and sample images
-2. **AI Analysis** - Show recipe results with markdown formatting
+2. **AI Analysis** - Show recipe results with Markdown formatting
 3. **Recipe Details** - Show detailed recipe with ingredients
 4. **Print Feature** - Show print dialog or printed recipe
 5. **Dark Mode** - Show app in dark theme

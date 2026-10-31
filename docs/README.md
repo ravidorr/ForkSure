@@ -1,6 +1,6 @@
 # ForkSure Documentation
 
-Welcome to the official documentation for the ForkSure project. This directory contains all of the technical, user, and project-related documentation.
+Welcome to the official documentation for the ForkSure project. This directory contains all the technical, user, and project-related documentation.
 
 ## Getting Started
 

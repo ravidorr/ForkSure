@@ -13,7 +13,7 @@ Test all the user feedback features we implemented across the four languages.
 - [ ] **Image Selection**: Select sample/captured image → See "Image selected for analysis"
 
 ### **Error Messages** ❌
-- [ ] **Network Error**: Turn off wifi → See "No internet connection..."
+- [ ] **Network Error**: Turn off Wi-Fi → See "No internet connection..."
 - [ ] **Share Failure**: Test with no share apps → See "Unable to share recipe..."
 - [ ] **Print Failure**: Test on device without printer → See "Unable to print recipe..."
 - [ ] **Report Failure**: Test with network off → See "Failed to submit report..."

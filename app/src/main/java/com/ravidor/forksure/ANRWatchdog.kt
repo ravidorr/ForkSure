@@ -43,21 +43,6 @@ class ANRWatchdog private constructor() {
     private var watchdogJob: Job? = null
     
     /**
-     * Start ANR monitoring
-     */
-    fun startWatching() {
-        if (isWatching.compareAndSet(false, true)) {
-            Log.d(TAG, "Starting ANR watchdog monitoring")
-            
-            watchdogJob = watchdogScope.launch {
-                monitorMainThread()
-            }
-        } else {
-            Log.d(TAG, "ANR watchdog already running")
-        }
-    }
-    
-    /**
      * Stop ANR monitoring
      */
     fun stopWatching() {
@@ -206,44 +191,9 @@ class ANRWatchdog private constructor() {
     }
     
     /**
-     * Check if main thread is currently responsive
-     */
-    fun isMainThreadResponsive(): Boolean {
-        val currentTime = System.currentTimeMillis()
-        val timeSinceLastResponse = currentTime - lastMainThreadResponse.get()
-        return timeSinceLastResponse < ANR_WARNING_THRESHOLD_MS
-    }
-    
-    /**
-     * Get time since last main thread response
-     */
-    fun getTimeSinceLastResponse(): Long {
-        return System.currentTimeMillis() - lastMainThreadResponse.get()
-    }
-    
-    /**
-     * Force update the last response time (for manual testing)
-     */
-    fun updateResponseTime() {
-        lastMainThreadResponse.set(System.currentTimeMillis())
-    }
-    
-    /**
      * Get current watching status
      */
     fun isWatching(): Boolean = isWatching.get()
-    
-    /**
-     * Clean up resources
-     */
-    fun cleanup() {
-        stopWatching()
-        try {
-            watchdogScope.cancel()
-        } catch (e: Exception) {
-            Log.e(TAG, "Error during cleanup", e)
-        }
-    }
 }
 
 /**
@@ -260,78 +210,5 @@ class ANRException(
     
     override fun toString(): String {
         return "${javaClass.simpleName}: $message"
-    }
-}
-
-/**
- * Utility functions for main thread operations
- */
-@Stable
-object MainThreadUtils {
-    private const val TAG = AppConstants.TAG_ANR_WATCHDOG
-    
-    /**
-     * Execute operation on main thread with timeout
-     */
-    fun executeOnMainThreadWithTimeout(
-        timeoutMs: Long = 5000L,
-        operation: () -> Unit
-    ): Boolean {
-        return try {
-            if (Looper.myLooper() == Looper.getMainLooper()) {
-                // Already on main thread
-                operation()
-                true
-            } else {
-                // Post to main thread and wait
-                val handler = Handler(Looper.getMainLooper())
-                var completed = false
-                
-                handler.post {
-                    try {
-                        operation()
-                        completed = true
-                    } catch (e: Exception) {
-                        Log.e(TAG, "Error executing operation on main thread", e)
-                    }
-                }
-                
-                // Wait for completion or timeout
-                val startTime = System.currentTimeMillis()
-                while (!completed && (System.currentTimeMillis() - startTime) < timeoutMs) {
-                    Thread.sleep(10)
-                }
-                
-                completed
-            }
-        } catch (e: Exception) {
-            Log.e(TAG, "Error in executeOnMainThreadWithTimeout", e)
-            false
-        }
-    }
-    
-    /**
-     * Check if current thread is main thread
-     */
-    fun isMainThread(): Boolean {
-        return Looper.myLooper() == Looper.getMainLooper()
-    }
-    
-    /**
-     * Assert that current code is running on main thread
-     */
-    fun assertMainThread() {
-        if (!isMainThread()) {
-            throw IllegalStateException("This operation must be called from the main thread")
-        }
-    }
-    
-    /**
-     * Assert that current code is NOT running on main thread
-     */
-    fun assertBackgroundThread() {
-        if (isMainThread()) {
-            throw IllegalStateException("This operation must not be called from the main thread")
-        }
     }
 }

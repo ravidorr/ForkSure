@@ -36,17 +36,4 @@ object ToastHelper {
             AccessibilityHelper.announceForAccessibility(context, message)
         }
     }
-    
-    /**
-     * Show an info toast message
-     */
-    fun showInfo(context: Context, message: String) {
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-        AccessibilityHelper.provideHapticFeedback(context, HapticFeedbackType.CLICK)
-        
-        // Announce for accessibility if screen reader is enabled
-        if (AccessibilityHelper.isScreenReaderEnabled(context)) {
-            AccessibilityHelper.announceForAccessibility(context, message)
-        }
-    }
 } // CI/CD Test: Verifying messaging system works with automated testing

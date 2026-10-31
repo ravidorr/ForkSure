@@ -2,11 +2,6 @@ package com.ravidor.forksure
 
 import android.content.Context
 import android.view.accessibility.AccessibilityManager
-import androidx.compose.foundation.layout.size
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 
@@ -31,54 +26,6 @@ object AccessibilityTestHelper {
     fun isScreenReaderEnabled(context: Context): Boolean {
         val accessibilityManager = context.getSystemService(AccessibilityManager::class.java)!!
         return accessibilityManager.isTouchExplorationEnabled
-    }
-    
-    /**
-     * Gets the minimum touch target size for accessibility compliance
-     */
-    fun getMinimumTouchTargetSize(): Dp = 48.dp
-    
-    /**
-     * Gets the recommended touch target size for better accessibility
-     */
-    fun getRecommendedTouchTargetSize(): Dp = 56.dp
-    
-    /**
-     * Validates if a touch target meets accessibility requirements
-     */
-    fun validateTouchTargetSize(size: Dp): AccessibilityValidationResult {
-        return when {
-            size < 48.dp -> AccessibilityValidationResult.FAIL
-            size < 56.dp -> AccessibilityValidationResult.WARNING
-            else -> AccessibilityValidationResult.PASS
-        }
-    }
-    
-    /**
-     * Creates a modifier that ensures minimum touch target size
-     */
-    @Composable
-    fun Modifier.ensureMinimumTouchTarget(
-        currentSize: Dp = 0.dp
-    ): Modifier {
-        val minimumSize = getMinimumTouchTargetSize()
-        return if (currentSize < minimumSize) {
-            this.size(minimumSize)
-        } else {
-            this
-        }
-    }
-    
-    /**
-     * Validates content description for accessibility
-     */
-    fun validateContentDescription(contentDescription: String?): AccessibilityValidationResult {
-        return when {
-            contentDescription.isNullOrBlank() -> AccessibilityValidationResult.FAIL
-            contentDescription.length < 3 -> AccessibilityValidationResult.WARNING
-            contentDescription.length > 500 -> AccessibilityValidationResult.WARNING
-            else -> AccessibilityValidationResult.PASS
-        }
     }
     
     /**
@@ -137,14 +84,6 @@ object AccessibilityTestHelper {
     }
 }
 
-@Stable
-enum class AccessibilityValidationResult {
-    PASS,
-    WARNING,
-    FAIL,
-    NOT_APPLICABLE
-}
-
 @Immutable
 data class AccessibilityReport(
     val isAccessibilityEnabled: Boolean,
@@ -152,27 +91,3 @@ data class AccessibilityReport(
     val enabledServices: List<String>,
     val recommendations: List<String>
 )
-
-@Immutable
-object AccessibilityConstants {
-    // WCAG 2.1 AA compliance
-    const val MIN_CONTRAST_RATIO_NORMAL = 4.5
-    const val MIN_CONTRAST_RATIO_LARGE = 3.0
-
-    // Touch target sizes
-    val MIN_TOUCH_TARGET_SIZE = 48.dp
-    val RECOMMENDED_TOUCH_TARGET_SIZE = 56.dp
-
-    // Text sizes
-    val MIN_TEXT_SIZE = 14.dp
-    val LARGE_TEXT_SIZE = 18.dp
-
-    // Animation durations (reduced for accessibility)
-    const val SHORT_ANIMATION_DURATION = 200L
-    const val MEDIUM_ANIMATION_DURATION = 300L
-    // --Commented out by Inspection (25/09/2025, 16:53):const val LONG_ANIMATION_DURATION = 500L
-
-    // Content description guidelines
-    const val MIN_CONTENT_DESCRIPTION_LENGTH = 3
-    const val MAX_CONTENT_DESCRIPTION_LENGTH = 500
-}

@@ -8,7 +8,6 @@ import com.ravidor.forksure.data.model.RecipeAnalysisResponse
 import com.ravidor.forksure.data.model.RecipeSource
 import com.ravidor.forksure.data.model.DifficultyLevel
 import com.ravidor.forksure.data.source.local.RecipeCacheDataSource
-import com.ravidor.forksure.SecurityManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch

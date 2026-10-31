@@ -3,11 +3,9 @@ package com.ravidor.forksure.data.source.local
 import android.content.SharedPreferences
 import com.ravidor.forksure.data.model.AppTheme
 import com.ravidor.forksure.data.model.UserPreferences
-import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class PreferencesDataSourceBehaviorTest {

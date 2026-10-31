@@ -100,7 +100,7 @@ The app includes `AccessibilityTestHelper` for automated validation:
 #### Visual Accessibility Testing
 - [ ] Text is readable at 200% zoom
 - [ ] High contrast mode works properly
-- [ ] Color blind users can use all features
+- [ ] Color-blind users can use all features
 - [ ] Animations respect reduced motion settings
 
 ## Accessibility Features by Screen

@@ -1,16 +1,12 @@
 package com.ravidor.forksure
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import androidx.compose.runtime.Stable
-import androidx.core.graphics.createBitmap
 import com.google.firebase.crashlytics.FirebaseCrashlytics
-import kotlinx.coroutines.*
 import java.util.concurrent.atomic.AtomicInteger
-import kotlin.time.Duration.Companion.milliseconds
 
 // Centralized constants imports
 
@@ -26,7 +22,6 @@ object StabilityTestUtils {
         // Test parameters
         private const val MEMORY_PRESSURE_SIZE = 50 * 1024 * 1024 // 50MB
         private const val ANR_TEST_DURATION = 6000L // 6 seconds
-        private const val NETWORK_TIMEOUT_TEST_DURATION = 15000L // 15 seconds
     
     private val testCounter = AtomicInteger(0)
     
@@ -56,7 +51,7 @@ object StabilityTestUtils {
         when (testType) {
             CrashTestType.NULL_POINTER -> {
                 val nullString: String? = null
-                @Suppress("IMPLICIT_NOTHING_TYPE_ARGUMENT_IN_RETURN_POSITION")
+                @Suppress("IMPLICIT_NOTHING_TYPE_ARGUMENT_IN_RETURN_POSITION", "KotlinConstantConditions")
                 nullString!!.length // This will throw NPE
             }
             CrashTestType.ARRAY_INDEX -> {
@@ -157,34 +152,6 @@ object StabilityTestUtils {
     }
     
     /**
-     * Test network timeout scenarios
-     */
-    fun testNetworkTimeout() = runBlocking {
-        if (!BuildConfig.DEBUG) {
-            Log.w(TAG, "Network timeout tests only available in debug builds")
-            return@runBlocking
-        }
-        
-        Log.d(TAG, "Testing network timeout scenarios")
-        
-        try {
-            withTimeout(NETWORK_TIMEOUT_TEST_DURATION.milliseconds) {
-                // Simulate long-running network operation
-                delay((NETWORK_TIMEOUT_TEST_DURATION + 1000).milliseconds)
-            }
-        } catch (e: TimeoutCancellationException) {
-            Log.d(TAG, "Network timeout test completed successfully")
-            
-            // Send to Crashlytics as non-fatal for testing
-            FirebaseCrashlytics.getInstance().recordException(
-                RuntimeException("Test network timeout", e)
-            )
-        } catch (e: Exception) {
-            Log.e(TAG, "Network timeout test failed", e)
-        }
-    }
-    
-    /**
      * Validate all stability systems are working
      */
     fun validateStabilitySystems(context: Context): StabilityValidationResult {
@@ -246,18 +213,6 @@ object StabilityTestUtils {
     }
     
     /**
-     * Create sample bitmap for memory testing
-     */
-    fun createTestBitmap(width: Int = 2048, height: Int = 2048): Bitmap? {
-        return try {
-            createBitmap(width, height)
-        } catch (e: OutOfMemoryError) {
-            Log.w(TAG, "Failed to create test bitmap due to memory constraints")
-            null
-        }
-    }
-    
-    /**
      * Helper function to trigger stack overflow
      */
     private fun recursiveFunction(depth: Int = 0): Int {
@@ -305,10 +260,4 @@ enum class MemoryTestResult {
 data class StabilityValidationResult(
     val allPassed: Boolean,
     val results: List<String>
-) {
-    fun getReport(): String {
-        return "Stability Systems Validation\n" +
-                "Status: ${if (allPassed) "PASS" else "FAIL"}\n\n" +
-                results.joinToString("\n")
-    }
-}
+)

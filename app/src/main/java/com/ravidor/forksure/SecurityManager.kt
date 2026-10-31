@@ -11,12 +11,9 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.atomic.AtomicInteger
 import java.util.regex.Pattern
 
 // Centralized constants imports
-import com.ravidor.forksure.AppConstants
-import com.ravidor.forksure.SecurityConstants
 
 /**
  * Comprehensive security manager for ForkSure app

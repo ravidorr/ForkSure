@@ -3,7 +3,6 @@ package com.ravidor.forksure
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -251,73 +250,3 @@ private fun RateLimitStatusItem(
         }
     }
 }
-
-@Composable
-fun SecurityWarningBanner(
-    issues: List<String>,
-    modifier: Modifier = Modifier
-) {
-    Card(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(Dimensions.PADDING_STANDARD)
-            .semantics {
-                contentDescription = "Security warning: ${issues.joinToString(", ")}"
-            },
-        colors = CardDefaults.cardColors(
-            containerColor = ThemeColors.errorColor().copy(alpha = AppColors.ALPHA_LOW)
-        ),
-                  shape = RoundedCornerShape(Dimensions.CORNER_RADIUS_STANDARD)
-    ) {
-        Column(
-            modifier = Modifier.padding(Dimensions.PADDING_STANDARD)
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Warning,
-                    contentDescription = "",
-                    tint = ThemeColors.errorColor(),
-                    modifier = Modifier.size(Dimensions.ICON_SIZE_LARGE)
-                )
-                Text(
-                    text = stringResource(R.string.security_warning_title),
-                    style = MaterialTheme.typography.titleMedium,
-                    color = ThemeColors.errorColor(),
-                    fontWeight = FontWeight.Bold,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.padding(start = Dimensions.PADDING_SMALL)
-                )
-            }
-
-            Text(
-                text = stringResource(R.string.security_issues_detected),
-                style = MaterialTheme.typography.bodyMedium,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.padding(top = Dimensions.PADDING_SMALL)
-            )
-
-            issues.forEach { issue ->
-                Text(
-                    text = "• $issue",
-                    style = MaterialTheme.typography.bodySmall,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.padding(start = Dimensions.PADDING_STANDARD, top = Dimensions.PADDING_EXTRA_SMALL)
-                )
-            }
-
-            Text(
-                text = stringResource(R.string.security_disclaimer),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                maxLines = 3,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.padding(top = Dimensions.PADDING_SMALL)
-            )
-        }
-    }
-} 

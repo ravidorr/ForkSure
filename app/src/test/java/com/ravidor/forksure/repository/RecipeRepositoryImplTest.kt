@@ -9,7 +9,6 @@ import com.ravidor.forksure.data.model.RecipeSource
 import com.ravidor.forksure.data.source.local.RecipeCacheDataSource
 import io.mockk.coEvery
 import io.mockk.coVerify
-import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
