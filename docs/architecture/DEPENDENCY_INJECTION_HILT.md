@@ -52,7 +52,7 @@ object AppModule
 ```
 **Provides**:
 - `GenerativeModel`: AI service for content generation
-- `SharedPreferences`: Security-related storage
+- `SharedPreferences`: App preferences storage (consumed by `PreferencesDataSource`)
 
 **Benefits**:
 - Centralized configuration of external dependencies
@@ -108,8 +108,7 @@ interface SecurityRepository {
 
 @Singleton
 class SecurityRepositoryImpl @Inject constructor(
-    @ApplicationContext private val context: Context,
-    private val sharedPreferences: SharedPreferences
+    @ApplicationContext private val context: Context
 ) : SecurityRepository
 ```
 

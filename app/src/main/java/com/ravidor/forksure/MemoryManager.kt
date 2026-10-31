@@ -1,7 +1,6 @@
 package com.ravidor.forksure
 
 import android.app.ActivityManager
-import android.content.ComponentCallbacks2
 import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.Stable
@@ -61,55 +60,6 @@ object MemoryManager {
                 isLowMemory = true,
                 isCriticalMemory = true
             )
-        }
-    }
-    
-    /**
-     * Handle memory trim callback
-     */
-    @Suppress("unused") // Called from ForkSureApplication.onTrimMemory
-    fun onTrimMemory(level: Int) {
-        when (level) {
-            ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN,
-            ComponentCallbacks2.TRIM_MEMORY_RUNNING_MODERATE,
-            ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW -> {
-                Log.d(TAG, "Memory trim level: $level - performing light cleanup")
-                performLightMemoryCleanup()
-            }
-            ComponentCallbacks2.TRIM_MEMORY_RUNNING_CRITICAL,
-            ComponentCallbacks2.TRIM_MEMORY_COMPLETE -> {
-                Log.d(TAG, "Memory trim level: $level - performing aggressive cleanup")
-                performAggressiveMemoryCleanup()
-            }
-        }
-    }
-    
-    /**
-     * Perform light memory cleanup
-     */
-    private fun performLightMemoryCleanup() {
-        try {
-            System.gc()
-            Log.d(TAG, "Light memory cleanup completed")
-        } catch (e: Exception) {
-            Log.e(TAG, "Error during light memory cleanup", e)
-        }
-    }
-    
-    /**
-     * Perform aggressive memory cleanup
-     */
-    private fun performAggressiveMemoryCleanup() {
-        try {
-            // Clear any image caches if they exist
-            // This would be customized based on your app's caching strategy
-            
-            // Force garbage collection
-            System.gc()
-            
-            Log.d(TAG, "Aggressive memory cleanup completed")
-        } catch (e: Exception) {
-            Log.e(TAG, "Error during aggressive memory cleanup", e)
         }
     }
 }

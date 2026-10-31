@@ -384,7 +384,6 @@ object SecurityManager {
 
 // Result classes
 @Immutable
-@Suppress("unused") // Constructor properties are read through their getters
 sealed class RateLimitResult {
     @Immutable
     data class Allowed(
@@ -409,7 +408,6 @@ sealed class InputValidationResult {
 }
 
 @Immutable
-@Suppress("unused") // Constructor properties are read through their getters
 sealed class AIResponseValidationResult {
     @Immutable
     data class Valid(val response: String) : AIResponseValidationResult()
@@ -424,7 +422,6 @@ sealed class AIResponseValidationResult {
 }
 
 @Immutable
-@Suppress("unused") // Constructor properties are read through their getters
 sealed class SecurityEnvironmentResult {
     @Immutable
     object Secure : SecurityEnvironmentResult()

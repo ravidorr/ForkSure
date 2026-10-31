@@ -235,7 +235,6 @@ enum class ErrorCategory {
 
 // Enhanced error result types
 @Immutable
-@Suppress("unused") // Constructor properties are read through their getters
 sealed class EnhancedErrorResult {
     @Immutable
     data class Recoverable(
@@ -289,7 +288,6 @@ sealed class EnhancedErrorResult {
 
 // AI response processing results
 @Immutable
-@Suppress("unused") // Constructor properties are read through their getters
 sealed class AIResponseProcessingResult {
     @Immutable
     data class Success(val response: String) : AIResponseProcessingResult()
