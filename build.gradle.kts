@@ -22,6 +22,7 @@ buildscript {
             classpath("com.google.protobuf:protobuf-kotlin:3.25.5")
             classpath("io.ktor:ktor-client-core-jvm:2.3.13")
             classpath("io.opentelemetry:opentelemetry-api:1.67.0")
+            classpath("com.google.guava:guava:33.7.2-jre")
         }
     }
 }
