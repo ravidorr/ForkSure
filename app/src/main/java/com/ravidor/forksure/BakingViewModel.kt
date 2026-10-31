@@ -35,10 +35,10 @@ class BakingViewModel @Inject constructor(
     val securityStatus: StateFlow<SecurityEnvironmentResult?> = _securityStatus.asStateFlow()
     
     private var lastSecurityCheckTime = 0L
-    private val SECURITY_CACHE_DURATION = 30_000L // 30 seconds
 
     companion object {
         private const val TAG = AppConstants.TAG_BAKING_VIEW_MODEL
+        private const val SECURITY_CACHE_DURATION = 30_000L // 30 seconds
     }
     
     init {

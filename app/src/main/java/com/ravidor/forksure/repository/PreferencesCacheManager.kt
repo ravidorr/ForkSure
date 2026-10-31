@@ -1,8 +1,5 @@
 package com.ravidor.forksure.repository
 
-import com.ravidor.forksure.data.model.UserPreferences
-import com.ravidor.forksure.data.model.RecipeAnalysisRequest
-import com.ravidor.forksure.data.model.RecipeAnalysisResponse
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import javax.inject.Inject

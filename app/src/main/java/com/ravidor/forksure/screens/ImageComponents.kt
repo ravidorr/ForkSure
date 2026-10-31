@@ -42,9 +42,6 @@ import com.ravidor.forksure.Dimensions
 import com.ravidor.forksure.HapticFeedbackType
 import com.ravidor.forksure.R
 import com.ravidor.forksure.ToastHelper
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 /**
  * Image-related UI components for the main screen

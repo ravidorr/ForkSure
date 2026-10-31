@@ -353,7 +353,7 @@ class ShareButtonComposeTest {
 
     @Test
     fun shareButtons_shouldHandleDifferentContentTypes() {
-        // Test with markdown content
+        // Test with Markdown content
         composeTestRule.setContent {
             ShareButton(outputText = "# Simple Recipe\n\nJust mix and bake!")
         }

@@ -138,6 +138,9 @@ android {
         disable += "UnusedResources"
         disable += "VectorPath"
         disable += "IconLauncherShape"
+
+        // targetSdk 37 was bumped deliberately; the one-time "edited by hand" reminder is not actionable
+        disable += "EditedTargetSdkVersion"
         
         abortOnError = false
         checkReleaseBuilds = false

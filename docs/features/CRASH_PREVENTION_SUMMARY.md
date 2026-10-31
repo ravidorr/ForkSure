@@ -27,13 +27,8 @@ You now have a **comprehensive, enterprise-grade crash prevention system** that 
   - Critical memory detection and handling
 - **Status**: ✅ Fully implemented and active
 
-### 4. **ANR Prevention System** (`ANRWatchdog.kt`)
-- **Features**:
-  - Monitors main thread responsiveness
-  - 4-second warning, 8-second critical alerts
-  - Automatic stack trace capture
-  - Integration with Firebase Crashlytics
-- **Status**: ✅ Fully implemented and active
+### 4. **ANR Prevention System** (removed)
+- **Status**: ❌ `ANRWatchdog.kt` was never started by the app and has been removed as dead code
 
 ### 5. **Enhanced Application Class** (`ForkSureApplication.kt`)
 - **Features**:
@@ -63,7 +58,7 @@ You now have a **comprehensive, enterprise-grade crash prevention system** that 
 
 // 1. Validate all systems are working
 val validation = StabilityTestUtils.validateStabilitySystems(context)
-Log.d("Stability", validation.getReport())
+Log.d("Stability", validation.results.joinToString("\n"))
 
 // 2. Test memory management
 val memoryStatus = MemoryManager.getMemoryStatus(context)
@@ -108,10 +103,6 @@ fun `crash prevention systems should be initialized`() {
     // Verify memory manager works
     val memory = MemoryManager.getMemoryStatus(context)
     assertTrue(memory.totalMemoryMB > 0)
-    
-    // Verify ANR watchdog is available
-    val watchdog = ANRWatchdog.getInstance()
-    assertNotNull(watchdog)
 }
 ```
 

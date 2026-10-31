@@ -2,11 +2,9 @@ package com.ravidor.forksure
 
 import android.content.Context
 import android.print.PrintAttributes
-import android.print.PrintDocumentAdapter
 import android.print.PrintJob
 import android.print.PrintManager
 import android.webkit.WebView
-import android.webkit.WebViewClient
 import android.util.Log
 import androidx.compose.runtime.Stable
 import java.text.SimpleDateFormat
@@ -14,14 +12,14 @@ import java.util.*
 
 /**
  * Helper class for printing recipes using Android's printing framework
- * Converts markdown recipe content to HTML and handles print job creation
+ * Converts Markdown recipe content to HTML and handles print job creation
  */
 @Stable
 object PrintHelper {
     private const val TAG = "PrintHelper"
     
     /**
-     * Print a recipe by converting markdown to HTML and using WebView printing
+     * Print a recipe by converting Markdown to HTML and using WebView printing
      */
     fun printRecipe(
         context: Context,
@@ -71,7 +69,7 @@ object PrintHelper {
     }
     
     /**
-     * Convert markdown recipe content to formatted HTML for printing
+     * Convert Markdown recipe content to formatted HTML for printing
      */
     fun convertRecipeToHtml(markdownContent: String, recipeName: String): String {
         val timestamp = SimpleDateFormat("MMM dd, yyyy 'at' HH:mm", Locale.getDefault()).format(Date())
@@ -223,7 +221,7 @@ object PrintHelper {
     }
     
     /**
-     * Extract recipe title from markdown content
+     * Extract recipe title from Markdown content
      */
     fun extractRecipeTitle(markdownContent: String): String {
         return try {

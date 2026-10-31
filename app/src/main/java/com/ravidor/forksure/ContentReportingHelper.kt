@@ -15,7 +15,6 @@ import java.util.Date
 import java.util.Locale
 
 // Centralized constants imports
-import com.ravidor.forksure.AppConstants
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable

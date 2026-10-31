@@ -52,9 +52,6 @@
         <item quantity="many">(%d usadas)</item>
         <item quantity="other"> (%d usadas)</item>
     </plurals>
-    <string name="security_warning_title">Advertencia de Seguridad</string>
-    <string name="security_issues_detected">Se detectaron los siguientes problemas de seguridad:</string>
-    <string name="security_disclaimer">Por su seguridad, algunas funciones pueden estar limitadas. Por favor, use la aplicación en un entorno seguro.</string>
     
     <!-- Camera error messages -->
     <string name="camera_bind_error">No se pudo vincular la cámara: %s</string>

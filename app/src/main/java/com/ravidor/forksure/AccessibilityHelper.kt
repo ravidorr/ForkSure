@@ -82,13 +82,6 @@ object AccessibilityHelper {
         val configuration = context.resources.configuration
         return configuration.fontScale
     }
-    
-    /**
-     * Checks if large text is enabled for accessibility
-     */
-    fun isLargeTextEnabled(context: Context): Boolean {
-        return getFontScale(context) > 1.0f
-    }
 }
 
 @Stable

@@ -5,7 +5,6 @@ import android.content.SharedPreferences
 import com.google.ai.client.generativeai.GenerativeModel
 import dagger.Module
 import dagger.Provides
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.testing.TestInstallIn
 import io.mockk.mockk

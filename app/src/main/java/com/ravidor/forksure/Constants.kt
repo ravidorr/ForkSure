@@ -18,7 +18,6 @@ import androidx.compose.foundation.isSystemInDarkTheme
  */
 @Immutable
 object AppConstants {
-    const val APP_NAME = "ForkSure"
     const val DEVELOPER_EMAIL = "support@avidor.org" // Use generic support email instead of personal
     
     // Logging tags
@@ -28,10 +27,8 @@ object AppConstants {
     const val TAG_ERROR_HANDLER = "ErrorHandler"
     const val TAG_ENHANCED_ERROR_HANDLER = "EnhancedErrorHandler"
     const val TAG_CONTENT_REPORTING = "ContentReporting"
-    const val TAG_SECURITY_STATUS = "SecurityStatusIndicator"
     const val TAG_CRASH_HANDLER = "CrashHandler"
     const val TAG_MEMORY_MANAGER = "MemoryManager"
-    const val TAG_ANR_WATCHDOG = "ANRWatchdog"
     const val TAG_STABILITY_TEST = "StabilityTest"
 }
 
@@ -45,29 +42,18 @@ object Dimensions {
     val PADDING_SMALL: Dp = 8.dp
     val PADDING_MEDIUM: Dp = 12.dp
     val PADDING_STANDARD: Dp = 16.dp
-    val PADDING_LARGE: Dp = 24.dp
-    val PADDING_EXTRA_LARGE: Dp = 32.dp
     
     // Specific UI element sizes
     val BORDER_WIDTH_STANDARD: Dp = 4.dp
     val CORNER_RADIUS_SMALL: Dp = 6.dp
     val CORNER_RADIUS_STANDARD: Dp = 8.dp
-    val CORNER_RADIUS_LARGE: Dp = 12.dp
     
     // Image and component sizes
     val SAMPLE_IMAGE_SIZE: Dp = 120.dp
     val CAPTURED_IMAGE_HEIGHT: Dp = 200.dp
-    val CAMERA_BUTTON_SIZE: Dp = 64.dp
     val ICON_SIZE_SMALL: Dp = 12.dp
-    val ICON_SIZE_STANDARD: Dp = 16.dp
     val ICON_SIZE_LARGE: Dp = 24.dp
     val STATUS_DOT_SIZE: Dp = 6.dp
-    
-    // Accessibility dimensions
-    val MIN_TOUCH_TARGET: Dp = 48.dp
-    val RECOMMENDED_TOUCH_TARGET: Dp = 56.dp
-    val MIN_TEXT_SIZE: Dp = 14.dp
-    val LARGE_TEXT_SIZE: Dp = 18.dp
 }
 
 /**
@@ -79,7 +65,6 @@ object AppColors {
     val SUCCESS_COLOR = Color(0xFF4CAF50) // Green
     val WARNING_COLOR = Color(0xFFFF9800) // Orange  
     val ERROR_COLOR = Color(0xFFF44336) // Red
-    val INFO_COLOR = Color(0xFF2196F3) // Blue
     
     // ForkSure Brand Colors - Light Theme
     val FORKSURE_PRIMARY_LIGHT = Color(0xFF6650a4) // Deep purple
@@ -101,29 +86,10 @@ object AppColors {
     val FORKSURE_ON_SURFACE_DARK = Color(0xFFE6E1E5) // Light grey
     val FORKSURE_ON_BACKGROUND_DARK = Color(0xFFE6E1E5) // Light grey
     
-    // Legacy Material 3 colors (for backward compatibility)
-    val PURPLE_80 = FORKSURE_PRIMARY_DARK
-    val PURPLE_GREY_80 = FORKSURE_SECONDARY_DARK
-    val PINK_80 = FORKSURE_TERTIARY_DARK
-    val PURPLE_40 = FORKSURE_PRIMARY_LIGHT
-    val PURPLE_GREY_40 = FORKSURE_SECONDARY_LIGHT
-    val PINK_40 = FORKSURE_TERTIARY_LIGHT
-    
-    // Legacy background colors (for backward compatibility)
-    val SURFACE_LIGHT = FORKSURE_SURFACE_LIGHT
-    val ON_BACKGROUND_LIGHT = FORKSURE_ON_BACKGROUND_LIGHT
-    val ON_SURFACE_LIGHT = FORKSURE_ON_SURFACE_LIGHT
-    
     // Dark theme status colors (adjusted for better visibility)
     val SUCCESS_COLOR_DARK = Color(0xFF66BB6A) // Lighter green
     val WARNING_COLOR_DARK = Color(0xFFFFB74D) // Lighter orange
     val ERROR_COLOR_DARK = Color(0xFFEF5350) // Lighter red
-    val INFO_COLOR_DARK = Color(0xFF42A5F5) // Lighter blue
-    
-    // Transparency levels
-    const val ALPHA_DISABLED = 0.38f
-    const val ALPHA_MEDIUM = 0.7f
-    const val ALPHA_LOW = 0.1f
 }
 
 // ===== Security Constants =====
@@ -139,54 +105,6 @@ object SecurityConstants {
     const val UPDATE_INTERVAL_MS = 5000L // 5 seconds
     const val INITIAL_DELAY_MS = 100L // Small initial delay
     const val LOW_REQUESTS_THRESHOLD = 3 // Show warning when requests < 3
-}
-
-/**
- * Animation and timing constants
- */
-@Immutable
-object AnimationConstants {
-    // Duration constants
-    const val SHORT_ANIMATION_DURATION = 200L
-    const val MEDIUM_ANIMATION_DURATION = 300L
-    const val LONG_ANIMATION_DURATION = 500L
-    
-    // Delay constants
-    const val HAPTIC_FEEDBACK_DELAY = 50L
-    const val UI_UPDATE_DELAY = 100L
-}
-
-// Accessibility constants are defined in AccessibilityTestHelper.kt
-
-/**
- * Network and API constants
- */
-@Immutable
-object NetworkConstants {
-    // Timeouts
-    const val CONNECTION_TIMEOUT_MS = 30000L // 30 seconds
-    const val READ_TIMEOUT_MS = 60000L // 60 seconds
-    
-    // Retry configuration
-    const val MAX_RETRY_ATTEMPTS = 3
-    const val RETRY_DELAY_MS = 1000L
-    const val EXPONENTIAL_BACKOFF_MULTIPLIER = 2.0
-}
-
-/**
- * Content reporting constants
- */
-@Immutable
-object ContentReportingConstants {
-    // Report types
-    const val REPORT_TYPE_INAPPROPRIATE = "inappropriate"
-    const val REPORT_TYPE_OFFENSIVE = "offensive"
-    const val REPORT_TYPE_HARMFUL = "harmful"
-    const val REPORT_TYPE_OTHER = "other"
-    
-    // Validation
-    const val MAX_ADDITIONAL_DETAILS_LENGTH = 1000
-    const val MIN_REPORT_REASON_LENGTH = 1
 }
 
 /**
@@ -207,13 +125,6 @@ object SampleDataConstants {
         R.string.image2_description,
         R.string.image3_description,
     )
-    
-    // Sample image names for logging/debugging
-    val IMAGE_NAMES = arrayOf(
-        "Cupcake",
-        "Cookies", 
-        "Cake"
-    )
 }
 
 /**
@@ -224,12 +135,10 @@ object NavigationConstants {
     // Route definitions
     const val ROUTE_MAIN = "main"
     const val ROUTE_CAMERA = "camera"
-    const val ROUTE_RESULTS = "results"
     
     // Navigation accessibility descriptions
     const val ACCESSIBILITY_NAVIGATION_TO_CAMERA = "Navigating to camera screen"
     const val ACCESSIBILITY_NAVIGATION_TO_MAIN = "Navigating to main screen"
-    const val ACCESSIBILITY_NAVIGATION_TO_RESULTS = "Navigating to results screen"
 }
 
 /**
@@ -260,12 +169,4 @@ object ThemeColors {
     fun errorColor(isDarkTheme: Boolean = isSystemInDarkTheme()): Color {
         return if (isDarkTheme) AppColors.ERROR_COLOR_DARK else AppColors.ERROR_COLOR
     }
-    
-    /**
-     * Get theme-aware info color
-     */
-    @Composable
-    fun infoColor(isDarkTheme: Boolean = isSystemInDarkTheme()): Color {
-        return if (isDarkTheme) AppColors.INFO_COLOR_DARK else AppColors.INFO_COLOR
-    }
-} 
+    } 

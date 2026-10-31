@@ -148,7 +148,7 @@ class RecipeSharingIntegrationTest {
         val recipeContent = "Test recipe with null image"
         val recipeName = "Null Image Test"
 
-        // When & Then - should fallback to text-only sharing
+        // When & Then - should fall back to text-only sharing
         try {
             val result = RecipeSharingHelper.shareRecipeWithImage(
                 context, 
@@ -171,7 +171,7 @@ class RecipeSharingIntegrationTest {
         // Use an app that's likely not installed (Notion)
         val targetApp = ShareTarget.NOTION
 
-        // When & Then - should fallback gracefully
+        // When & Then - should fall back gracefully
         try {
             val result = RecipeSharingHelper.shareRecipeToApp(
                 context,

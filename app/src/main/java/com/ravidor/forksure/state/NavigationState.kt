@@ -30,12 +30,6 @@ class NavigationState(
     val selectedImageIndex: Int
         get() = selectedImageState.intValue
     
-    val hasSelectedCapturedImage: Boolean
-        get() = selectedImageIndex == -1 && capturedImage != null
-    
-    val hasSelectedSampleImage: Boolean
-        get() = selectedImageIndex >= 0
-    
     // State update functions
     fun updateCapturedImage(bitmap: Bitmap?) {
         capturedImage = bitmap
@@ -43,23 +37,6 @@ class NavigationState(
     
     fun selectCapturedImage() {
         selectedImageState.intValue = -1
-    }
-    
-    fun selectSampleImage(index: Int) {
-        selectedImageState.intValue = index
-    }
-    
-    fun clearCapturedImage() {
-        capturedImage = null
-        if (selectedImageIndex == -1) {
-            // Reset to no selection if captured image was selected
-            selectedImageState.intValue = -2
-        }
-    }
-    
-    fun resetToInitialState() {
-        capturedImage = null
-        selectedImageState.intValue = -2
     }
 }
 

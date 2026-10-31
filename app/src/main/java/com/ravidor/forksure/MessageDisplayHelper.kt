@@ -9,60 +9,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
 /**
- * Helper for displaying user feedback messages using Snackbar
- * Integrates with the app's accessibility and haptic feedback systems
- */
-@Stable
-object MessageDisplayHelper {
-    
-    /**
-     * Show a success message with haptic feedback
-     */
-    suspend fun showSuccessMessage(
-        snackbarHostState: SnackbarHostState,
-        message: String,
-        actionLabel: String? = null,
-        duration: SnackbarDuration = SnackbarDuration.Short
-    ): SnackbarResult {
-        return snackbarHostState.showSnackbar(
-            message = message,
-            actionLabel = actionLabel,
-            duration = duration
-        )
-    }
-    
-    /**
-     * Show an error message with haptic feedback
-     */
-    suspend fun showErrorMessage(
-        snackbarHostState: SnackbarHostState,
-        message: String,
-        actionLabel: String? = "Retry",
-        duration: SnackbarDuration = SnackbarDuration.Long
-    ): SnackbarResult {
-        return snackbarHostState.showSnackbar(
-            message = message,
-            actionLabel = actionLabel,
-            duration = duration
-        )
-    }
-    
-    /**
-     * Show a simple info message
-     */
-    suspend fun showInfoMessage(
-        snackbarHostState: SnackbarHostState,
-        message: String,
-        duration: SnackbarDuration = SnackbarDuration.Short
-    ): SnackbarResult {
-        return snackbarHostState.showSnackbar(
-            message = message,
-            duration = duration
-        )
-    }
-}
-
-/**
  * Message types for consistent styling and behavior
  */
 @Stable

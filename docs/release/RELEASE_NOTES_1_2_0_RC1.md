@@ -29,7 +29,7 @@ ForkSure v1.2.0-rc1 Release Notes
 📊 Comprehensive Test Coverage
 - Added 19 new tests for print functionality
 - 94 total tests now passing (100% success rate)
-- Unit tests for markdown conversion and title extraction
+- Unit tests for Markdown conversion and title extraction
 - Integration tests for UI behavior and user interactions
 - Improved test reliability and maintainability
 
@@ -43,7 +43,7 @@ ForkSure v1.2.0-rc1 Release Notes
 
 ⚡ Performance Optimizations
 - Optimized HTML generation for printing
-- Efficient markdown to HTML conversion
+- Efficient Markdown to HTML conversion
 - Reduced memory usage during print operations
 - Smart caching of print job names
 
@@ -58,7 +58,7 @@ ForkSure v1.2.0-rc1 Release Notes
 Print Functionality:
 - PrintHelper utility class for HTML conversion
 - WebView-based printing with Android Print Framework
-- Automatic recipe title extraction from markdown
+- Automatic recipe title extraction from Markdown
 - Professional CSS styling for print output
 - Unique print job naming with timestamps
 

@@ -1,4 +1,4 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
+// Top-level build file where you can add configuration options common to all subprojects/modules.
 buildscript {
     // Pin vulnerable transitive build-tooling dependencies (pulled in by AGP and friends)
     // to patched releases until the plugins that bring them in ship their own fixes.

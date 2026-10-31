@@ -130,7 +130,7 @@ ksp {
 ### Performance
 - **Incremental Processing**: KSP supports better incremental compilation
 - **Memory Usage**: Lower memory footprint during builds
-- **Parallel Processing**: Better utilization of multi-core systems
+- **Parallel Processing**: Better utilization of multicore systems
 
 ### Ecosystem
 - **Industry Standard**: KSP is becoming the standard for Kotlin annotation processing
