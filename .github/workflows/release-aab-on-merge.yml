@@ -14,6 +14,9 @@ concurrency:
 jobs:
   release:
     runs-on: ubuntu-latest
+    env:
+      # Secrets cannot be used in step conditions directly; expose only whether signing is configured.
+      HAS_SIGNING_KEY: ${{ secrets.ANDROID_KEYSTORE_BASE64 != '' }}
 
     steps:
     - name: Checkout main
@@ -64,19 +67,41 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-gradle-
 
-    - name: Build installable APK and release AAB
+    - name: Set up release signing
+      if: steps.existing.outputs.exists == 'false' && env.HAS_SIGNING_KEY == 'true'
+      run: |
+        echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > release.keystore
+        {
+          echo "storeFile=release.keystore"
+          echo "storePassword=${{ secrets.ANDROID_KEYSTORE_PASSWORD }}"
+          echo "keyAlias=${{ secrets.ANDROID_KEY_ALIAS }}"
+          echo "keyPassword=${{ secrets.ANDROID_KEY_PASSWORD }}"
+        } > keystore.properties
+
+    - name: Build release AAB
       if: steps.existing.outputs.exists == 'false'
       run: |
         chmod +x gradlew
-        ./gradlew assembleDebug bundleRelease
+        ./gradlew bundleRelease
+
+    - name: Build signed release APK
+      if: steps.existing.outputs.exists == 'false' && env.HAS_SIGNING_KEY == 'true'
+      run: ./gradlew assembleRelease
+
+    - name: Warn that no APK is published
+      if: steps.existing.outputs.exists == 'false' && env.HAS_SIGNING_KEY != 'true'
+      run: |
+        echo "::warning::No ANDROID_KEYSTORE_BASE64 secret configured: publishing the AAB only. An unsigned or debug APK is not distributable."
 
     - name: Prepare release assets
       if: steps.existing.outputs.exists == 'false'
       run: |
         VERSION="${{ steps.version.outputs.version_name }}"
         mkdir -p release-assets
-        cp app/build/outputs/apk/debug/app-debug.apk "release-assets/forksure-$VERSION.apk"
         cp app/build/outputs/bundle/release/app-release.aab "release-assets/forksure-$VERSION-release.aab"
+        if [ "$HAS_SIGNING_KEY" = "true" ]; then
+          cp app/build/outputs/apk/release/app-release.apk "release-assets/forksure-$VERSION.apk"
+        fi
         cd release-assets
         sha256sum * > checksums.txt
 
