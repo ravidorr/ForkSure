@@ -282,9 +282,8 @@ configurations.configureEach {
                 useVersion("4.1.137.Final")
             requested.group == "org.bouncycastle" && requested.name.endsWith("-jdk18on") ->
                 useVersion("1.85")
-            requested.group == "com.google.guava" && requested.name == "guava" &&
-                requested.version == "31.1-android" ->
-                useVersion("33.4.8-android")
+            requested.group == "com.google.guava" && requested.name == "guava" ->
+                useVersion(if (requested.version.orEmpty().endsWith("-android")) "33.7.2-android" else "33.7.2-jre")
             requested.group == "com.google.protobuf" &&
                 requested.name in listOf("protobuf-java", "protobuf-kotlin") ->
                 useVersion("3.25.5")
