@@ -1,22 +1,20 @@
 package com.ravidor.forksure.navigation
 
-import android.graphics.Bitmap
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.ravidor.forksure.AccessibilityHelper
 import com.ravidor.forksure.BakingViewModel
 import com.ravidor.forksure.CameraCapture
@@ -41,6 +39,7 @@ fun ForkSureNavigation(
     bakingViewModel: BakingViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
+    val resources = LocalResources.current
     val coroutineScope = rememberCoroutineScope()
     
     // Centralized navigation state management
@@ -84,14 +83,14 @@ fun ForkSureNavigation(
                     coroutineScope.launch(Dispatchers.Main) {
                         navigationState.updateCapturedImage(bitmap)
                         navigationState.selectCapturedImage()
-                        ToastHelper.showSuccess(context, context.getString(R.string.success_photo_captured))
+                        ToastHelper.showSuccess(context, resources.getString(R.string.success_photo_captured))
                         navController.popBackStack()
                     }
                 },
-                onError = { error ->
+                onError = { _ ->
                     // Camera callbacks run on background threads, need to dispatch to main
                     coroutineScope.launch(Dispatchers.Main) {
-                        ToastHelper.showError(context, context.getString(R.string.error_photo_capture_failed))
+                        ToastHelper.showError(context, resources.getString(R.string.error_photo_capture_failed))
                         // Navigate back to main screen with error
                         navController.popBackStack()
                     }

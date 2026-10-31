@@ -4,12 +4,7 @@ import android.Manifest
 import android.content.Context
 import android.graphics.Bitmap
 import androidx.activity.ComponentActivity
-import androidx.camera.view.PreviewView
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.assertIsEnabled
-import androidx.compose.ui.test.assertIsNotEnabled
-import androidx.compose.ui.test.assertTextContains
-import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
@@ -17,6 +12,7 @@ import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.GrantPermissionRule
+import com.google.common.truth.Truth.assertThat
 import com.ravidor.forksure.ui.theme.ForkSureTheme
 import org.junit.Before
 import org.junit.Rule
@@ -178,8 +174,7 @@ class CameraCaptureTest {
         composeTestRule.waitForIdle()
         Thread.sleep(1000) // Give time for capture process
         
-        // In real device testing, this would trigger actual capture
-        // In emulator without camera, this tests the UI interaction
+        assertThat(captureTriggered).isNotNull()
     }
 
     @Test

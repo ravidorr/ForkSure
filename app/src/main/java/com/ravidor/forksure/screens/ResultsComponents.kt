@@ -18,6 +18,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -56,6 +57,7 @@ fun MainResultsSection(
     showMessage: suspend (UserMessage) -> Unit
 ) {
     val context = LocalContext.current
+    val resources = LocalResources.current
     
     // Announce state changes for accessibility
     LaunchedEffect(uiState) {
@@ -64,7 +66,7 @@ fun MainResultsSection(
                 is UiState.Loading -> {
                     AccessibilityHelper.announceForAccessibility(
                         context, 
-                        context.getString(R.string.analyzing_baked_goods)
+                        resources.getString(R.string.analyzing_baked_goods)
                     )
                 }
                 is UiState.Success -> {
@@ -116,7 +118,7 @@ fun MainResultsSection(
                         if (printJob != null) {
                             showMessage(
                                 UserMessage(
-                                    text = context.getString(R.string.success_print_started),
+                                    text = resources.getString(R.string.success_print_started),
                                     type = MessageType.SUCCESS
                                 )
                             )
@@ -124,9 +126,9 @@ fun MainResultsSection(
                             showMessage(
                                 UserMessage(
                                     text = if (PrintHelper.isPrintingAvailable(context)) {
-                                        context.getString(R.string.error_print_failed)
+                                        resources.getString(R.string.error_print_failed)
                                     } else {
-                                        context.getString(R.string.error_print_not_available)
+                                        resources.getString(R.string.error_print_not_available)
                                     },
                                     type = MessageType.ERROR
                                 )
@@ -165,6 +167,7 @@ fun RecipeResultsSection(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
+    val resources = LocalResources.current
     val resultsSectionDescription = stringResource(R.string.accessibility_results_section)
     val aiContentDescription = stringResource(R.string.accessibility_ai_content, outputText)
     val actionPrintText = stringResource(R.string.action_print)
@@ -225,14 +228,14 @@ fun RecipeResultsSection(
                         if (success) {
                             showMessage(
                                 UserMessage(
-                                    text = context.getString(R.string.success_share_completed),
+                                    text = resources.getString(R.string.success_share_completed),
                                     type = MessageType.SUCCESS
                                 )
                             )
                         } else {
                             showMessage(
                                 UserMessage(
-                                    text = context.getString(R.string.error_share_failed),
+                                    text = resources.getString(R.string.error_share_failed),
                                     type = MessageType.ERROR
                                 )
                             )

@@ -132,6 +132,7 @@ class NavigationTest {
         capturedError = null
         
         // Then
+        assertThat(sampleImageIndex).isEqualTo(2)
         assertThat(capturedBitmap).isNull()
         assertThat(capturedError).isNull()
     }

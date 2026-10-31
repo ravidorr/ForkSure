@@ -20,7 +20,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -30,7 +29,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -41,12 +39,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
-
-// Centralized constants imports
-import com.ravidor.forksure.SecurityConstants
-import com.ravidor.forksure.AppColors
-import com.ravidor.forksure.ThemeColors
-import com.ravidor.forksure.Dimensions
+import kotlin.time.Duration.Companion.milliseconds
 
 // Constants moved to centralized Constants.kt file
 
@@ -64,7 +57,7 @@ fun SecurityStatusIndicator(
 
     // Initial setup - trigger security check and get other status
     LaunchedEffect(viewModel) {
-        delay(SecurityConstants.INITIAL_DELAY_MS)
+        delay(SecurityConstants.INITIAL_DELAY_MS.milliseconds)
         viewModel.refreshSecurityStatus() // Triggers background check
         rateLimitStatus = SecurityManager.getRateLimitStatus(context, "ai_requests")
         requestCount = viewModel.getRequestCount()
@@ -73,7 +66,7 @@ fun SecurityStatusIndicator(
     // Periodic updates for rate limit and request count only
     LaunchedEffect(viewModel) {
         while (isActive) {
-            delay(SecurityConstants.UPDATE_INTERVAL_MS)
+            delay(SecurityConstants.UPDATE_INTERVAL_MS.milliseconds)
             if (isActive) {
                 try {
                     // Security status updates automatically via StateFlow

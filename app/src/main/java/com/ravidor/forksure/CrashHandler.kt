@@ -15,9 +15,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.system.exitProcess
 
-// Centralized constants imports
-import com.ravidor.forksure.AppConstants
-
 /**
  * Global exception handler that provides last-resort crash capture,
  * logging, and app recovery mechanisms.
@@ -54,7 +51,7 @@ class CrashHandler(
             }
             
             // Record crash for monitoring
-            recordCrash(exception)
+            recordCrash()
             
             // Log crash locally for offline analysis
             logCrashLocally(exception, thread)
@@ -115,7 +112,7 @@ class CrashHandler(
     /**
      * Record crash occurrence for monitoring
      */
-    private fun recordCrash(exception: Throwable) {
+    private fun recordCrash() {
         val currentTime = System.currentTimeMillis()
         val crashCount = crashPrefs.getInt(PREF_CRASH_COUNT, 0)
         
@@ -250,38 +247,6 @@ class CrashHandler(
             (runtime.freeMemory() / (1024 * 1024)) // Convert to MB
         } catch (e: Exception) {
             -1L
-        }
-    }
-    
-    /**
-     * Get crash logs for debugging (if needed)
-     */
-    fun getCrashLogs(): String? {
-        return try {
-            val logFile = File(context.filesDir, CRASH_LOG_FILE)
-            if (logFile.exists()) {
-                logFile.readText()
-            } else {
-                null
-            }
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to read crash logs", e)
-            null
-        }
-    }
-    
-    /**
-     * Clear crash logs (for maintenance)
-     */
-    fun clearCrashLogs() {
-        try {
-            val logFile = File(context.filesDir, CRASH_LOG_FILE)
-            if (logFile.exists()) {
-                logFile.delete()
-                Log.d(TAG, "Crash logs cleared")
-            }
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to clear crash logs", e)
         }
     }
 }

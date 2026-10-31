@@ -8,6 +8,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * Helper class for testing Firebase Crashlytics integration.
@@ -153,7 +154,7 @@ object CrashlyticsTestHelper {
         
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                delay(delayMs)
+                delay(delayMs.milliseconds)
                 sendTestNonFatalCrash(testType)
                 Log.d(TAG, "Delayed test crash sent")
             } catch (e: Exception) {

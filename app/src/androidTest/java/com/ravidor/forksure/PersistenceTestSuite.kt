@@ -21,7 +21,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestCoroutineScheduler
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
@@ -34,6 +33,7 @@ import java.util.Date
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import org.junit.Rule
+import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * Comprehensive persistence testing suite for ForkSure app
@@ -278,7 +278,7 @@ class PersistenceTestSuite {
             // Trigger potential cleanup every 20 operations
             if (index % 20 == 0) {
                 System.gc()
-                delay(10)
+                delay(10.milliseconds)
             }
         }
         
@@ -539,7 +539,7 @@ class PersistenceTestSuite {
             // Simulate periodic cleanup
             if (day % 7 == 0) {
                 System.gc()
-                delay(10)
+                delay(10.milliseconds)
             }
         }
         

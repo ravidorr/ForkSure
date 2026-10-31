@@ -10,12 +10,6 @@ import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.Stable
 import java.io.ByteArrayOutputStream
-import java.io.InputStream
-import kotlin.math.min
-import kotlin.math.sqrt
-
-// Centralized constants imports
-import com.ravidor.forksure.AppConstants
 
 /**
  * Memory management utilities for safe image processing and OutOfMemoryError prevention
@@ -75,7 +69,13 @@ object MemoryManager {
             )
         } catch (e: Exception) {
             Log.e(TAG, "Failed to get memory status", e)
-            MemoryStatus(0, 0, 0, true, true)
+            MemoryStatus(
+                availableMemoryMB = 0,
+                totalMemoryMB = 0,
+                usedMemoryMB = 0,
+                isLowMemory = true,
+                isCriticalMemory = true
+            )
         }
     }
     

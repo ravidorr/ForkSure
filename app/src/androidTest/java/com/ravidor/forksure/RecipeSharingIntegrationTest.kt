@@ -113,7 +113,7 @@ class RecipeSharingIntegrationTest {
             ShareTarget.EVERNOTE to "com.evernote"
         )
         
-        packageNames.forEach { (target, expectedPackage) ->
+        packageNames.forEach { (_, expectedPackage) ->
             // Try to get package info - this will throw if package name is wrong format
             try {
                 packageManager.getPackageInfo(expectedPackage, 0)
@@ -220,11 +220,11 @@ class RecipeSharingIntegrationTest {
     @Test
     fun shareTarget_enumShouldContainAllExpectedValues() {
         // When
-        val allTargets = ShareTarget.values()
+        val allTargets = ShareTarget.entries
 
         // Then
-        assertThat(allTargets).hasLength(6)
-        assertThat(allTargets).asList().containsExactly(
+        assertThat(allTargets).hasSize(6)
+        assertThat(allTargets).containsExactly(
             ShareTarget.GOOGLE_KEEP,
             ShareTarget.GMAIL,
             ShareTarget.GOOGLE_DOCS,

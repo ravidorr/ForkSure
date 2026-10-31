@@ -33,8 +33,8 @@ object PrintHelper {
             
             // Create a WebView for printing
             val webView = WebView(context)
-            webView.settings.setAllowContentAccess(false)
-            webView.settings.setAllowFileAccess(false)
+            webView.settings.allowContentAccess = false
+            webView.settings.allowFileAccess = false
             webView.settings.javaScriptEnabled = false
             
             // Convert markdown to HTML

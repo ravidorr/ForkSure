@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ravidor.forksure.repository.AIRepository
 import com.ravidor.forksure.repository.SecurityRepository
-import com.ravidor.forksure.repository.PreferencesCacheManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,14 +14,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
-// Centralized constants imports
-import com.ravidor.forksure.AppConstants
-
 @HiltViewModel
 class BakingViewModel @Inject constructor(
     private val aiRepository: AIRepository,
-    private val securityRepository: SecurityRepository,
-    private val preferencesCacheManager: PreferencesCacheManager // <-- Injected
+    private val securityRepository: SecurityRepository
 ) : ViewModel() {
     
     private val _uiState: MutableStateFlow<UiState> =
@@ -70,8 +65,7 @@ class BakingViewModel @Inject constructor(
                 }
 
                 // 2. Validate user input
-                val inputValidation = securityRepository.validateUserInput(prompt)
-                when (inputValidation) {
+                when (val inputValidation = securityRepository.validateUserInput(prompt)) {
                     is UserInputValidationResult.Invalid -> {
                         _uiState.value = UiState.Error(
                             inputValidation.reason,
@@ -99,8 +93,7 @@ class BakingViewModel @Inject constructor(
     ) {
         try {
             // 3. Check rate limiting
-            val rateLimitResult = securityRepository.checkRateLimit("ai_requests")
-            when (rateLimitResult) {
+            when (val rateLimitResult = securityRepository.checkRateLimit("ai_requests")) {
                 is RateLimitResult.Blocked -> {
                     _uiState.value = UiState.Error(
                         rateLimitResult.reason,
@@ -224,18 +217,9 @@ class BakingViewModel @Inject constructor(
         }
     }
     
-    // Legacy method for compatibility - now uses cached value
-    suspend fun getSecurityStatus(): SecurityEnvironmentResult? {
-        // Trigger refresh if needed
-        refreshSecurityStatus()
-        // Return cached value or null if not available
-        return _securityStatus.value
-    }
-
     fun getRequestCount(): Int = requestCount
 
     override fun onCleared() {
-        super.onCleared()
         // Clear sensitive data
         lastBitmap = null
         lastPrompt = null
