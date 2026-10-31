@@ -183,20 +183,6 @@ object StabilityTestUtils {
             allPassed = false
         }
         
-        // Check ANR watchdog
-        try {
-            val anrWatchdog = ANRWatchdog.getInstance()
-            if (anrWatchdog.isWatching()) {
-                results.add("✓ ANR watchdog: Active")
-            } else {
-                results.add("✗ ANR watchdog: Not watching")
-                allPassed = false
-            }
-        } catch (e: Exception) {
-            results.add("✗ ANR watchdog: Error checking")
-            allPassed = false
-        }
-        
         // Check Firebase Crashlytics
         try {
             FirebaseCrashlytics.getInstance().log("Stability validation check")
