@@ -25,7 +25,7 @@ jobs:
           java-version: "17"
 
       - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
+        uses: android-actions/setup-android@9fc6c4e9069bf8d3d10b2204b1fb8f6ef7065407 # v3
         with:
           packages: ""
 
@@ -52,5 +52,5 @@ jobs:
         run: ./gradlew --no-daemon :app:assembleDebug --warning-mode all
         
       - name: Generate and submit dependency graph
-        uses: gradle/actions/dependency-submission@v3
+        uses: gradle/actions/dependency-submission@d9c87d481d55275bb5441eef3fe0e46805f9ef70 # v3
         if: github.ref == 'refs/heads/main'
