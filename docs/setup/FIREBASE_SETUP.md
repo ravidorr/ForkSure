@@ -56,7 +56,7 @@ val result = StabilityTestUtils.testMemoryPressure(context)
 
 // Validate all systems
 val validation = StabilityTestUtils.validateStabilitySystems(context)
-Log.d("Stability", validation.getReport())
+Log.d("Stability", validation.results.joinToString("\n"))
 ```
 
 ## What's Already Implemented

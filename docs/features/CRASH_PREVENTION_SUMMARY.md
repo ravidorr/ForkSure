@@ -58,7 +58,7 @@ You now have a **comprehensive, enterprise-grade crash prevention system** that 
 
 // 1. Validate all systems are working
 val validation = StabilityTestUtils.validateStabilitySystems(context)
-Log.d("Stability", validation.getReport())
+Log.d("Stability", validation.results.joinToString("\n"))
 
 // 2. Test memory management
 val memoryStatus = MemoryManager.getMemoryStatus(context)

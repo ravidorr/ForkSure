@@ -4,9 +4,9 @@ This guide will help you test Firebase Crashlytics integration and verify that c
 
 ## Quick Test (Automatic)
 
-The app automatically sends a test crash 3 seconds after startup (debug builds only). Look for this log message:
+Use the debug buttons below, or call `CrashlyticsTestHelper.sendTestNonFatalCrash()` (see Option 2). Look for this log message:
 ```
-CrashlyticsQuickTest: Test crash sent successfully! Check Firebase Console in 2-5 minutes.
+CrashlyticsTestHelper: Test non-fatal crash sent: Manual Test
 ```
 
 ## Manual Testing Options
@@ -24,9 +24,9 @@ CrashlyticsQuickTest: Test crash sent successfully! Check Firebase Console in 2-
 
 ### Option 2: Code-based Testing
 
-Add this line anywhere in your code to send a test crash:
+Add this line anywhere in your code to send a test non-fatal exception:
 ```kotlin
-CrashlyticsQuickTest.sendTestCrash()
+CrashlyticsTestHelper.sendTestNonFatalCrash()
 ```
 
 ## Verifying Results
@@ -34,8 +34,7 @@ CrashlyticsQuickTest.sendTestCrash()
 ### 1. Check Logcat
 Look for these log messages:
 ```
-CrashlyticsQuickTest: Sending test crash to Firebase Crashlytics...
-CrashlyticsQuickTest: Test crash sent successfully! Check Firebase Console in 2-5 minutes.
+CrashlyticsTestHelper: Test non-fatal crash sent: Manual Test
 ```
 
 ### 2. Check Firebase Console
@@ -86,7 +85,6 @@ CrashlyticsQuickTest: Test crash sent successfully! Check Firebase Console in 2-
 ## Debug Logging
 
 Enable verbose logging by checking logcat for these tags:
-- `CrashlyticsQuickTest`: Quick test results
 - `CrashlyticsTestHelper`: Detailed test helper logs
 - `DebugCrashSection`: Debug UI visibility
 - `ForkSureApplication`: App initialization
