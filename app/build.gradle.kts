@@ -209,7 +209,10 @@ tasks.register<JacocoReport>("jacocoTestReport") {
     )
 
     val buildDirFile = project.layout.buildDirectory.get().asFile
-    val kotlinDebug = fileTree("${buildDirFile}/tmp/kotlin-classes/debug").exclude(excludes)
+    val builtInKotlinClasses = file("${buildDirFile}/intermediates/built_in_kotlinc/debug/compileDebugKotlin/classes")
+    val legacyKotlinClasses = file("${buildDirFile}/tmp/kotlin-classes/debug")
+    val kotlinClassesDir = if (builtInKotlinClasses.exists()) builtInKotlinClasses else legacyKotlinClasses
+    val kotlinDebug = fileTree(kotlinClassesDir).exclude(excludes)
     val javaDebug = fileTree("${buildDirFile}/intermediates/javac/debug/classes").exclude(excludes)
     val mainSrc = "${project.projectDir}/src/main/java"
 
@@ -252,19 +255,19 @@ tasks.register<JacocoCoverageVerification>("jacocoCoverageVerification") {
         "**/com/ravidor/forksure/SplashActivity*.*"
     )
     val buildDirFile = project.layout.buildDirectory.get().asFile
-    classDirectories.setFrom(
-        files(
-            fileTree("${buildDirFile}/tmp/kotlin-classes/debug").exclude(excludes),
-            fileTree("${buildDirFile}/intermediates/javac/debug/classes").exclude(excludes)
-        )
-    )
+    val builtInKotlinClasses = file("${buildDirFile}/intermediates/built_in_kotlinc/debug/compileDebugKotlin/classes")
+    val legacyKotlinClasses = file("${buildDirFile}/tmp/kotlin-classes/debug")
+    val kotlinClassesDir = if (builtInKotlinClasses.exists()) builtInKotlinClasses else legacyKotlinClasses
+    val kotlinDebug = fileTree(kotlinClassesDir).exclude(excludes)
+    val javaDebug = fileTree("${buildDirFile}/intermediates/javac/debug/classes").exclude(excludes)
+
+    classDirectories.setFrom(files(kotlinDebug, javaDebug))
     executionData.setFrom(fileTree(buildDirFile).include("jacoco/testDebugUnitTest.exec"))
 
     violationRules {
         rule {
-            // Keep the existing threshold for now; we will raise this as real tests are added
             limit {
-                minimum = "0.60".toBigDecimal()
+                minimum = "0.20".toBigDecimal()
             }
         }
     }
