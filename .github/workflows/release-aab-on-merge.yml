@@ -1,199 +1,118 @@
-name: Release AAB on PR Merge
+name: Release on Merge
 
 on:
-  pull_request:
-    types: [closed]
+  push:
     branches: [main]
 
 permissions:
   contents: write
 
+concurrency:
+  group: release
+  cancel-in-progress: false
+
 jobs:
-  build-and-release-aab:
-    # Only run when PR is actually merged (not just closed)
-    if: github.event.pull_request.merged == true
+  release:
     runs-on: ubuntu-latest
-    
+    env:
+      # Secrets cannot be used in step conditions directly; expose only whether signing is configured.
+      HAS_SIGNING_KEY: ${{ secrets.ANDROID_KEYSTORE_BASE64 != '' }}
+
     steps:
-    - name: 🎉 PR Merged - Building Release AAB
-      run: echo "🎉 PR ${{ github.event.pull_request.number }} merged! Building release AAB and creating GitHub release..."
-      
-    - name: Checkout merged code
+    - name: Checkout main
       uses: actions/checkout@v4
-      with:
-        ref: main
-        fetch-depth: 0  # Fetch full history for version tagging
-        
+
+    - name: Read version
+      id: version
+      run: |
+        VERSION_NAME=$(grep "versionName" app/build.gradle.kts | sed 's/.*"\(.*\)".*/\1/')
+        VERSION_CODE=$(grep "versionCode" app/build.gradle.kts | sed 's/.*= \(.*\)/\1/')
+        echo "version_name=$VERSION_NAME" >> $GITHUB_OUTPUT
+        echo "version_code=$VERSION_CODE" >> $GITHUB_OUTPUT
+        echo "tag_name=v$VERSION_NAME-build$VERSION_CODE" >> $GITHUB_OUTPUT
+
+    - name: Check whether this version is already released
+      id: existing
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        if gh release view "${{ steps.version.outputs.tag_name }}" >/dev/null 2>&1; then
+          echo "exists=true" >> $GITHUB_OUTPUT
+          echo "Release ${{ steps.version.outputs.tag_name }} already exists, skipping."
+        else
+          echo "exists=false" >> $GITHUB_OUTPUT
+        fi
+
     - name: Set up JDK 17
+      if: steps.existing.outputs.exists == 'false'
       uses: actions/setup-java@v4
       with:
         java-version: '17'
         distribution: 'temurin'
-        
+
     - name: Create local.properties
+      if: steps.existing.outputs.exists == 'false'
       run: |
         echo "sdk.dir=$ANDROID_HOME" > local.properties
         echo "apiKey=${{ secrets.GEMINI_API_KEY }}" >> local.properties
-      working-directory: ${{ github.workspace }}
-        
+
     - name: Cache Gradle packages
+      if: steps.existing.outputs.exists == 'false'
       uses: actions/cache@v4
       with:
         path: |
           ~/.gradle/caches
           ~/.gradle/wrapper
-        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties', 'gradle/libs.versions.toml') }}
         restore-keys: |
           ${{ runner.os }}-gradle-
-          
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
-      
-    - name: 🔢 Auto-bump version numbers
-      id: bump_version
-      run: |
-        # Extract current versions
-        CURRENT_VERSION_NAME=$(grep "versionName" app/build.gradle.kts | sed 's/.*"\(.*\)".*/\1/')
-        CURRENT_VERSION_CODE=$(grep "versionCode" app/build.gradle.kts | sed 's/.*= \(.*\)/\1/')
-        
-        echo "Current version: $CURRENT_VERSION_NAME (code: $CURRENT_VERSION_CODE)"
-        
-        # Increment version code
-        NEW_VERSION_CODE=$((CURRENT_VERSION_CODE + 1))
-        
-        # Auto-increment version name (patch version)
-        # Extract major.minor.patch from version like "1.2.0-rc3"
-        VERSION_BASE=$(echo $CURRENT_VERSION_NAME | sed 's/-.*$//')  # Remove suffix like "-rc3"
-        VERSION_SUFFIX=$(echo $CURRENT_VERSION_NAME | sed 's/^[0-9]*\.[0-9]*\.[0-9]*\(.*\)$/\1/')  # Extract suffix
-        
-        MAJOR=$(echo $VERSION_BASE | cut -d. -f1)
-        MINOR=$(echo $VERSION_BASE | cut -d. -f2)
-        PATCH=$(echo $VERSION_BASE | cut -d. -f3)
-        
-        # Increment patch version
-        NEW_PATCH=$((PATCH + 1))
-        NEW_VERSION_NAME="$MAJOR.$MINOR.$NEW_PATCH$VERSION_SUFFIX"
-        
-        echo "New version: $NEW_VERSION_NAME (code: $NEW_VERSION_CODE)"
-        
-        # Update build.gradle.kts
-        sed -i "s/versionCode = $CURRENT_VERSION_CODE/versionCode = $NEW_VERSION_CODE/" app/build.gradle.kts
-        sed -i "s/versionName = \"$CURRENT_VERSION_NAME\"/versionName = \"$NEW_VERSION_NAME\"/" app/build.gradle.kts
-        
-        # Set outputs
-        echo "old_version_name=$CURRENT_VERSION_NAME" >> $GITHUB_OUTPUT
-        echo "old_version_code=$CURRENT_VERSION_CODE" >> $GITHUB_OUTPUT
-        echo "version_name=$NEW_VERSION_NAME" >> $GITHUB_OUTPUT
-        echo "version_code=$NEW_VERSION_CODE" >> $GITHUB_OUTPUT
-        echo "tag_name=v$NEW_VERSION_NAME-build$NEW_VERSION_CODE" >> $GITHUB_OUTPUT
-        
-    - name: 📝 Commit version bump
-      run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-        git add app/build.gradle.kts
-        git commit -m "🔢 Auto-bump version to ${{ steps.bump_version.outputs.version_name }} (build ${{ steps.bump_version.outputs.version_code }})
 
-        Triggered by PR #${{ github.event.pull_request.number }}: ${{ github.event.pull_request.title }}
-        Previous version: ${{ steps.bump_version.outputs.old_version_name }} (build ${{ steps.bump_version.outputs.old_version_code }})"
-        
-    - name: 🚀 Push version bump to main
-      uses: ad-m/github-push-action@v0.6.0
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        branch: main
-        
-    - name: 🏗️ Build release AAB
-      run: ./gradlew bundleRelease
-      
-    - name: 🏗️ Build release APK (for testing)
+    - name: Set up release signing
+      if: steps.existing.outputs.exists == 'false' && env.HAS_SIGNING_KEY == 'true'
+      run: |
+        echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > release.keystore
+        {
+          echo "storeFile=release.keystore"
+          echo "storePassword=${{ secrets.ANDROID_KEYSTORE_PASSWORD }}"
+          echo "keyAlias=${{ secrets.ANDROID_KEY_ALIAS }}"
+          echo "keyPassword=${{ secrets.ANDROID_KEY_PASSWORD }}"
+        } > keystore.properties
+
+    - name: Build release AAB
+      if: steps.existing.outputs.exists == 'false'
+      run: |
+        chmod +x gradlew
+        ./gradlew bundleRelease
+
+    - name: Build signed release APK
+      if: steps.existing.outputs.exists == 'false' && env.HAS_SIGNING_KEY == 'true'
       run: ./gradlew assembleRelease
-      
-    - name: 📦 Prepare release assets
+
+    - name: Warn that no APK is published
+      if: steps.existing.outputs.exists == 'false' && env.HAS_SIGNING_KEY != 'true'
       run: |
+        echo "::warning::No ANDROID_KEYSTORE_BASE64 secret configured: publishing the AAB only. An unsigned or debug APK is not distributable."
+
+    - name: Prepare release assets
+      if: steps.existing.outputs.exists == 'false'
+      run: |
+        VERSION="${{ steps.version.outputs.version_name }}"
         mkdir -p release-assets
-        cp app/build/outputs/bundle/release/*.aab release-assets/
-        cp app/build/outputs/apk/release/*.apk release-assets/
-        
-        # Create checksums
+        cp app/build/outputs/bundle/release/app-release.aab "release-assets/forksure-$VERSION-release.aab"
+        if [ "$HAS_SIGNING_KEY" = "true" ]; then
+          cp app/build/outputs/apk/release/app-release.apk "release-assets/forksure-$VERSION.apk"
+        fi
         cd release-assets
-        sha256sum *.aab > checksums.txt
-        sha256sum *.apk >> checksums.txt
-        cd ..
-        
-    - name: 🏷️ Create GitHub Release
-      uses: actions/create-release@v1
-      id: create_release
+        sha256sum * > checksums.txt
+
+    - name: Create GitHub Release
+      if: steps.existing.outputs.exists == 'false'
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ steps.bump_version.outputs.tag_name }}
-        release_name: "ForkSure ${{ steps.bump_version.outputs.version_name }} (Build ${{ steps.bump_version.outputs.version_code }})"
-        body: |
-          ## 🎉 ForkSure Release ${{ steps.bump_version.outputs.version_name }}
-          
-          **Build**: ${{ steps.bump_version.outputs.version_code }}
-          **Triggered by**: PR #${{ github.event.pull_request.number }} - ${{ github.event.pull_request.title }}
-          **Branch**: ${{ github.event.pull_request.head.ref }} → main
-          **Commit**: ${{ github.sha }}
-          **Previous Version**: ${{ steps.bump_version.outputs.old_version_name }} (build ${{ steps.bump_version.outputs.old_version_code }})
-          
-          ### 📦 Release Assets
-          - **Android App Bundle (AAB)**: Ready for Google Play Console upload
-          - **APK**: For testing and sideloading
-          - **Checksums**: SHA256 verification file
-          
-          ### 🚀 Installation
-          1. **Google Play Store**: Upload the AAB file to Google Play Console
-          2. **Direct Install**: Download and install the APK file
-          
-          ### ✅ What's New
-          ${{ github.event.pull_request.body }}
-          
-        draft: false
-        prerelease: false
-        
-    - name: 📎 Upload AAB to Release
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: release-assets/app-release.aab
-        asset_name: forksure-${{ steps.bump_version.outputs.version_name }}-release.aab
-        asset_content_type: application/octet-stream
-        
-    - name: 📎 Upload APK to Release
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: release-assets/app-release.apk
-        asset_name: forksure-${{ steps.bump_version.outputs.version_name }}-release.apk
-        asset_content_type: application/vnd.android.package-archive
-        
-    - name: 📎 Upload Checksums to Release
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: release-assets/checksums.txt
-        asset_name: checksums.txt
-        asset_content_type: text/plain
-        
-    - name: 📋 Release Summary
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        echo "## 🎉 GitHub Release Created!" >> $GITHUB_STEP_SUMMARY
-        echo "" >> $GITHUB_STEP_SUMMARY
-        echo "**Release**: [${{ steps.bump_version.outputs.tag_name }}](${{ steps.create_release.outputs.html_url }})" >> $GITHUB_STEP_SUMMARY
-        echo "**Version**: ${{ steps.bump_version.outputs.version_name }} (Build ${{ steps.bump_version.outputs.version_code }})" >> $GITHUB_STEP_SUMMARY
-        echo "**PR**: #${{ github.event.pull_request.number }} - ${{ github.event.pull_request.title }}" >> $GITHUB_STEP_SUMMARY
-        echo "" >> $GITHUB_STEP_SUMMARY
-        echo "### 📦 Release Assets" >> $GITHUB_STEP_SUMMARY
-        echo "- 🎯 **AAB**: \`forksure-${{ steps.bump_version.outputs.version_name }}-release.aab\`" >> $GITHUB_STEP_SUMMARY
-        echo "- 📱 **APK**: \`forksure-${{ steps.bump_version.outputs.version_name }}-release.apk\`" >> $GITHUB_STEP_SUMMARY
-        echo "- 🔐 **Checksums**: \`checksums.txt\`" >> $GITHUB_STEP_SUMMARY
-        echo "" >> $GITHUB_STEP_SUMMARY
-        echo "🚀 **Ready for Google Play Console upload!**" >> $GITHUB_STEP_SUMMARY 
+        VERSION="${{ steps.version.outputs.version_name }}"
+        gh release create "${{ steps.version.outputs.tag_name }}" \
+          --target "${{ github.sha }}" \
+          --title "ForkSure $VERSION (Build ${{ steps.version.outputs.version_code }})" \
+          --generate-notes \
+          release-assets/*
