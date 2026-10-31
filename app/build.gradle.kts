@@ -289,7 +289,6 @@ configurations.configureEach {
             "com.google.protobuf" -> if (requested.name in listOf("protobuf-java", "protobuf-kotlin")) useVersion("3.25.5")
             "io.ktor" -> if (requested.version == "2.3.2") useVersion("2.3.13")
             "androidx.concurrent" -> useVersion("1.3.0")
-            "org.jetbrains.kotlinx" -> if (requested.name.startsWith("kotlinx-coroutines-")) useVersion("1.10.2")
         }
     }
 }
