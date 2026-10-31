@@ -292,6 +292,8 @@ configurations.configureEach {
             "com.google.protobuf" -> if (requested.name in listOf("protobuf-java", "protobuf-kotlin")) useVersion("3.25.5")
             "io.ktor" -> if (requested.version == "2.3.2") useVersion("2.3.13")
             "androidx.concurrent" -> useVersion("1.3.0")
+            "org.apache.httpcomponents" -> if (requested.name == "httpclient") useVersion("4.5.14")
+            "org.apache.commons" -> if (requested.name == "commons-lang3") useVersion("3.18.0")
         }
     }
 }
