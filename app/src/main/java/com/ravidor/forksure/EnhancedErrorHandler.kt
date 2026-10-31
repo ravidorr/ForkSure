@@ -23,8 +23,7 @@ object EnhancedErrorHandler {
     suspend fun handleError(
         context: Context,
         error: Throwable,
-        userInput: String? = null,
-        aiResponse: String? = null
+        userInput: String? = null
     ): EnhancedErrorResult {
         
         // Log error for debugging (sanitized)
@@ -35,7 +34,7 @@ object EnhancedErrorHandler {
         }
         
         // Check security environment
-        val securityCheck = SecurityManager.checkSecurityEnvironment(context)
+        val securityCheck = SecurityManager.checkSecurityEnvironment()
         if (securityCheck is SecurityEnvironmentResult.Insecure) {
             Log.w(TAG, "Insecure environment detected: ${securityCheck.details}")
             return EnhancedErrorResult.Critical(
@@ -54,9 +53,9 @@ object EnhancedErrorHandler {
             ErrorCategory.NETWORK -> handleNetworkError(context, error)
             ErrorCategory.AUTHENTICATION -> handleSecurityError(context, error)
             ErrorCategory.RATE_LIMIT -> handleRateLimitError(context)
-            ErrorCategory.INPUT_VALIDATION -> handleInputValidationError(context, error, userInput)
-            ErrorCategory.SERVER_ERROR -> handleAIResponseError(context, error)
-            ErrorCategory.CLIENT_ERROR -> handleSystemError(context, error)
+            ErrorCategory.INPUT_VALIDATION -> handleInputValidationError(context, userInput)
+            ErrorCategory.SERVER_ERROR -> handleAIResponseError(context)
+            ErrorCategory.CLIENT_ERROR -> handleSystemError(context)
             ErrorCategory.UNKNOWN -> handleUnknownError(context, error)
         }
     }
@@ -177,7 +176,7 @@ object EnhancedErrorHandler {
         )
     }
     
-    private fun handleInputValidationError(context: Context, error: Throwable, userInput: String?): EnhancedErrorResult {
+    private fun handleInputValidationError(context: Context, userInput: String?): EnhancedErrorResult {
         val message = if (userInput != null && userInput.length > 1000) {
             context.getString(R.string.error_input_too_long)
         } else {
@@ -192,7 +191,7 @@ object EnhancedErrorHandler {
         )
     }
     
-    private fun handleAIResponseError(context: Context, error: Throwable): EnhancedErrorResult {
+    private fun handleAIResponseError(context: Context): EnhancedErrorResult {
         return EnhancedErrorResult.ServiceError(
             title = context.getString(R.string.error_title_ai_service),
             message = context.getString(R.string.error_ai_service_issue),
@@ -201,7 +200,7 @@ object EnhancedErrorHandler {
         )
     }
     
-    private fun handleSystemError(context: Context, error: Throwable): EnhancedErrorResult {
+    private fun handleSystemError(context: Context): EnhancedErrorResult {
         return EnhancedErrorResult.Critical(
             title = context.getString(R.string.error_title_system),
             message = context.getString(R.string.error_system_general),
@@ -236,6 +235,7 @@ enum class ErrorCategory {
 
 // Enhanced error result types
 @Immutable
+@Suppress("unused") // Constructor properties are read through their getters
 sealed class EnhancedErrorResult {
     @Immutable
     data class Recoverable(
@@ -289,6 +289,7 @@ sealed class EnhancedErrorResult {
 
 // AI response processing results
 @Immutable
+@Suppress("unused") // Constructor properties are read through their getters
 sealed class AIResponseProcessingResult {
     @Immutable
     data class Success(val response: String) : AIResponseProcessingResult()

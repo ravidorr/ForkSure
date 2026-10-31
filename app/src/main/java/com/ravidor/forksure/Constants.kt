@@ -46,13 +46,11 @@ object Dimensions {
     // Specific UI element sizes
     val BORDER_WIDTH_STANDARD: Dp = 4.dp
     val CORNER_RADIUS_SMALL: Dp = 6.dp
-    val CORNER_RADIUS_STANDARD: Dp = 8.dp
     
     // Image and component sizes
     val SAMPLE_IMAGE_SIZE: Dp = 120.dp
     val CAPTURED_IMAGE_HEIGHT: Dp = 200.dp
     val ICON_SIZE_SMALL: Dp = 12.dp
-    val ICON_SIZE_LARGE: Dp = 24.dp
     val STATUS_DOT_SIZE: Dp = 6.dp
 }
 
@@ -68,23 +66,23 @@ object AppColors {
     
     // ForkSure Brand Colors - Light Theme
     val FORKSURE_PRIMARY_LIGHT = Color(0xFF6650a4) // Deep purple
-    val FORKSURE_SECONDARY_LIGHT = Color(0xFF625b71) // Purple grey
+    val FORKSURE_SECONDARY_LIGHT = Color(0xFF625b71) // Purple gray
     val FORKSURE_TERTIARY_LIGHT = Color(0xFF7D5260) // Pink
     val FORKSURE_SURFACE_LIGHT = Color(0xFFFFFBFE) // Off-white
     val FORKSURE_BACKGROUND_LIGHT = Color(0xFFFFFBFE) // Off-white
     val FORKSURE_ON_PRIMARY_LIGHT = Color(0xFFFFFFFF) // White
-    val FORKSURE_ON_SURFACE_LIGHT = Color(0xFF1C1B1F) // Dark grey
-    val FORKSURE_ON_BACKGROUND_LIGHT = Color(0xFF1C1B1F) // Dark grey
+    val FORKSURE_ON_SURFACE_LIGHT = Color(0xFF1C1B1F) // Dark gray
+    val FORKSURE_ON_BACKGROUND_LIGHT = Color(0xFF1C1B1F) // Dark gray
     
     // ForkSure Brand Colors - Dark Theme
     val FORKSURE_PRIMARY_DARK = Color(0xFFD0BCFF) // Light purple
-    val FORKSURE_SECONDARY_DARK = Color(0xFFCCC2DC) // Light purple grey
+    val FORKSURE_SECONDARY_DARK = Color(0xFFCCC2DC) // Light purple gray
     val FORKSURE_TERTIARY_DARK = Color(0xFFEFB8C8) // Light pink
-    val FORKSURE_SURFACE_DARK = Color(0xFF1C1B1F) // Dark grey
+    val FORKSURE_SURFACE_DARK = Color(0xFF1C1B1F) // Dark gray
     val FORKSURE_BACKGROUND_DARK = Color(0xFF121212) // True dark
     val FORKSURE_ON_PRIMARY_DARK = Color(0xFF371E73) // Dark purple
-    val FORKSURE_ON_SURFACE_DARK = Color(0xFFE6E1E5) // Light grey
-    val FORKSURE_ON_BACKGROUND_DARK = Color(0xFFE6E1E5) // Light grey
+    val FORKSURE_ON_SURFACE_DARK = Color(0xFFE6E1E5) // Light gray
+    val FORKSURE_ON_BACKGROUND_DARK = Color(0xFFE6E1E5) // Light gray
     
     // Dark theme status colors (adjusted for better visibility)
     val SUCCESS_COLOR_DARK = Color(0xFF66BB6A) // Lighter green

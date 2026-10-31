@@ -74,14 +74,6 @@ object AccessibilityHelper {
             }
         }
     }
-    
-    /**
-     * Gets the user's preferred font scale for accessibility
-     */
-    fun getFontScale(context: Context): Float {
-        val configuration = context.resources.configuration
-        return configuration.fontScale
-    }
 }
 
 @Stable

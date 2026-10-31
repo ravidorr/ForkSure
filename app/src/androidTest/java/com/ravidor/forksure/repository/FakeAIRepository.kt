@@ -66,17 +66,6 @@ class FakeAIRepository @Inject constructor() : AIRepository {
         errorMessage = error
     }
 
-    fun setBlockedResponse() {
-        reset()
-        shouldReturnBlocked = true
-    }
-
-    fun setWarningResponse(response: String) {
-        reset()
-        shouldReturnWarning = true
-        customResponse = response
-    }
-
     fun setDelay(delayMs: Long) {
         this.delayMs = delayMs
     }

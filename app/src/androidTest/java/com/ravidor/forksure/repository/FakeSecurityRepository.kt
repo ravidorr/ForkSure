@@ -69,30 +69,10 @@ class FakeSecurityRepository @Inject constructor() : SecurityRepository {
         sanitizedInput = ""
     }
 
-    fun setSecureEnvironment() {
-        isSecureEnvironment = true
-        securityIssues = emptyList()
-    }
-
-    fun setInsecureEnvironment(issues: List<String>) {
-        isSecureEnvironment = false
-        securityIssues = issues
-    }
-
     fun setRateLimited(reason: String = "Rate limit exceeded") {
         isRateLimited = true
         rateLimitReason = reason
         requestsRemaining = 0
-    }
-
-    fun setRateAllowed(remaining: Int = 10) {
-        isRateLimited = false
-        requestsRemaining = remaining
-    }
-
-    fun setInputValid(sanitized: String = "") {
-        isInputValid = true
-        sanitizedInput = sanitized
     }
 
     fun setInputInvalid(reason: String = "Invalid input") {

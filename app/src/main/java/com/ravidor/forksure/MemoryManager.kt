@@ -67,6 +67,7 @@ object MemoryManager {
     /**
      * Handle memory trim callback
      */
+    @Suppress("unused") // Called from ForkSureApplication.onTrimMemory
     fun onTrimMemory(level: Int) {
         when (level) {
             ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN,

@@ -22,6 +22,7 @@ import dagger.Provides
  */
 @Module
 @InstallIn(SingletonComponent::class)
+@Suppress("unused") // @Binds methods are consumed by Hilt
 abstract class RepositoryModule {
 
     /**

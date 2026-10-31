@@ -521,8 +521,8 @@ class PersistenceTestSuite {
             repeat(operationsPerDay) { op ->
                 // Add recipe to cache
                 val request = RecipeAnalysisRequest(
-                    imageHash = "longterm_hash_${day}_$op",
-                    prompt = "longterm_prompt_${day}_$op"
+                    imageHash = "long_term_hash_${day}_$op",
+                    prompt = "long_term_prompt_${day}_$op"
                 )
                 val recipe = createTestRecipe("Long-term Recipe $day-$op", "Content")
                 val response = createTestResponse(recipe)

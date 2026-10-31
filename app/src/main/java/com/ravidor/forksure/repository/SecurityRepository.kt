@@ -1,7 +1,6 @@
 package com.ravidor.forksure.repository
 
 import android.content.Context
-import android.content.SharedPreferences
 import com.ravidor.forksure.RateLimitResult
 import com.ravidor.forksure.SecurityEnvironmentResult
 import com.ravidor.forksure.SecurityManager
@@ -24,8 +23,7 @@ interface SecurityRepository {
  */
 @Singleton
 class SecurityRepositoryImpl @Inject constructor(
-    @ApplicationContext private val context: Context,
-    private val sharedPreferences: SharedPreferences
+    @ApplicationContext private val context: Context
 ) : SecurityRepository {
 
     override suspend fun checkRateLimit(identifier: String): RateLimitResult {
@@ -33,7 +31,7 @@ class SecurityRepositoryImpl @Inject constructor(
     }
 
     override suspend fun checkSecurityEnvironment(): SecurityEnvironmentResult {
-        return SecurityManager.checkSecurityEnvironment(context)
+        return SecurityManager.checkSecurityEnvironment()
     }
 
     override suspend fun validateUserInput(input: String): UserInputValidationResult {

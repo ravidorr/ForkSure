@@ -9,6 +9,7 @@ import dagger.hilt.android.testing.HiltTestApplication
  * Custom test runner for Hilt testing
  * Replaces the application with HiltTestApplication for dependency injection in tests
  */
+@Suppress("unused") // Referenced from build.gradle.kts as the instrumentation runner
 class HiltTestRunner : AndroidJUnitRunner() {
 
     override fun newApplication(cl: ClassLoader?, name: String?, context: Context?): Application {

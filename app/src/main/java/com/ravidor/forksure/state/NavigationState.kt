@@ -26,10 +26,6 @@ class NavigationState(
     var capturedImage by mutableStateOf<Bitmap?>(null)
         private set
     
-    // Derived state
-    val selectedImageIndex: Int
-        get() = selectedImageState.intValue
-    
     // State update functions
     fun updateCapturedImage(bitmap: Bitmap?) {
         capturedImage = bitmap
