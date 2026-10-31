@@ -108,7 +108,7 @@
     <string name="error_content_blocked">Content was blocked by safety filters. Please try a different image.</string>
     <string name="error_unexpected">An unexpected error occurred. Please try again.</string>
     <string name="camera_permission_required">Camera permission is required to take photos of your baked goods.</string>
-    <string name="camera_permission_settings_hint">Please grant camera permission in your device settings if the permission dialog didn\'t appear.</string>
+    <string name="camera_permission_settings_hint">Please grant camera permission in your device settings if the permission dialog didn’t appear.</string>
     <string name="camera_initializing">Initializing camera…</string>
     <string name="camera_capturing">Capturing photo…</string>
     <string name="error_image_too_large">Image is too large. Please try a smaller image.</string>

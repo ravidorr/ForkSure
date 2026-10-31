@@ -23,6 +23,7 @@ import dagger.Provides
     components = [SingletonComponent::class],
     replaces = [RepositoryModule::class, PreferencesCacheManagerModule::class]
 )
+@Suppress("unused") // Replaces RepositoryModule; consumed by Hilt
 abstract class TestRepositoryModule {
 
     @Binds

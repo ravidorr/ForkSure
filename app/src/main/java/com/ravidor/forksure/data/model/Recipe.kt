@@ -57,7 +57,6 @@ enum class DifficultyLevel {
 @Immutable
 enum class RecipeSource {
     AI_GENERATED,
-    USER_PROVIDED,
     CACHED
 }
 

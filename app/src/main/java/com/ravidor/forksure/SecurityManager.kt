@@ -296,7 +296,7 @@ object SecurityManager {
     /**
      * Checks if the app is running in a secure environment
      */
-    suspend fun checkSecurityEnvironment(context: Context): SecurityEnvironmentResult {
+    suspend fun checkSecurityEnvironment(): SecurityEnvironmentResult {
         return withContext(Dispatchers.IO) {
             val issues = mutableListOf<String>()
 

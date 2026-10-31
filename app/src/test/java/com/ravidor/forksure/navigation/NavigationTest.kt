@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import androidx.navigation.NavHostController
 import com.google.common.truth.Truth.assertThat
 import com.ravidor.forksure.NavigationConstants
+import com.ravidor.forksure.state.NavigationState
 import io.mockk.*
 import org.junit.Before
 import org.junit.Test
@@ -147,21 +148,18 @@ class NavigationTest {
 
     @Test
     fun `navigation should handle image update correctly`() {
-        // Test image update flow
+        val navigationState = NavigationState()
         val initialBitmap = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888)
         val updatedBitmap = Bitmap.createBitmap(200, 200, Bitmap.Config.ARGB_8888)
-        
-        // When - initial update
-        capturedBitmap = initialBitmap
-        assertThat(capturedBitmap).isEqualTo(initialBitmap)
-        
-        // When - update with new bitmap
-        capturedBitmap = updatedBitmap
-        assertThat(capturedBitmap).isEqualTo(updatedBitmap)
-        
-        // When - clear image
-        capturedBitmap = null
-        assertThat(capturedBitmap).isNull()
+
+        navigationState.updateCapturedImage(initialBitmap)
+        assertThat(navigationState.capturedImage).isEqualTo(initialBitmap)
+
+        navigationState.updateCapturedImage(updatedBitmap)
+        assertThat(navigationState.capturedImage).isEqualTo(updatedBitmap)
+
+        navigationState.updateCapturedImage(null)
+        assertThat(navigationState.capturedImage).isNull()
     }
 
     @Test
@@ -188,28 +186,25 @@ class NavigationTest {
 
     @Test
     fun `navigation state consistency should be maintained`() {
-        // Test that navigation state remains consistent across operations
-        
+        val navigationState = NavigationState()
+
         // Initial state
-        assertThat(capturedBitmap).isNull()
-        assertThat(capturedError).isNull()
-        
-        // Navigate to camera and capture image
+        assertThat(navigationState.capturedImage).isNull()
+        assertThat(navigationState.selectedImageState.intValue).isEqualTo(-2)
+
+        // Capture an image and select it
         val testBitmap = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888)
-        capturedBitmap = testBitmap
-        capturedError = null
-        
-        // Verify state
-        assertThat(capturedBitmap).isNotNull()
-        assertThat(capturedError).isNull()
-        
-        // Select sample image (should clear captured image)
-        capturedBitmap = null
-        capturedError = null
-        
-        // Verify final state
-        assertThat(capturedBitmap).isNull()
-        assertThat(capturedError).isNull()
+        navigationState.updateCapturedImage(testBitmap)
+        navigationState.selectCapturedImage()
+
+        assertThat(navigationState.capturedImage).isEqualTo(testBitmap)
+        assertThat(navigationState.selectedImageState.intValue).isEqualTo(-1)
+
+        // Clearing the image leaves the selection untouched
+        navigationState.updateCapturedImage(null)
+
+        assertThat(navigationState.capturedImage).isNull()
+        assertThat(navigationState.selectedImageState.intValue).isEqualTo(-1)
     }
 
     @Test

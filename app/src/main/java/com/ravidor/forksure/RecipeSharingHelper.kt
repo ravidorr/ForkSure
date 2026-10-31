@@ -41,7 +41,7 @@ object RecipeSharingHelper {
             // Create chooser with fallback to other apps if Keep isn't available
             val chooserIntent = Intent.createChooser(shareIntent, "Save recipe to...")
             chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, arrayOf(
-                createFallbackShareIntent(context, recipeContent, recipeName)
+                createFallbackShareIntent(recipeContent, recipeName)
             ))
             
             context.startActivity(chooserIntent)
@@ -151,7 +151,6 @@ object RecipeSharingHelper {
      * Create fallback share intent for when specific apps aren't available
      */
     private fun createFallbackShareIntent(
-        context: Context,
         recipeContent: String,
         recipeName: String
     ): Intent {

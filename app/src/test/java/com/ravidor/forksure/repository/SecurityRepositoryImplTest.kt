@@ -1,7 +1,6 @@
 package com.ravidor.forksure.repository
 
 import android.content.Context
-import android.content.SharedPreferences
 import com.ravidor.forksure.InputValidationResult
 import com.ravidor.forksure.RateLimitResult
 import com.ravidor.forksure.SecurityEnvironmentResult
@@ -19,8 +18,7 @@ class SecurityRepositoryImplTest {
 
     private fun repo(): SecurityRepositoryImpl {
         val ctx = mockk<Context>(relaxed = true)
-        val prefs = mockk<SharedPreferences>(relaxed = true)
-        return SecurityRepositoryImpl(ctx, prefs)
+        return SecurityRepositoryImpl(ctx)
     }
 
     @Test
@@ -46,8 +44,7 @@ class SecurityRepositoryImplTest {
         mockkObject(SecurityManager)
         val ctx = mockk<Context>(relaxed = true)
 coEvery { SecurityManager.checkRateLimit(ctx, any()) } returns RateLimitResult.Allowed(5, 60)
-        val prefs = mockk<SharedPreferences>(relaxed = true)
-        val repo = SecurityRepositoryImpl(ctx, prefs)
+        val repo = SecurityRepositoryImpl(ctx)
 
         val res = repo.checkRateLimit("id")
         assertEquals(RateLimitResult.Allowed(5, 60), res)
@@ -57,9 +54,8 @@ coEvery { SecurityManager.checkRateLimit(ctx, any()) } returns RateLimitResult.A
     fun checkSecurityEnvironment_delegates() = runTest {
         mockkObject(SecurityManager)
         val ctx = mockk<Context>(relaxed = true)
-        coEvery { SecurityManager.checkSecurityEnvironment(ctx) } returns SecurityEnvironmentResult.Secure
-        val prefs = mockk<SharedPreferences>(relaxed = true)
-        val repo = SecurityRepositoryImpl(ctx, prefs)
+        coEvery { SecurityManager.checkSecurityEnvironment() } returns SecurityEnvironmentResult.Secure
+        val repo = SecurityRepositoryImpl(ctx)
 
         val res = repo.checkSecurityEnvironment()
         assertEquals(SecurityEnvironmentResult.Secure, res)

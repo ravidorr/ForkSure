@@ -34,7 +34,7 @@ class EnhancedErrorHandlerTest {
 
     @Test
     fun handleError_returnsCritical_whenSecurityEnvironmentInsecure() = runTest {
-        coEvery { SecurityManager.checkSecurityEnvironment(any()) } returns SecurityEnvironmentResult.Insecure(
+        coEvery { SecurityManager.checkSecurityEnvironment() } returns SecurityEnvironmentResult.Insecure(
             reason = "Security concerns detected",
             details = "Root detected"
         )
@@ -49,7 +49,7 @@ class EnhancedErrorHandlerTest {
 
     @Test
     fun handleError_networkException_returnsRecoverable() = runTest {
-        coEvery { SecurityManager.checkSecurityEnvironment(any()) } returns SecurityEnvironmentResult.Secure
+        coEvery { SecurityManager.checkSecurityEnvironment() } returns SecurityEnvironmentResult.Secure
         val result = EnhancedErrorHandler.handleError(context, java.net.UnknownHostException("dns"))
         assertThat(result).isInstanceOf(EnhancedErrorResult.Recoverable::class.java)
         val rec = result as EnhancedErrorResult.Recoverable
@@ -60,7 +60,7 @@ class EnhancedErrorHandlerTest {
     @Test
     fun processAIResponse_mapsValidationResults_correctly() {
         every { SecurityManager.validateAIResponse("valid") } returns AIResponseValidationResult.Valid("valid")
-        every { SecurityManager.validateAIResponse("warn") } returns AIResponseValidationResult.RequiresWarning("payload","warnmsg")
+        every { SecurityManager.validateAIResponse("warn") } returns AIResponseValidationResult.RequiresWarning("payload","warn message")
         every { SecurityManager.validateAIResponse("unsafe") } returns AIResponseValidationResult.Unsafe("why","warn")
         every { SecurityManager.validateAIResponse("invalid") } returns AIResponseValidationResult.Invalid("why","msg")
 

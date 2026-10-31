@@ -44,7 +44,6 @@ interface UserPreferencesRepository {
     
     suspend fun resetAllSettings()
     suspend fun exportSettings(): String
-    suspend fun importSettings(settingsJson: String): Boolean
 }
 
 /**
@@ -205,15 +204,6 @@ class UserPreferencesRepositoryImpl @Inject constructor(
             appendLine("    \"averageSessionDuration\": ${stats.averageSessionDuration}")
             appendLine("  }")
             append("}")
-        }
-    }
-
-    override suspend fun importSettings(settingsJson: String): Boolean {
-        return try {
-            // Simplified implementation - in a real app, use proper JSON parsing
-            false
-        } catch (e: Exception) {
-            false
         }
     }
 } 

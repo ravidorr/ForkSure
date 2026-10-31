@@ -33,7 +33,7 @@ object AppModule {
     }
 
     /**
-     * Provides SharedPreferences for security-related storage
+     * Provides the app's SharedPreferences (consumed by PreferencesDataSource)
      */
     @Provides
     @Singleton

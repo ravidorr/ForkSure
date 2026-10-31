@@ -59,12 +59,12 @@ Since the app doesn't have a backend API, reports are sent via email:
 
 ## Compliance Features
 
-✅ **In-app reporting** - Users can report content without leaving the app
-✅ **User-friendly interface** - Clear, accessible reporting dialog
-✅ **Multiple report categories** - Covers various types of offensive content
-✅ **Developer notification** - Reports sent directly to the developer email
-✅ **No exit required** - Entire process happens within the app
-✅ **Professional implementation** - Follows Material Design guidelines
+✅ **In-app reporting** - Users can report content without leaving the app.
+✅ **User-friendly interface** - Clear, accessible reporting dialog.
+✅ **Multiple report categories** - Covers various types of offensive content.
+✅ **Developer notification** - Reports sent directly to the developer email.
+✅ **No exit required** - Entire process happens within the app.
+✅ **Professional implementation** - Follows Material Design guidelines.
 
 ## How It Works
 
