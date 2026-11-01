@@ -17,6 +17,8 @@ jobs:
     env:
       # Secrets cannot be used in step conditions directly; expose only whether signing is configured.
       HAS_SIGNING_KEY: ${{ secrets.ANDROID_KEYSTORE_BASE64 != '' }}
+      # Same for the Google Play upload: the service account JSON itself is only referenced by the upload step.
+      HAS_PLAY_KEY: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON != '' }}
 
     steps:
     - name: Checkout main
@@ -41,6 +43,20 @@ jobs:
           echo "Release ${{ steps.version.outputs.tag_name }} already exists, skipping."
         else
           echo "exists=false" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Validate Google Play release notes
+      if: steps.existing.outputs.exists == 'false' && env.HAS_SIGNING_KEY == 'true' && env.HAS_PLAY_KEY == 'true'
+      run: |
+        NOTES=distribution/whatsnew/whatsnew-en-US
+        if [ ! -s "$NOTES" ]; then
+          echo "::error file=$NOTES::Missing or empty Google Play release notes. Update them for this release."
+          exit 1
+        fi
+        LENGTH=$(wc -m < "$NOTES" | tr -d ' ')
+        if [ "$LENGTH" -gt 500 ]; then
+          echo "::error file=$NOTES::Google Play release notes are $LENGTH characters, the limit is 500."
+          exit 1
         fi
 
     - name: Set up JDK 17
@@ -116,3 +132,42 @@ jobs:
           --title "ForkSure $VERSION (Build ${{ steps.version.outputs.version_code }})" \
           --generate-notes \
           release-assets/*
+
+    - name: Warn that nothing is uploaded to Google Play
+      if: steps.existing.outputs.exists == 'false' && (env.HAS_SIGNING_KEY != 'true' || env.HAS_PLAY_KEY != 'true')
+      run: |
+        echo "::warning::ANDROID_KEYSTORE_BASE64 or PLAY_SERVICE_ACCOUNT_JSON is not configured: skipping the Google Play upload."
+
+    - name: Locate Google Play upload files
+      id: play_files
+      if: steps.existing.outputs.exists == 'false' && env.HAS_SIGNING_KEY == 'true' && env.HAS_PLAY_KEY == 'true'
+      run: |
+        MAPPING=app/build/outputs/mapping/release/mapping.txt
+        SYMBOLS=app/build/outputs/native-debug-symbols/release/native-debug-symbols.zip
+        if [ -f "$MAPPING" ]; then
+          echo "mapping=$MAPPING" >> "$GITHUB_OUTPUT"
+        else
+          echo "::warning::No R8 mapping file found, Play will show a missing deobfuscation file warning."
+        fi
+        # The symbols zip is only produced when the app bundles native libraries.
+        if [ -f "$SYMBOLS" ]; then
+          echo "symbols=$SYMBOLS" >> "$GITHUB_OUTPUT"
+        else
+          echo "No native debug symbols produced, uploading without them."
+        fi
+
+    # Runs after the GitHub Release exists, so a failed upload fails the job without rolling the release back.
+    # Re-runs skip this step because the release already exists. To retry a failed upload, delete the release and tag first.
+    - name: Upload to Google Play
+      if: steps.existing.outputs.exists == 'false' && env.HAS_SIGNING_KEY == 'true' && env.HAS_PLAY_KEY == 'true'
+      uses: r0adkll/upload-google-play@e738b9dd8f2476ea806d921b64aacd24f34515a5 # v1.1.5
+      with:
+        serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+        packageName: com.ravidor.forksure
+        releaseFiles: app/build/outputs/bundle/release/app-release.aab
+        # Repo variable PLAY_TRACK overrides the track, for example `internal` for a dry run.
+        track: ${{ vars.PLAY_TRACK || 'production' }}
+        status: completed
+        whatsNewDirectory: distribution/whatsnew
+        mappingFile: ${{ steps.play_files.outputs.mapping }}
+        debugSymbols: ${{ steps.play_files.outputs.symbols }}
