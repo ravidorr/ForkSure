@@ -165,7 +165,8 @@ jobs:
         serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
         packageName: com.ravidor.forksure
         releaseFiles: app/build/outputs/bundle/release/app-release.aab
-        # Repo variable PLAY_TRACK overrides the track, for example `internal` for a dry run.
+        # Repo variable PLAY_TRACK overrides the track, for example `internal`. This is a real release, not a dry run:
+        # the version is then marked released and later runs skip the upload, so promote it in Play Console or bump versionCode.
         track: ${{ vars.PLAY_TRACK || 'production' }}
         status: completed
         whatsNewDirectory: distribution/whatsnew
