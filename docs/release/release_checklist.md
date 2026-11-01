@@ -62,6 +62,22 @@
 - [ ] **Complete final review**
 - [ ] **Submit for review**
 
+## 🤖 Automated Release (CI)
+
+Every push to `main` runs `.github/workflows/release-aab-on-merge.yml`. When `versionCode` in `app/build.gradle.kts` is new, it builds the signed AAB, creates the `v<versionName>-build<versionCode>` GitHub Release, and uploads the AAB to Google Play, which sends it for review and rolls it out to 100% once approved (`status: completed`).
+
+Per release:
+- [ ] **Bump `versionCode` and `versionName`** in `app/build.gradle.kts`
+- [ ] **Update `distribution/whatsnew/whatsnew-en-US`** (1 to 500 characters). The workflow fails before building if it is missing, empty, or too long.
+- [ ] **Merge to `main`** and watch the "Release on Merge" run
+
+Behavior:
+- The upload uses the track in the `PLAY_TRACK` repository variable, `production` when unset.
+- The R8 mapping file and native debug symbols (when the build produces them) are uploaded with the AAB.
+- If `PLAY_SERVICE_ACCOUNT_JSON` or the signing secrets are missing (for example in forks), the upload is skipped with a warning.
+- A failed upload fails the job, but the GitHub Release is kept. Because the release now exists, re-running does not upload. To retry, delete the GitHub Release and its tag, then re-run the workflow.
+- The Publishing API cannot create the first release: upload the first AAB manually. See the one-time setup in [docs/google-play/README.md](../google-play/README.md).
+
 ## 📋 Build Commands Reference
 
 After updating keystore.properties with your password:
