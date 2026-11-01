@@ -25,3 +25,4 @@ The "Release on Merge" workflow uploads each new release AAB to Google Play. One
 5. Optional: set the repository variable `PLAY_TRACK` (for example `internal`) to override the default `production` track, for a dry run.
 
 Release notes come from `distribution/whatsnew/whatsnew-en-US` (maximum 500 characters); update it with every release. If managed publishing is enabled in the Play Console, approved releases wait for a manual publish.
+A failed upload fails the job but keeps the GitHub Release. Re-running does not upload again because the release exists; to retry, delete the GitHub Release and its tag, then re-run the workflow.

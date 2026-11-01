@@ -49,7 +49,7 @@ jobs:
       if: steps.existing.outputs.exists == 'false' && env.HAS_SIGNING_KEY == 'true' && env.HAS_PLAY_KEY == 'true'
       run: |
         NOTES=distribution/whatsnew/whatsnew-en-US
-        if [ ! -s "$NOTES" ]; then
+        if [ ! -s "$NOTES" ] || ! grep -q '[^[:space:]]' "$NOTES"; then
           echo "::error file=$NOTES::Missing or empty Google Play release notes. Update them for this release."
           exit 1
         fi
