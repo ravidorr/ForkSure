@@ -1,0 +1,51 @@
+name: Release Notes Guard
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  release-notes:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout PR
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Require updated Google Play release notes when versionCode changes
+      env:
+        BASE_REF: ${{ github.base_ref }}
+      run: |
+        NOTES=distribution/whatsnew/whatsnew-en-US
+        PLACEHOLDER="Bug fixes, security updates and stability improvements."
+        code_of() { grep "versionCode" | sed 's/.*= \(.*\)/\1/'; }
+        BASE_CODE=$(git show "origin/$BASE_REF:app/build.gradle.kts" | code_of)
+        HEAD_CODE=$(code_of < app/build.gradle.kts)
+        if [ "$BASE_CODE" = "$HEAD_CODE" ]; then
+          echo "versionCode unchanged ($HEAD_CODE), release notes not required."
+          exit 0
+        fi
+        echo "versionCode changed: $BASE_CODE -> $HEAD_CODE"
+        if git diff --quiet "origin/$BASE_REF...HEAD" -- "$NOTES"; then
+          echo "::error file=$NOTES::versionCode changed but the Google Play release notes were not updated in this PR."
+          exit 1
+        fi
+        if [ ! -s "$NOTES" ] || ! grep -q '[^[:space:]]' "$NOTES"; then
+          echo "::error file=$NOTES::Google Play release notes are empty."
+          exit 1
+        fi
+        if [ "$(tr -d '\n' < "$NOTES" | sed 's/[[:space:]]*$//')" = "$PLACEHOLDER" ]; then
+          echo "::error file=$NOTES::Google Play release notes are still the generic placeholder."
+          exit 1
+        fi
+        LENGTH=$(wc -m < "$NOTES" | tr -d ' ')
+        if [ "$LENGTH" -gt 500 ]; then
+          echo "::error file=$NOTES::Google Play release notes are $LENGTH characters, the limit is 500."
+          exit 1
+        fi
+        echo "Release notes updated ($LENGTH characters)."
