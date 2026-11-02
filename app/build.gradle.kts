@@ -289,7 +289,7 @@ configurations.configureEach {
             "io.netty" -> if (requested.name.startsWith("netty-")) useVersion("4.1.137.Final")
             "org.bouncycastle" -> if (requested.name.endsWith("-jdk18on")) useVersion("1.85")
             "com.google.guava" -> if (requested.name == "guava") useVersion(if (requested.version.orEmpty().endsWith("-android")) "33.7.2-android" else "33.7.2-jre")
-            "com.google.protobuf" -> if (requested.name in listOf("protobuf-java", "protobuf-kotlin")) useVersion("3.25.5")
+            "com.google.protobuf" -> if (requested.name in listOf("protobuf-java", "protobuf-kotlin")) useVersion("4.36.2")
             "io.ktor" -> if (requested.version == "2.3.2") useVersion("2.3.13")
             "androidx.concurrent" -> useVersion("1.3.0")
             "org.apache.httpcomponents" -> if (requested.name == "httpclient") useVersion("4.5.14")
