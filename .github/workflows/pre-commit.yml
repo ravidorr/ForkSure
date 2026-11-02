@@ -27,7 +27,7 @@ jobs:
     - name: Create local.properties
       run: |
         echo "sdk.dir=$ANDROID_HOME" > local.properties
-        echo "apiKey=${{ secrets.GEMINI_API_KEY }}" >> local.properties
+        echo "apiKey=${{ secrets.GEMINI_API_KEY || 'dummy' }}" >> local.properties
       working-directory: ${{ github.workspace }}
         
     - name: Cache Gradle packages
@@ -72,7 +72,7 @@ jobs:
     - name: Create local.properties
       run: |
         echo "sdk.dir=$ANDROID_HOME" > local.properties
-        echo "apiKey=${{ secrets.GEMINI_API_KEY }}" >> local.properties
+        echo "apiKey=${{ secrets.GEMINI_API_KEY || 'dummy' }}" >> local.properties
       working-directory: ${{ github.workspace }}
         
     - name: Cache Gradle packages
