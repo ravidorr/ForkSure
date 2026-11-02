@@ -20,7 +20,6 @@ buildscript {
             classpath("org.jdom:jdom2:2.0.6.1")
             classpath("com.google.protobuf:protobuf-java:3.25.5")
             classpath("com.google.protobuf:protobuf-kotlin:3.25.5")
-            classpath("io.ktor:ktor-client-core-jvm:3.6.1")
             classpath("io.opentelemetry:opentelemetry-api:1.67.0")
             classpath("com.google.guava:guava:33.7.2-jre")
             classpath("org.apache.httpcomponents:httpclient:4.5.14")

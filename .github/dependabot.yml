@@ -4,4 +4,7 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-    open-pull-requests-limit: 10
+    open-pull-requests-limit: 10    ignore:
+      # generativeai 0.9.0 is built against ktor 2.x; ktor 3 is binary-incompatible
+      - dependency-name: "io.ktor:*"
+        update-types: ["version-update:semver-major"]
