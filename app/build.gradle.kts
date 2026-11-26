@@ -24,7 +24,11 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     namespace = "com.ravidor.forksure"
-    compileSdk = 37
+    compileSdk {
+        version = release(37) {
+            minorApiLevel = 1
+        }
+    }
 
     defaultConfig {
         applicationId = "com.ravidor.forksure"
